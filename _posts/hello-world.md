@@ -5,7 +5,7 @@ coverImage: '/assets/blog/mpd-jukebox/mpd-jukebox.jpg'
 date: '2017-08-09T10:35:07.322Z'
 author:
   name: Craig J. Midwinter
-  picture: '/assets/blog/authors/craig.png'
+  picture: '/assets/blog/authors/craig.png?size=48'
 ogImage:
   url: '/assets/blog/mpd-jukebox/mpd-jukebox.jpg'
 ---
