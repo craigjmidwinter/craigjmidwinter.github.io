@@ -1,19 +1,21 @@
 ---
-title: 'Learn How to Pre-render Pages Using Static Generation with Next.js'
+title: 'True MPD Jukebox using Raspberry Pi'
 excerpt: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. At imperdiet dui accumsan sit amet nulla facilities morbi tempus.'
-coverImage: '/assets/blog/hello-world/cover.jpg'
-date: '2020-03-16T05:35:07.322Z'
+coverImage: '/assets/blog/mpd-jukebox/mpd-jukebox.jpg'
+date: '2017-08-09T10:35:07.322Z'
 author:
-  name: Tim Neutkens
-  picture: '/assets/blog/authors/tim.jpeg'
+  name: Craig J. Midwinter
+  picture: '/assets/blog/authors/craig.png'
 ogImage:
-  url: '/assets/blog/hello-world/cover.jpg'
+  url: '/assets/blog/mpd-jukebox/mpd-jukebox.jpg'
 ---
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. At imperdiet dui accumsan sit amet nulla facilities morbi tempus. Praesent elementum facilisis leo vel fringilla. Congue mauris rhoncus aenean vel. Egestas sed tempus urna et pharetra pharetra massa massa ultricies.
+Since my fiancee, Jess, and I are getting hitched in a few months, we've obviously been in the midst of wedding planning (prior to starting work on this game). When discussing our options for music, we thought that the money we could spend on hiring a DJ could be better spent elsewhere. Initially we were just going to put together a google music playlist and let it run on shuffle, but then I thought it would be fun to let guests have a say in the playlist, so I decided that I could probably build a jukebox web app pretty easily.
 
-Venenatis cras sed felis eget velit. Consectetur libero id faucibus nisl tincidunt. Gravida in fermentum et sollicitudin ac orci phasellus egestas tellus. Volutpat consequat mauris nunc congue nisi vitae. Id aliquet risus feugiat in ante metus dictum at tempor. Sed blandit libero volutpat sed cras. Sed odio morbi quis commodo odio aenean sed adipiscing. Velit euismod in pellentesque massa placerat. Mi bibendum neque egestas congue quisque egestas diam in arcu. Nisi lacus sed viverra tellus in. Nibh cras pulvinar mattis nunc sed. Luctus accumsan tortor posuere ac ut consequat semper viverra. Fringilla ut morbi tincidunt augue interdum velit euismod.
+The jukebox application is pretty straight forward. It's a Laravel project which basically consists of two components. First, a pared-down MPD web client which users can just select a song to add to the queue. The second portion is an artisan command which runs in the background which listens for the state of MPD. Whenever the song changes, the listener checks to see if its that song is the last song in the queue, and if it is, it just queues a random song.
 
-## Lorem Ipsum
+It's open source and you can check it out on GitHub if you'd like (though I haven't touched the readme yet, it's pretty straight forward I'll try to remember to update it with some instructions). The repository is a Homestead project, which I was using for dev, so you can probably get it going locally with a 'vagrant up' though you might need to do some tinkering with MPD in the VM in order for it to actually play.
 
-Tristique senectus et netus et malesuada fames ac turpis. Ridiculous mus mauris vitae ultricies leo integer malesuada nunc vel. In mollis nunc sed id semper. Egestas tellus rutrum tellus pellentesque. Phasellus vestibulum lorem sed risus ultricies tristique nulla. Quis blandit turpis cursus in hac habitasse platea dictumst quisque. Eros donec ac odio tempor orci dapibus ultrices. Aliquam sem et tortor consequat id porta nibh. Adipiscing elit duis tristique sollicitudin nibh sit amet commodo nulla. Diam vulputate ut pharetra sit amet. Ut tellus elementum sagittis vitae et leo. Arcu non odio euismod lacinia at quis risus sed vulputate.
+In "production", I'm running it on a Raspberry Pi LEMP stack.
+
+Step-by-step to follow...
