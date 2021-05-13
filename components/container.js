@@ -1,3 +1,7 @@
-export default function Container({ children }) {
-  return <div className="container mx-auto px-5">{children}</div>
+import styled from "@emotion/styled";
+const Container = styled.div`
+  max-width: 960px;
+`;
+export default function({ children }) {
+  return <Container>{children}</Container>;
 }

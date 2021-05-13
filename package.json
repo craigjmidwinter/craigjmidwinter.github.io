@@ -9,6 +9,13 @@
     "deploy": "rm -rf node_modules/.cache && next build && next export && touch out/.nojekyll"
   },
   "dependencies": {
+    "@babel/preset-env": "^7.14.1",
+    "@babel/runtime": "^7.14.0",
+    "@emotion/core": "^11.0.0",
+    "@emotion/react": "^11.1.5",
+    "@emotion/styled": "^11.3.0",
+    "@fontsource/cabin": "^4.3.0",
+    "@fontsource/noto-serif": "^4.3.0",
     "classnames": "2.2.6",
     "date-fns": "2.16.1",
     "gray-matter": "4.0.2",
@@ -21,9 +28,12 @@
     "lqip-loader": "^2.2.1",
     "next": "latest",
     "next-compose-plugins": "^2.2.1",
-    "next-optimized-images": "^2.6.2",
+    "next-optimized-images": "canary",
+    "next-react-svg": "^1.1.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-markdown": "^6.0.2",
+    "react-optimized-image": "^0.4.1",
     "remark": "13.0.0",
     "remark-html": "13.0.1",
     "responsive-loader": "^2.3.0",
@@ -31,6 +41,8 @@
     "webp-loader": "^0.6.0"
   },
   "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.13.15",
+    "@babel/preset-react": "^7.13.13",
     "autoprefixer": "^10.2.1",
     "postcss": "^8.2.4",
     "tailwindcss": "^2.0.2"

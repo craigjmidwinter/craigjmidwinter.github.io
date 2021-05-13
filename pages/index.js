@@ -1,51 +1,38 @@
-import Container from '../components/container'
-import MoreStories from '../components/more-stories'
-import HeroPost from '../components/hero-post'
-import Intro from '../components/intro'
-import Layout from '../components/layout'
-import { getAllPosts } from '../lib/api'
-import Head from 'next/head'
-import { CMS_NAME } from '../lib/constants'
+import Container from "../components/container";
+import { getAllExperiences } from "../lib/api";
+import Intro from "../components/intro";
+import Layout from "../components/layout";
+import Head from "next/head";
+import ResumeBody from "../components/resume-body";
 
-export default function Index({ allPosts }) {
-  const heroPost = allPosts[0]
-  const morePosts = allPosts.slice(1)
+export default function Index({ experiences }) {
   return (
     <>
       <Layout>
         <Head>
-          <title>Next.js Blog Example with {CMS_NAME}</title>
+          <title>Craig J. Midwinter - Full Stack Developer</title>
         </Head>
         <Container>
           <Intro />
-          {heroPost && (
-            <HeroPost
-              title={heroPost.title}
-              coverImage={heroPost.coverImage}
-              date={heroPost.date}
-              author={heroPost.author}
-              slug={heroPost.slug}
-              excerpt={heroPost.excerpt}
-            />
-          )}
-          {morePosts.length > 0 && <MoreStories posts={morePosts} />}
+          <ResumeBody experiences={experiences}></ResumeBody>
         </Container>
       </Layout>
     </>
-  )
+  );
 }
 
 export async function getStaticProps() {
-  const allPosts = getAllPosts([
-    'title',
-    'date',
-    'slug',
-    'author',
-    'coverImage',
-    'excerpt',
-  ])
+  const experiences = getAllExperiences([
+    "title",
+    "start",
+    "end",
+    "sortDate",
+    "company",
+    "content",
+    "tech"
+  ]);
 
   return {
-    props: { allPosts },
-  }
+    props: { experiences }
+  };
 }
