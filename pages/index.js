@@ -4,8 +4,11 @@ import Intro from "../components/intro";
 import Layout from "../components/layout";
 import Head from "next/head";
 import ResumeBody from "../components/resume-body";
+import ReactGA from "react-ga";
 
 export default function Index({ experiences }) {
+  ReactGA.initialize("UA-131210782-1");
+  ReactGA.pageview("/");
   return (
     <>
       <Layout>
