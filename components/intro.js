@@ -1,19 +1,50 @@
-import { CMS_NAME } from '../lib/constants'
+import Img from "react-optimized-image";
+import styled from "@emotion/styled";
+
+const IntroHeader = styled.div`
+  display: flex;
+  padding: 1rem;
+`;
+const AvatarContainer = styled.div`
+  max-width: 25%;
+  margin: 1rem;
+`;
+
+const IntroAvatar = styled(Img)`
+  max-height: 20rem;
+  max-width: 100%;
+  border-radius: 50%;
+  border-style: solid;
+  border-color: #000;
+  border-width: 0.5rem;
+  background-color: #1f1a4d;
+`;
+const IntroTextContainer = styled.div`
+  text-align: right;
+  vertical-align: middle;
+`;
+const IntroBody = styled.div`
+  font-family: CabinVariable;
+  font-size: 1.25rem;
+`;
+const HeaderText = styled.h1`
+  font-size: 4rem;
+`;
 
 export default function Intro() {
   return (
-    <section className="flex-col md:flex-row flex items-center md:justify-between mt-16 mb-16 md:mb-12">
-      <h1 className="text-6xl md:text-8xl font-bold tracking-tighter leading-tight md:pr-8">Craig J. Midwinter</h1>
-      <h4 className="text-center md:text-left text-lg mt-5 md:pl-8">
-        A statically generated blog example using{' '}
-        <a
-          href="https://nextjs.org/"
-          className="underline hover:text-success duration-200 transition-colors"
-        >
-          Next.js
-        </a>{' '}
-        and {CMS_NAME}.
-      </h4>
-    </section>
-  )
+    <IntroHeader>
+      <AvatarContainer>
+        <IntroAvatar src={require("../images/avatar.svg")} />
+      </AvatarContainer>
+      <IntroTextContainer>
+        <HeaderText>Craig J. Midwinter</HeaderText>
+        <IntroBody>
+          Experienced Developer who specializes in quickly adapting to new
+          languages and tools, and developing solutions in challenging problem
+          domains
+        </IntroBody>
+      </IntroTextContainer>
+    </IntroHeader>
+  );
 }
