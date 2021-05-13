@@ -48,7 +48,7 @@ export default function Intro() {
         <HeaderText>Craig J. Midwinter</HeaderText>
           <Contact>
               craig.j.midwinter@gmail.com<br/>
-              <a target="_blank" href="https://www.linkedin.com/in/craig-midwinter-b26193155/">linked.in</a>
+              <a target="_blank" href="https://www.linkedin.com/in/craig-midwinter-b26193155/">linkedIn</a>
           </Contact>
         <IntroBody>
             Experienced Developer who specializes in quickly adapting to new
