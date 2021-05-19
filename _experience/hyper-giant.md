@@ -4,7 +4,7 @@ title: 'Full-Stack Developer'
 sortDate: '2019-04-09T10:35:07.322Z'
 start: 'Apr. 2019'
 end: 'Current'
-tech: 'Node.js, React, Typescript, C#, Postgres, Redis, GraphQL'
+tech: 'Node.js, React, Typescript, C#, Postgres, Redis, GraphQL, Kubernetes, Terraform'
 ---
 - Lead back-end development efforts for key internal product
 efforts in the Space and ML/DataScience spaces
