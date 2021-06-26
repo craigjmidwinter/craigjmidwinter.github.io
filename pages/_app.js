@@ -1,6 +1,7 @@
 import "@fontsource/noto-serif/index.css";
 import "@fontsource/cabin/variable.css";
 import "@fontsource/poppins";
+import "@fontsource/poppins/700.css";
 
 import { Global, css } from "@emotion/react";
 
@@ -68,7 +69,12 @@ export default function MyApp({ Component, pageProps }) {
                 format("truetype");
             font-weight: 700;
           }
+          html {
+            font-size: 12px;
+          }
+          ,
           body {
+            margin: 0px;
             font-family: "SegoeUI";
             color: #1f2235;
           }

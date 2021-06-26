@@ -2,7 +2,8 @@ import styled from "@emotion/styled";
 
 import ReactMarkdown from "react-markdown";
 const ExperienceContainer = styled.div`
-  margin-bottom: 3rem;
+  padding: 8.6rem;
+  border-bottom: solid 2px #ebebeb;
 `;
 const ExperienceSubheading = styled.div`
   display: flex;
@@ -13,14 +14,27 @@ const ExperienceSubheading = styled.div`
 `;
 const ExperienceTitle = styled.h2`
   margin: 0;
+  font-family: "Poppins";
+  font-weight: 700;
+  font-size: 2.5rem;
 `;
 const ExperienceCompany = styled.h3`
   margin: 0;
+  color: #ff4a57;
+  font-family: "Poppins";
+  font-weight: 400;
+  font-size: 1.375rem;
 `;
-const ExperienceTerm = styled.div``;
+const ExperienceTerm = styled.div`
+  font-family: "Poppins";
+  font-weight: 400;
+  font-size: 1.375rem;
+`;
 const ExperienceTech = styled.div`
-  font-size: 0.75rem;
-  font-style: italic;
+  font-family: "SegoeUI";
+  color: #707070;
+  font-weight: 400;
+  font-size: 1.375rem;
 `;
 const ExperienceBody = styled.div``;
 

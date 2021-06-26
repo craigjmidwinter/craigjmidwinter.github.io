@@ -25,6 +25,7 @@ const IntroTextContainer = styled.div`
 const IntroName = styled.h1`
   font-size: 3.5rem;
   margin-bottom: 1.75rem;
+  font-weight: 900;
 `;
 const IntroEmail = styled.h2`
   font-size: 1.25rem;
@@ -56,11 +57,13 @@ const IntroAvatar = styled(Img)`
   z-index: 2;
   position: absolute;
   top: 0;
+  border-radius: 1.5rem;
 `;
 const Box1 = styled.div`
   background-color: #352d95;
   opacity: 0.5;
   transform: rotate(345deg);
+  border-radius: 1.5rem;
   width: 100%;
   height: 100%;
   z-index: 1;
@@ -76,6 +79,7 @@ const Box2 = styled.div`
   z-index: 1;
   position: absolute;
   top: 0;
+  border-radius: 1.5rem;
 `;
 
 export default function Intro() {
