@@ -4,7 +4,6 @@ import ExperienceSection from "./experience-section";
 import ReactMarkdown from "react-markdown";
 
 const ResumeContainer = styled.div`
-  background-color: #fff;
 `;
 const ParagraphContainer = styled.div`
   padding: 0 8.6rem 8.6rem 8.6rem;

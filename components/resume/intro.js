@@ -5,7 +5,6 @@ const IntroHeader = styled.div`
   display: flex;
   justify-content: center;
   padding: 10.75rem 0;
-  background: #fff;
 `;
 const IntroRow = styled.div`
   display: flex;
@@ -53,7 +52,6 @@ const Avatar = styled.div`
 const IntroAvatar = styled(Img)`
   width: 100%;
   height: 100%;
-  background-color: #1f1a4d;
   z-index: 2;
   position: absolute;
   top: 0;
@@ -73,7 +71,7 @@ const Box1 = styled.div`
 const Box2 = styled.div`
   background-color: #7067d4;
   opacity: 0.3;
-  transform: rotate(-45deg);
+  transform: rotate(330deg);
   width: 100%;
   height: 100%;
   z-index: 1;
@@ -99,7 +97,7 @@ export default function Intro() {
           <Avatar>
             <Box1 />
             <Box2 />
-            <IntroAvatar src={require("../images/avatar.svg")} />
+            <IntroAvatar src={require("../../images/avatar.svg")} />
           </Avatar>
         </AvatarContainer>
       </IntroRow>

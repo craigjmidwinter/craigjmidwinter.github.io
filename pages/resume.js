@@ -3,14 +3,12 @@ import { getAllExperiences } from "../lib/api";
 import Intro from "../components/resume/intro";
 import Layout from "../components/layout";
 import Head from "next/head";
-import Link from "next/link";
 import ResumeBody from "../components/resume/resume-body";
 import ReactGA from "react-ga";
-import NavBar from "../components/nav-bar";
 
 export default function Index({ experiences }) {
   ReactGA.initialize("UA-131210782-1");
-  ReactGA.pageview("/");
+  ReactGA.pageview("/resume");
   return (
     <>
       <Layout>
@@ -18,9 +16,8 @@ export default function Index({ experiences }) {
           <title>Craig J. Midwinter - Full Stack Developer</title>
         </Head>
         <Container>
-          <Link href="/resume">
-            <a>Resume</a>
-          </Link>
+          <Intro />
+          <ResumeBody experiences={experiences}></ResumeBody>
         </Container>
       </Layout>
     </>

@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 import ReactMarkdown from "react-markdown";
 const ExperienceContainer = styled.div`
   padding: 8.6rem;
-  border-bottom: solid 2px #ebebeb;
+  border-bottom: solid 2px ${props => props.theme.shaded};
 `;
 const ExperienceSubheading = styled.div`
   display: flex;
@@ -32,7 +32,7 @@ const ExperienceTerm = styled.div`
 `;
 const ExperienceTech = styled.div`
   font-family: "SegoeUI";
-  color: #707070;
+  color: ${props => props.theme.lightText};
   font-weight: 400;
   font-size: 1.375rem;
 `;
