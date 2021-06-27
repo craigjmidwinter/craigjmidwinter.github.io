@@ -5,20 +5,23 @@ import ReactMarkdown from "react-markdown";
 
 const ResumeContainer = styled.div`
   background-color: #fff;
-  border-top: ${props => props.theme.accent} solid 0.4rem;
-  padding: 1rem;
+`;
+const ParagraphContainer = styled.div`
+  padding: 0 8.6rem 8.6rem 8.6rem;
 `;
 
 export default function ResumeBody({ experiences }) {
   return (
     <ResumeContainer>
-      <ResumeSection title="Summary">
-        Currently primarily using ReactJS on the front-end and working with
-        NodeJS, C#, and Go in containerized environments deployed to managed
-        Kubernetes clusters on the back-end, using Terraform to manage cloud
-        infrastructure on AWS and Digital Ocean.
+      <ResumeSection shaded underlineHeading title="Summary">
+        <ParagraphContainer>
+          Currently primarily using ReactJS on the front-end and working with
+          NodeJS, C#, and Go in containerized environments deployed to managed
+          Kubernetes clusters on the back-end, using Terraform to manage cloud
+          infrastructure on AWS and Digital Ocean.
+        </ParagraphContainer>
       </ResumeSection>
-      <ResumeSection title="Employment History">
+      <ResumeSection bulletHeading title="Employment History">
         {experiences.map(experience => {
           return (
             <ExperienceSection
@@ -32,7 +35,12 @@ export default function ResumeBody({ experiences }) {
           );
         })}
       </ResumeSection>
-      <ResumeSection title="Select Personal Projects">
+      <ResumeSection
+        shaded
+        bulletHeading
+        rightAlignHeader
+        title="Select Personal Projects"
+      >
         <ExperienceSection
           company={"Goalfeed"}
           title={"Sole Developer"}
@@ -54,7 +62,11 @@ export default function ResumeBody({ experiences }) {
           Assistant and the Honeywell Totalconnect python client.
         </ExperienceSection>
       </ResumeSection>
-      <ResumeSection title="Volunteer Experience">
+      <ResumeSection
+        bulletHeading
+        rightAlignHeader
+        title="Volunteer Experience"
+      >
         <ExperienceSection
           company={"Thistle Curling Club Board of Executives"}
           term={"2015 - Current"}
@@ -76,14 +88,16 @@ export default function ResumeBody({ experiences }) {
           various technical roles.
         </ExperienceSection>
       </ResumeSection>
-      <ResumeSection title="Fun Facts">
-        <ReactMarkdown>
-          {`
+      <ResumeSection shaded underlineHeading title="Fun Facts">
+        <ParagraphContainer>
+          <ReactMarkdown>
+            {`
 - I am currently running a three-node bare-metal k8s cluster as a homelab
 - I maintain a blog about Home Automation on [149walnut.com](http://149walnut.com)
 - I am a huge fan of The Real Housewives reality TV franchise
 `}
-        </ReactMarkdown>
+          </ReactMarkdown>
+        </ParagraphContainer>
       </ResumeSection>
     </ResumeContainer>
   );

@@ -1,19 +1,60 @@
 import styled from "@emotion/styled";
 
 const Section = styled.div`
-margin-bottom: 3rem;
+  background-color: ${props => (props.shaded ? "#EBEBEB" : "#fff")};
+`;
+const HeaderContainer = styled.div`
+  padding: 0 8rem;
+  ${props => props.rightAlign && "text-align: right;"}
 `;
 const SectionHeader = styled.h1`
-border-top: solid black 1px;
-  border-bottom: solid black 1px;
-  padding: 0.5rem;
-`;
-const SectionBody = styled.div``;
+  font-size: 3.5rem;
+  display: inline-block;
+  ${props =>
+    props.bulletHeading
+      ? `
+::before{
+content: '- ';
+color: #FF4A57;
 
-export default function ResumeSection({ children, title, ...props }) {
+}
+`
+      : " "}
+  ${props =>
+    props.underlineHeading
+      ? `
+::after{
+content: ' ';
+width: 50%;
+border-bottom: solid #FF4A57 4px;
+display:block;
+}
+`
+      : ""}
+`;
+const SectionBody = styled.div`
+  font-size: 1.25rem;
+`;
+
+export default function ResumeSection({
+  children,
+  title,
+  shaded = false,
+  bulletHeading = false,
+  underlineHeading = false,
+  rightAlignHeader = false,
+  ...props
+}) {
   return (
-    <Section>
-      <SectionHeader>{title}</SectionHeader>
+    <Section shaded={shaded}>
+      <HeaderContainer rightAlign={rightAlignHeader}>
+        <SectionHeader
+          bulletHeading={bulletHeading}
+          underlineHeading={underlineHeading}
+        >
+          {title}
+        </SectionHeader>
+      </HeaderContainer>
       <SectionBody>{children}</SectionBody>
     </Section>
   );

@@ -1,26 +1,95 @@
-import "@fontsource/noto-serif/index.css"
-import "@fontsource/cabin/variable.css"
-import { Global, css } from '@emotion/react'
+import "@fontsource/noto-serif/index.css";
+import "@fontsource/cabin/variable.css";
+import "@fontsource/poppins";
+import "@fontsource/poppins/700.css";
+
+import { Global, css } from "@emotion/react";
 
 export default function MyApp({ Component, pageProps }) {
-  return (<>
-      <Global styles={css`
-body {
+  return (
+    <>
+      <Global
+        styles={css`
+          @font-face {
+            font-family: SegoeUI;
+            src: local("Segoe UI Light"),
+              url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/light/latest.woff2)
+                format("woff2"),
+              url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/light/latest.woff)
+                format("woff"),
+              url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/light/latest.ttf)
+                format("truetype");
+            font-weight: 100;
+          }
 
-        background-color: #f3f3f3;
-        font-family: "Noto Serif";
-        }
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
-          font-family: "CabinVariable";
-          font-weight: 700;
-        }
-`}/>
+          @font-face {
+            font-family: SegoeUI;
+            src: local("Segoe UI Semilight"),
+              url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/semilight/latest.woff2)
+                format("woff2"),
+              url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/semilight/latest.woff)
+                format("woff"),
+              url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/semilight/latest.ttf)
+                format("truetype");
+            font-weight: 200;
+          }
+
+          @font-face {
+            font-family: SegoeUI;
+            src: local("Segoe UI"),
+              url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/normal/latest.woff2)
+                format("woff2"),
+              url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/normal/latest.woff)
+                format("woff"),
+              url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/normal/latest.ttf)
+                format("truetype");
+            font-weight: 400;
+          }
+
+          @font-face {
+            font-family: SegoeUI;
+            src: local("Segoe UI Bold"),
+              url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/bold/latest.woff2)
+                format("woff2"),
+              url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/bold/latest.woff)
+                format("woff"),
+              url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/bold/latest.ttf)
+                format("truetype");
+            font-weight: 600;
+          }
+
+          @font-face {
+            font-family: SegoeUI;
+            src: local("Segoe UI Semibold"),
+              url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/semibold/latest.woff2)
+                format("woff2"),
+              url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/semibold/latest.woff)
+                format("woff"),
+              url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/semibold/latest.ttf)
+                format("truetype");
+            font-weight: 700;
+          }
+          html {
+            font-size: 12px;
+          }
+          ,
+          body {
+            margin: 0px;
+            font-family: "SegoeUI";
+            color: #1f2235;
+          }
+          h1,
+          h2,
+          h3,
+          h4,
+          h5,
+          h6 {
+            font-family: "Poppins";
+            font-weight: 700;
+          }
+        `}
+      />
       <Component {...pageProps} />
-      </>
+    </>
   );
 }

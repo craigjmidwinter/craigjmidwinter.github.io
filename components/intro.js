@@ -3,59 +3,106 @@ import styled from "@emotion/styled";
 
 const IntroHeader = styled.div`
   display: flex;
-  padding: 1rem;
+  justify-content: center;
+  padding: 10.75rem 0;
+  background: #fff;
+`;
+const IntroRow = styled.div`
+  display: flex;
+  width: 75%;
+  justify-content: space-around;
+`;
+const IntroTextContainer = styled.div`
+  text-align: left;
+  vertical-align: middle;
+  max-width: 65%;
+  height: 100%;
+ display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+`;
+const IntroName = styled.h1`
+  font-size: 3.5rem;
+  margin-bottom: 1.75rem;
+  font-weight: 900;
+`;
+const IntroEmail = styled.h2`
+  font-size: 1.25rem;
+  margin-bottom: 1.75rem;
+`;
+const IntroBody = styled.div`
+  font-size: 1.25rem;
+  max-width: 35rem;
+  color: #b1acac;
 `;
 const AvatarContainer = styled.div`
-  max-width: 25%;
   margin: 1rem;
+  flex: 1;
+  max-width: 28.25rem;
+`;
+const Avatar = styled.div`
+  :before {
+    content: "";
+    display: block;
+    padding-top: 100%;
+  }
+  position: relative;
 `;
 
 const IntroAvatar = styled(Img)`
-  max-height: 20rem;
-  max-width: 100%;
-  border-radius: 50%;
-  border-style: solid;
-  border-color: #000;
-  border-width: 0.5rem;
+  width: 100%;
+  height: 100%;
   background-color: #1f1a4d;
+  z-index: 2;
+  position: absolute;
+  top: 0;
+  border-radius: 1.5rem;
 `;
-const IntroTextContainer = styled.div`
-  text-align: right;
-  vertical-align: middle;
+const Box1 = styled.div`
+  background-color: #352d95;
+  opacity: 0.5;
+  transform: rotate(345deg);
+  border-radius: 1.5rem;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  position: absolute;
+  top: 0;
 `;
-const IntroBody = styled.div`
-  font-family: CabinVariable;
-  font-size: 1.25rem;
-`;
-const Contact = styled.div`
-  font-family: CabinVariable;
-    margin: 0.5rem;
-  margin-bottom: 1rem;
-`
-const HeaderText = styled.h1`
-  font-size: 4rem;
-  margin-top: 1rem;
-  margin-bottom: 2rem;
+const Box2 = styled.div`
+  background-color: #7067d4;
+  opacity: 0.3;
+  transform: rotate(-45deg);
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  border-radius: 1.5rem;
 `;
 
 export default function Intro() {
   return (
     <IntroHeader>
-      <AvatarContainer>
-        <IntroAvatar src={require("../images/avatar.svg")} />
-      </AvatarContainer>
-      <IntroTextContainer>
-        <HeaderText>Craig J. Midwinter</HeaderText>
-          <Contact>
-              craig.j.midwinter@gmail.com<br/>
-              <a target="_blank" href="https://www.linkedin.com/in/craig-midwinter-b26193155/">linkedIn</a>
-          </Contact>
-        <IntroBody>
+      <IntroRow>
+        <IntroTextContainer>
+          <IntroName>Craig J. Midwinter</IntroName>
+          <IntroBody>
             Experienced Developer who specializes in quickly adapting to new
             languages and tools, and developing solutions in challenging problem
             domains.
-        </IntroBody>
-      </IntroTextContainer>
+          </IntroBody>
+          <IntroEmail>craig.j.midwinter@gmail.com</IntroEmail>
+        </IntroTextContainer>
+        <AvatarContainer>
+          <Avatar>
+            <Box1 />
+            <Box2 />
+            <IntroAvatar src={require("../images/avatar.svg")} />
+          </Avatar>
+        </AvatarContainer>
+      </IntroRow>
     </IntroHeader>
   );
 }
