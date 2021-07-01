@@ -10,6 +10,9 @@ export const darkTheme = {
   shaded: colors.DarkPurple,
   lightText: "#707070",
   lightText2: "#757575",
+  lightText3: "#B1ACAC",
+  lightText4: "#D4D4D4",
+  lightText5: "#6B6B6B",
 
   titleFont: Poppins,
   bodyFont: Segoe

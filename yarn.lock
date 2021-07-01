@@ -962,6 +962,29 @@
     "@babel/helper-validator-identifier" "^7.14.0"
     to-fast-properties "^2.0.0"
 
+"@emotion-icons/boxicons-logos@^3.14.0":
+  version "3.14.0"
+  resolved "https://registry.yarnpkg.com/@emotion-icons/boxicons-logos/-/boxicons-logos-3.14.0.tgz#dd90e91b0723ae5464e14a4fc01bea09fa42fe6d"
+  integrity sha512-p7SWz/PWRyv6zWm3JEGi3Y7xAPFZfy21kqStECD5o9xHn/lO8HyQEWBGWpYWnZWCVeb62bQ+GKlWprufEUNU2g==
+  dependencies:
+    "@babel/runtime" "^7.14.0"
+    "@emotion-icons/emotion-icon" "4.1.0"
+
+"@emotion-icons/emotion-icon@4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@emotion-icons/emotion-icon/-/emotion-icon-4.1.0.tgz#587667e92a72dc3b271713eed4b72c6bf3b22df1"
+  integrity sha512-bOUbWj8DPjUK5MtRx2ApMudOnh/tasqJwa+sdRbqsZD0g0hYf0jCsTDNs/57VvGOJH2PfWDKD1jbLjwajAYT9A==
+  dependencies:
+    "@babel/runtime" "^7.14.0"
+
+"@emotion-icons/heroicons-outline@^3.14.0":
+  version "3.14.0"
+  resolved "https://registry.yarnpkg.com/@emotion-icons/heroicons-outline/-/heroicons-outline-3.14.0.tgz#c23a9b1620355304900f994fbefd51d58892dff6"
+  integrity sha512-U+BhfRkwrWenAeciXiDrRIE55ygESAXkItd+DBIlOQjc6XI8uk0WRaKE4AxDVXMeLK0RbQxjNSCrkqkM/HuQuQ==
+  dependencies:
+    "@babel/runtime" "^7.14.0"
+    "@emotion-icons/emotion-icon" "4.1.0"
+
 "@emotion/babel-plugin@^11.3.0":
   version "11.3.0"
   resolved "https://registry.yarnpkg.com/@emotion/babel-plugin/-/babel-plugin-11.3.0.tgz#3a16850ba04d8d9651f07f3fb674b3436a4fb9d7"
