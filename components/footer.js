@@ -2,9 +2,8 @@ import Container from './container'
 
 export default function Footer() {
   return (
-    <footer >
-      <Container>
-      </Container>
+    <footer>
+      <Container></Container>
     </footer>
   )
 }

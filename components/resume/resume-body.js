@@ -1,14 +1,12 @@
-import styled from "@emotion/styled";
-import ResumeSection from "./resume-section";
-import ExperienceSection from "./experience-section";
-import ReactMarkdown from "react-markdown";
+import styled from '@emotion/styled'
+import ResumeSection from './resume-section'
+import ExperienceSection from './experience-section'
+import ReactMarkdown from 'react-markdown'
 
-const ResumeContainer = styled.div`
-  background-color: #fff;
-`;
+const ResumeContainer = styled.div``
 const ParagraphContainer = styled.div`
   padding: 0 8.6rem 8.6rem 8.6rem;
-`;
+`
 
 export default function ResumeBody({ experiences }) {
   return (
@@ -22,9 +20,10 @@ export default function ResumeBody({ experiences }) {
         </ParagraphContainer>
       </ResumeSection>
       <ResumeSection bulletHeading title="Employment History">
-        {experiences.map(experience => {
+        {experiences.map((experience, i) => {
           return (
             <ExperienceSection
+              key={i}
               company={experience.company}
               term={`${experience.start} - ${experience.end}`}
               title={experience.title}
@@ -32,7 +31,7 @@ export default function ResumeBody({ experiences }) {
             >
               {experience.content}
             </ExperienceSection>
-          );
+          )
         })}
       </ResumeSection>
       <ResumeSection
@@ -42,9 +41,9 @@ export default function ResumeBody({ experiences }) {
         title="Select Personal Projects"
       >
         <ExperienceSection
-          company={"Goalfeed"}
-          title={"Sole Developer"}
-          tech={"golang, python, kubernetes, redis, postgres"}
+          company={'Goalfeed'}
+          title={'Sole Developer'}
+          tech={'golang, python, kubernetes, redis, postgres'}
         >
           Goalfeed is a service that I developed and maintain as a hobby. It
           provides realtime updates for NHL and MLB scores to various external
@@ -53,9 +52,9 @@ export default function ResumeBody({ experiences }) {
           their home when their favourite team scores.
         </ExperienceSection>
         <ExperienceSection
-          company={"Open Source"}
-          title={"Contributor/Maintainer"}
-          tech={"JS, golang, python, kubernetes, redis, postgres"}
+          company={'Open Source'}
+          title={'Contributor/Maintainer'}
+          tech={'JS, golang, python, kubernetes, redis, postgres'}
         >
           I contribute or maintain a variety of open-source projects and
           libraries. Including but not limited to integrations for Home
@@ -68,18 +67,18 @@ export default function ResumeBody({ experiences }) {
         title="Volunteer Experience"
       >
         <ExperienceSection
-          company={"Thistle Curling Club Board of Executives"}
-          term={"2015 - Current"}
-          title={"Executive Board Member"}
+          company={'Thistle Curling Club Board of Executives'}
+          term={'2015 - Current'}
+          title={'Executive Board Member'}
         >
           I have served on the board of executives for the Thistle Curling Club
           since 2015. In addition to providing input to help shape the future of
           the club, I am also responsible for club communications.
         </ExperienceSection>
         <ExperienceSection
-          company={"The Week Thus Far"}
-          term={"2011 - 2014"}
-          title={"Writer, Producer"}
+          company={'The Week Thus Far'}
+          term={'2011 - 2014'}
+          title={'Writer, Producer'}
         >
           Created and served as a writer and producer for The Week Thus Far, a
           comedic late-night talk show which aired throughout Manitoba over a
@@ -100,5 +99,5 @@ export default function ResumeBody({ experiences }) {
         </ParagraphContainer>
       </ResumeSection>
     </ResumeContainer>
-  );
+  )
 }

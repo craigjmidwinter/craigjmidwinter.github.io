@@ -1,40 +1,40 @@
-import styled from "@emotion/styled";
+import styled from '@emotion/styled'
 
 const Section = styled.div`
-  background-color: ${props => (props.shaded ? "#EBEBEB" : "#fff")};
-`;
+  background-color: ${(props) =>
+    props.shaded ? props.theme.shaded : props.theme.white};
+`
 const HeaderContainer = styled.div`
   padding: 0 8rem;
-  ${props => props.rightAlign && "text-align: right;"}
-`;
+  ${(props) => props.rightAlign && 'text-align: right;'}
+`
 const SectionHeader = styled.h1`
   font-size: 3.5rem;
   display: inline-block;
-  ${props =>
+  ${(props) =>
     props.bulletHeading
       ? `
 ::before{
 content: '- ';
-color: #FF4A57;
-
+color: ${props.theme.accent};
 }
 `
-      : " "}
-  ${props =>
+      : ' '}
+  ${(props) =>
     props.underlineHeading
       ? `
 ::after{
 content: ' ';
 width: 50%;
-border-bottom: solid #FF4A57 4px;
+border-bottom: solid ${props.theme.accent} 4px;
 display:block;
 }
 `
-      : ""}
-`;
+      : ''}
+`
 const SectionBody = styled.div`
   font-size: 1.25rem;
-`;
+`
 
 export default function ResumeSection({
   children,
@@ -43,7 +43,6 @@ export default function ResumeSection({
   bulletHeading = false,
   underlineHeading = false,
   rightAlignHeader = false,
-  ...props
 }) {
   return (
     <Section shaded={shaded}>
@@ -57,5 +56,5 @@ export default function ResumeSection({
       </HeaderContainer>
       <SectionBody>{children}</SectionBody>
     </Section>
-  );
+  )
 }
