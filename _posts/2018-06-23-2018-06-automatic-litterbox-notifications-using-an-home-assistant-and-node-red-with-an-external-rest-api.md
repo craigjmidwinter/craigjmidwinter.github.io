@@ -17,9 +17,9 @@ Now, there are a number of ways you can really simply implement something pretty
 **So, what does this do?**
 
 Basically, all it consists of is a button near the litterbox that I hit after I’ve cleaned the litter box to log the fact that I’ve cleaned it. It fires a thank you tweet off and logs the cleaning in the microservice. In addition to the api endpoint for logging the cleaning, it provides a few endpoints to provide some information to my HASS install, the main one being an litterbox fill percentage that my HASS install uses in a sensor to determine when it should notify me about needing to be cleaned again. Let’s look at the Node-Red flow:
-![](/images/2018/12/Screenshot-2018-06-24-16.54.22.png)
+![](/src/images/2018/12/Screenshot-2018-06-24-16.54.22.png)
 It looks a little more complicated than it actually is. I tried to group it and lay it out as logically as possible. Let’s take a look at the top part of the flow
-![](/images/2018/12/Screenshot-2018-06-24-16.55.55.png)
+![](/src/images/2018/12/Screenshot-2018-06-24-16.55.55.png)
 The top part of this flow just handles the litter clean button press. When it sees the event in Home Assistant, it uses the HTTP Request node to send a request to the API on the litterbox microservice to log the cleaning, thanks me on twitter, and then waits 20 seconds (I do this here because the sensor we use in Home Assistant only updates every few seconds.) before sending the reset message to the Trigger & Block node.
 
 There is also this daily notification reset, that sends the reset message to the Trigger & Block node once a day.
@@ -29,7 +29,7 @@ There is also this daily notification reset, that sends the reset message to the
 The trigger and block node is useful node that is helpful for limiting actions that only should be triggered once. Essentially, the first message through it passes through and then locks the door behind it. In order to open the door for more messages to come through, you need to send a message where msg.reset is set. So in this case, we are firing our notification flow the first time that the litter level crosses the threshold and then the door locks. After that, we are unlocking the door once a day to allow another notification through as a reminder and also unlocking it after it gets cleaned.
 
 **Ok, let’s take a look at the actual notification flow**
-![](/images/2018/12/Screenshot-2018-06-24-16.57.10.png)
+![](/src/images/2018/12/Screenshot-2018-06-24-16.57.10.png)
 The main trigger for this part of the flow is checking the litter fill sensor I’ve got set up in Home Assistant. This is a REST sensor and it gets the percentage from my micro service’s api using an HTTP request. This type of sensor is really handy and has really limitless potential since you can use it to get any sort of data from any external REST API that you’ve got access to and use a template to read the data you want to use. This is what the configuration for my sensor looks like in my Home Assistant config
 
     - platform: rest

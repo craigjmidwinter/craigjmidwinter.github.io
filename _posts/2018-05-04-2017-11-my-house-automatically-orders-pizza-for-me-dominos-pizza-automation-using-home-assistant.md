@@ -103,7 +103,7 @@ In order to accomplish this, I need to actually set up two separate automations 
               - "No thanks:/nopizza"
 
 The first automation triggers at 6:30pm if I am at home and my wife is not_home. She goes to the gym in the evening several times a week at this time and we eat a bit later on those days, so I avoid her being in the not_home state by creating a zone around the gym. When the condition is met, I get a telegram message sent to me that looks like this:
-![](/images/2018/12/ryt1RoiAZ.jpg)
+![](/src/images/2018/12/ryt1RoiAZ.jpg)
 The two options are buttons that basically just send back a command (defined in that inline keyboard bit) that we handle in a callback event. The automation for those callback event looks like this:
 
     - alias: 'No pizza'

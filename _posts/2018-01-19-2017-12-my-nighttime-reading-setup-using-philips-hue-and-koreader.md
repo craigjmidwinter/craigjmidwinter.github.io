@@ -8,7 +8,7 @@ excerpt: Using Philips Hue and KoReader for nighttime reading
 ---
 
 Just wanted to quickly post about my new night-time reading set-up since I’m pretty happywith it, so far.
-![](/images/2018/12/r1U2cwpMz.jpg)
+![](/src/images/2018/12/r1U2cwpMz.jpg)
 I hesitate to call this a scene, because when I think of a scene in the home automation context, I think of several entities getting set to a state by a single action trigger, and by that definition, this doesn’t really qualify-- but I’m hoping to change that eventually.
 
 This really just consists of two devices:

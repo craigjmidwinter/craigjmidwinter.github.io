@@ -9,7 +9,7 @@ tags: Home Assistant, Telegram, YAML, Home Automation
 *Note: If you'd like to see how this is implemented with Node-RED instead, [check this post](https://midwinter.cc/post/telegram-keyboard-and-callbacks-in-home-assistant-with-node-red_r1Fa56ZRz/#top).*
 
 A while ago I made [this post](https://midwinter.cc/post/my-house-orders-pizza-for-me-dominos-pizza-automation-using-home-assistant_SJY1zsc0W/) about creating an automation and Home Assistant integration to allow my house to order pizza for me. In the months since, I’ve noticed it referenced on a few occasions when people have been looking for more information on how to use the inline keyboard functionality in conjunction with the Telegram callbacks in order to create an actionable notification in Home Assistant.
-![](/images/2018/12/BJWTz95Tf.png)
+![](/src/images/2018/12/BJWTz95Tf.png)
 Since that post is a bit long and only partially focuses on that functionality, I thought I’d cut the bullshit and make a quick post that focuses on it. If anyone has questions about this, feel free to leave a comment and I’ll try to answer. I’ll also try and keep this page updated with the answers to any questions that come up over time.
 
 This post makes the assumption that you are familiar with the basic structure for defining automations in Home Assistant. It also makes the assumption that you have added the telegram bot to your configuration by following the instructions for either the [webhook method](https://www.home-assistant.io/components/telegram_bot.webhooks/) or the [polling method](https://www.home-assistant.io/components/telegram_bot.polling/).
