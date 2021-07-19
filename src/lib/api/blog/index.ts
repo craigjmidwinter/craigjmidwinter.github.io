@@ -39,20 +39,16 @@ export function getAllPosts(fields = []) {
   const items = slugs
     .map((slug) => getPostBySlug(slug, fields))
     .sort((item1, item2) => {
-      return Date.parse(item1.date_published) > Date.parse(item2.date_published)
-        ? -1
-        : 1
+      return Date.parse((item1 as any).date_published) > Date.parse((item2 as any).date_published)
+    ? -1
+    : 1;
     })
     .map((post) => {
       return {
-        ...post,
-        date_published: moment(Date.parse(post.date_published)).format(
-          'MMM Do YYYY'
-        ),
-        date_updated: moment(Date.parse(post.date_updated)).format(
-          'MMM Do YYYY'
-        ),
-      }
+    ...post,
+    date_published: moment(Date.parse((post as any).date_published)).format('MMM Do YYYY'),
+    date_updated: moment(Date.parse((post as any).date_updated)).format('MMM Do YYYY'),
+};
     })
   return items
 }

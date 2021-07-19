@@ -7,18 +7,18 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
 `
-const InfoContainer = styled.div`
+const InfoContainer = styled.div `
   padding: 8rem;
   flex-direction: column;
   width: 20%;
   font-size: 1.25rem;
-  color: ${(props) => props.theme.lightText3};
-`
-const PostRow = styled.div`
+  color: ${(props) => (props.theme as any).lightText3};
+`;
+const PostRow = styled.div `
   display: table-row;
   flex-direction: row;
   justify-content: space-between;
-  color: ${(props) => props.theme.lightText6};
+  color: ${(props) => (props.theme as any).lightText6};
   font-size: 1.375rem;
   position: relative;
   ::after {
@@ -29,9 +29,9 @@ const PostRow = styled.div`
     left: 0px;
     width: 100%;
     height: 100%;
-    border-bottom: 1px solid ${(props) => props.theme.lightText6};
+    border-bottom: 1px solid ${(props) => (props.theme as any).lightText6};
   }
-`
+`;
 const PostsContainer = styled.div`
   display: table;
   flex-direction: column;

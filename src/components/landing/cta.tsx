@@ -1,24 +1,24 @@
 import styled from '@emotion/styled'
 import { HeadingText, SectionHeading } from '../section-header'
 
-const Container = styled.div`
+const Container = styled.div `
   display: flex;
   justify-content: space-between;
-  background-color: ${(props) => props.theme.shaded};
-`
-const InfoContainer2 = styled.div`
+  background-color: ${(props) => (props.theme as any).shaded};
+`;
+const InfoContainer2 = styled.div `
   width: 33%;
   padding: 8rem;
   font-size: 1.25rem;
-  color: ${(props) => props.theme.lightText3};
-`
-const InfoContainer = styled.div`
+  color: ${(props) => (props.theme as any).lightText3};
+`;
+const InfoContainer = styled.div `
   width: 33%;
   padding: 8rem;
   flex-direction: column;
   font-size: 1.25rem;
-  color: ${(props) => props.theme.lightText3};
-`
+  color: ${(props) => (props.theme as any).lightText3};
+`;
 
 export default function LandingHero() {
   return (

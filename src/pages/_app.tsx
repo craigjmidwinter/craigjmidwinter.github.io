@@ -10,9 +10,7 @@ import { darkTheme } from '../themes/dark'
 import { Global, css } from '@emotion/react'
 const GlobalStyles = () => {
   const theme = useTheme()
-  return (
-    <Global
-      styles={css`
+  return (<Global styles={css `
         @font-face {
           font-family: SegoeUI;
           src: local('Segoe UI Light'),
@@ -77,10 +75,10 @@ const GlobalStyles = () => {
         }
         ,
         body {
-          background: ${theme.background};
+          background: ${(theme as any).background};
           margin: 0px;
           font-family: 'SegoeUI';
-          color: ${theme.text};
+          color: ${(theme as any).text};
           position: absolute;
         }
         h1,
@@ -92,9 +90,7 @@ const GlobalStyles = () => {
           font-family: 'Poppins';
           font-weight: 700;
         }
-      `}
-    />
-  )
+      `}/>);
 }
 
 export default function MyApp({ Component, pageProps }) {
