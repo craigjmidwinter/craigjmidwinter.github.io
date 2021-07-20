@@ -2,19 +2,19 @@ import styled from '@emotion/styled'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
-const Container = styled.div `
+const Container = styled.div`
   display: flex;
-  background-color: ${(props) => (props.theme as any).navBarBackground};
+  background-color: ${(props) => props.theme.navBarBackground};
   height: 8.5rem;
   justify-content: space-between;
   align-items: center;
-`;
+`
 const Links = styled.div`
   display: flex;
   height: 100%;
 `
-const LinkItem = styled.div `
-  font-family: ${(props) => (props.theme as any).titleFont};
+const LinkItem = styled.div`
+  font-family: ${(props) => props.theme.titleFont};
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -23,16 +23,18 @@ const LinkItem = styled.div `
   height: 100%;
   align-items: center;
   font-weight: ${(props) => ((props as any).isSelected ? '700' : '400')};
-  color: ${(props) => (props as any).isSelected ? (props.theme as any).accent : (props.theme as any).lightText2};
-  ${(props) => (props as any).isSelected &&
+  color: ${(props) =>
+    (props as any).isSelected ? props.theme.accent : props.theme.lightText2};
+  ${(props) =>
+    (props as any).isSelected &&
     `::after {
   content: " ";
-  border-top: solid ${(props.theme as any).accent} 0.3rem;
+  border-top: solid ${props.theme.accent} 0.3rem;
   width:5%;
   display:block;
   top:-0.3rem;
   }`}
-`;
+`
 const navItems = [
   {
     text: 'Home',
@@ -47,12 +49,12 @@ const navItems = [
   //link: "/blog"
   //}
 ]
-const LogoContainer = styled.div `
-  color: ${(props) => (props.theme as any).text};
+const LogoContainer = styled.div`
+  color: ${(props) => props.theme.text};
   font-size: 3rem;
-  font-family: ${(props) => (props.theme as any).titleFont};
+  font-family: ${(props) => props.theme.titleFont};
   padding-left: 2rem;
-`;
+`
 export default function NavBar() {
   const router = useRouter()
   return (

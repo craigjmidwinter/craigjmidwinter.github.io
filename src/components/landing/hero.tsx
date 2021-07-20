@@ -21,14 +21,14 @@ const InfoContainer = styled.div`
   padding: 8rem;
   flex-direction: column;
 `
-const BadgeContainer = styled.div `
+const BadgeContainer = styled.div`
   width: 2rem;
-  color: ${(props) => (props.theme as any).text};
-  border: solid ${(props) => (props.theme as any).accent} 1px;
+  color: ${(props) => props.theme.text};
+  border: solid ${(props) => props.theme.accent} 1px;
   border-radius: 50%;
   padding: 1rem;
   margin-right: 1rem;
-`;
+`
 const BadgeRow = styled.div`
   display: flex;
 `
@@ -42,10 +42,10 @@ const ButtonContainer = styled.div`
 const HeroTitle = styled.h1`
   font-size: 3.81rem;
 `
-const HeroText = styled.div `
-  color: ${(props) => (props.theme as any).lightText3};
+const HeroText = styled.div`
+  color: ${(props) => props.theme.lightText3};
   font-size: 1.25rem;
-`;
+`
 const TopBlock = styled.div`
   display: flex;
   justify-content: space-around;
@@ -57,14 +57,14 @@ const BottomBlock = styled.div`
 const HeroButtonText = styled.div`
   display: inline;
 `
-const HeroButton = styled.div `
-  color: ${(props) => (props.theme as any).text};
+const HeroButton = styled.div`
+  color: ${(props) => props.theme.text};
   padding: 1.625rem 3rem 1.625rem 4.5rem;
-  border: solid ${(props) => (props.theme as any).accent} 1px;
+  border: solid ${(props) => props.theme.accent} 1px;
   border-radius: 4rem;
   font-size: 1.25rem;
   display: inline-block;
-`;
+`
 const Arrow = styled(ArrowNarrowRight)`
   padding-left: 3rem;
   height: 2rem;

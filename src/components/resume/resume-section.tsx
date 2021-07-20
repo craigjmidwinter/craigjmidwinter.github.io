@@ -1,34 +1,37 @@
 import styled from '@emotion/styled'
 
-const Section = styled.div `
-  background-color: ${(props) => (props as any).shaded ? (props.theme as any).shaded : (props.theme as any).white};
-`;
-const HeaderContainer = styled.div `
+const Section = styled.div`
+  background-color: ${(props) =>
+    (props as any).shaded ? props.theme.shaded : props.theme.white};
+`
+const HeaderContainer = styled.div`
   padding: 0 8rem;
   ${(props) => (props as any).rightAlign && 'text-align: right;'}
-`;
-const SectionHeader = styled.h1 `
+`
+const SectionHeader = styled.h1`
   font-size: 3.5rem;
   display: inline-block;
-  ${(props) => (props as any).bulletHeading
-    ? `
+  ${(props) =>
+    (props as any).bulletHeading
+      ? `
 ::before{
 content: '- ';
-color: ${(props.theme as any).accent};
+color: ${props.theme.accent};
 }
 `
-    : ' '}
-  ${(props) => (props as any).underlineHeading
-    ? `
+      : ' '}
+  ${(props) =>
+    (props as any).underlineHeading
+      ? `
 ::after{
 content: ' ';
 width: 50%;
-border-bottom: solid ${(props.theme as any).accent} 4px;
+border-bottom: solid ${props.theme.accent} 4px;
 display:block;
 }
 `
-    : ''}
-`;
+      : ''}
+`
 const SectionBody = styled.div`
   font-size: 1.25rem;
 `

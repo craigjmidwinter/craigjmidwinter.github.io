@@ -1,7 +1,9 @@
 import colors from './colors'
+import { Theme } from '@emotion/styled'
 const Poppins = 'Poppins'
 const Segoe = 'SegoeUI'
-export const darkTheme = {
+
+export const darkTheme: Theme = {
   accent: '#FF4A57',
   navBarBackground: colors.DarkPurple,
   text: colors.white,

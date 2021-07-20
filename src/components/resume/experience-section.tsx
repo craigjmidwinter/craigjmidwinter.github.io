@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
 
 import ReactMarkdown from 'react-markdown'
-const ExperienceContainer = styled.div `
+const ExperienceContainer = styled.div`
   padding: 8.6rem;
-  border-bottom: solid 2px ${(props) => (props.theme as any).shaded};
-`;
+  border-bottom: solid 2px ${(props) => props.theme.shaded};
+`
 const ExperienceSubheading = styled.div`
   display: flex;
   width: 100%;
@@ -30,12 +30,12 @@ const ExperienceTerm = styled.div`
   font-weight: 400;
   font-size: 1.375rem;
 `
-const ExperienceTech = styled.div `
+const ExperienceTech = styled.div`
   font-family: 'SegoeUI';
-  color: ${(props) => (props.theme as any).lightText};
+  color: ${(props) => props.theme.lightText};
   font-weight: 400;
   font-size: 1.375rem;
-`;
+`
 const ExperienceBody = styled.div``
 
 export default function ExperienceSection({
