@@ -39,7 +39,7 @@ export function getAllExperiences(fields = []) {
     .map((slug) => getExperienceBySlug(slug, fields))
     .sort((item1, item2) => {
       console.log(item1)
-      return item1.sortDate > item2.sortDate ? -1 : 1
+      return (item1 as any).sortDate > (item2 as any).sortDate ? -1 : 1
     })
   return items
 }

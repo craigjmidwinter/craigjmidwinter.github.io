@@ -27,7 +27,7 @@ Now that I’ve got my fancy new notifications, let’s put them to use
 I don’t really care about if these go off when I’m not home, but I don’t want them to go off while the house is in ‘Night Mode’ and wake us up. Since I’ve got more than a few notifications that need to be handled in the same way I decided to create a reusable sub-flow that I could just pass messages into from other flows.
 
 The flow for this is pretty simple, take a look–
-![](/images/2018/12/Screenshot-2018-06-24-15.10.54.png)
+![](/src/images/2018/12/Screenshot-2018-06-24-15.10.54.png)
 The first node there is the entry point– every flow that is going to pass this flow a message is going to have a corresponding node that is the other side of the virtual wire. This is where the messages come in.
 
 The way that I’ve configure this to work is that incoming messages should all have a property on the message named file that is set to the url of the file we want to play, so we’ll always send a message where msg.file = “https://server/our-notification.mp3.

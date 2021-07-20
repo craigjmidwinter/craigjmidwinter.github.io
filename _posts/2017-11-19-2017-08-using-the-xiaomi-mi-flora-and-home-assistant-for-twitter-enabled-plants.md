@@ -7,7 +7,7 @@ tags: Home Automation, Home Assistant, Twitter, Xiaomi, YAML
 ---
 
 I have a confession. I am a murderer. So many unsuspecting house plants have fallen victim to my black thumb. Luckily, I have changed my ways, thanks in no small part to this little miracle worker.
-![](/images/2018/12/ByUqHgdwW.png)
+![](/src/images/2018/12/ByUqHgdwW.png)
 The [Xiaomi Mi Flora smart plant monitor](http://amzn.to/2vhQP4K) is a wicked little plant monitor for an awesome price. The device tracks light accumulation, soil moisture, soil fertility and room temperature of your plants and reports them over bluetooth.
 
 The stock app does a decent enough job of providing you with information about the plants that you want to monitor, but unfortunately it requires you to actively open the app and check your plants to check its needs-- not a big deal if you are a motivated gardener who just needs some help determining your plants needs, but if you are a lazy ass like me, you’re probably about as likely to remember to check the app for information as you were to remember to water them in the first place.

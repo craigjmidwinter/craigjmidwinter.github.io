@@ -77,10 +77,10 @@ const GlobalStyles = () => {
         }
         ,
         body {
-          background: ${theme.background};
+          background: ${(theme as any).background};
           margin: 0px;
           font-family: 'SegoeUI';
-          color: ${theme.text};
+          color: ${(theme as any).text};
           position: absolute;
         }
         h1,

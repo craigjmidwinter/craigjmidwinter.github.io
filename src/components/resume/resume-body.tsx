@@ -40,6 +40,7 @@ export default function ResumeBody({ experiences }) {
         rightAlignHeader
         title="Select Personal Projects"
       >
+        {/* @ts-expect-error ts-migrate(2741) FIXME: Property 'term' is missing in type '{ children: st... Remove this comment to see the full error message */}
         <ExperienceSection
           company={'Goalfeed'}
           title={'Sole Developer'}
@@ -51,6 +52,7 @@ export default function ResumeBody({ experiences }) {
           integration that I also maintain in order to trigger light shows in
           their home when their favourite team scores.
         </ExperienceSection>
+        {/* @ts-expect-error ts-migrate(2741) FIXME: Property 'term' is missing in type '{ children: st... Remove this comment to see the full error message */}
         <ExperienceSection
           company={'Open Source'}
           title={'Contributor/Maintainer'}
@@ -66,6 +68,7 @@ export default function ResumeBody({ experiences }) {
         rightAlignHeader
         title="Volunteer Experience"
       >
+        {/* @ts-expect-error ts-migrate(2741) FIXME: Property 'tech' is missing in type '{ children: st... Remove this comment to see the full error message */}
         <ExperienceSection
           company={'Thistle Curling Club Board of Executives'}
           term={'2015 - Current'}
@@ -75,6 +78,7 @@ export default function ResumeBody({ experiences }) {
           since 2015. In addition to providing input to help shape the future of
           the club, I am also responsible for club communications.
         </ExperienceSection>
+        {/* @ts-expect-error ts-migrate(2741) FIXME: Property 'tech' is missing in type '{ children: st... Remove this comment to see the full error message */}
         <ExperienceSection
           company={'The Week Thus Far'}
           term={'2011 - 2014'}

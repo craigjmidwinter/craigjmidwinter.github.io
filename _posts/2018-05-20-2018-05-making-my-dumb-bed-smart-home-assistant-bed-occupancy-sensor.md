@@ -13,7 +13,7 @@ Now, this sensor is similar to the one in [this build on the 24-7-home-security 
 I’ve got a king sized bed and I wanted to get a reading on both using two FSRs. The one drawback to the ESP8266MOD is that it only has a single analog input pin– this means, if you want to read the two separately, you’ll need to multiplex them, or build two sensors. I just ended up building two sensors.
 
 Let’s take a look at the guts of this thing:
-![](/images/2018/12/IMG_20180518_174346.jpg)
+![](/src/images/2018/12/IMG_20180518_174346.jpg)
 I thought I had taken more and better photos of this before I sealed it up and put it in place, but I guess I didn’t/ The strip thing you see goes on for 2 feet. That’s the FSR and it just sits underneath the mattress but on top of the box spring. In the final version, I made the wires that connect it to the controller much longer so that the controllers can just sit on the floor under the bed.
 
 There’s not a heck of a lot to see in the Arduino sketch. Most of it I just patched together from pieces of code I found around the internet. All it does is connect to wifi, read the analog pin and then publish the value to my MQTT server.

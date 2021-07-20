@@ -22,11 +22,11 @@ const LinkItem = styled.div`
   font-size: 1.25rem;
   height: 100%;
   align-items: center;
-  font-weight: ${(props) => (props.isSelected ? '700' : '400')};
+  font-weight: ${(props) => ((props as any).isSelected ? '700' : '400')};
   color: ${(props) =>
-    props.isSelected ? props.theme.accent : props.theme.lightText2};
+    (props as any).isSelected ? props.theme.accent : props.theme.lightText2};
   ${(props) =>
-    props.isSelected &&
+    (props as any).isSelected &&
     `::after {
   content: " ";
   border-top: solid ${props.theme.accent} 0.3rem;
@@ -64,6 +64,7 @@ export default function NavBar() {
         {navItems.map((item, i) => {
           return (
             <Link href={item.link} key={i}>
+              {/* @ts-expect-error ts-migrate(2322) FIXME: Type '{ children: Element; isSelected: boolean; }'... Remove this comment to see the full error message */}
               <LinkItem isSelected={router.route === item.link}>
                 <a>{item.text}</a>
               </LinkItem>
