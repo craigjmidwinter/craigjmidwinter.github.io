@@ -7,6 +7,7 @@ export const darkTheme: Theme = {
   accent: '#FF4A57',
   navBarBackground: colors.DarkPurple,
   text: colors.white,
+  white: colors.white,
   background: colors.purple,
 
   shaded: colors.DarkPurple,

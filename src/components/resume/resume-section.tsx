@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 const Section = styled.div`
   background-color: ${(props) =>
-    (props as any).shaded ? props.theme.shaded : props.theme.white};
+    (props as any).shaded ? props.theme.shaded : props.theme.background};
 `
 const HeaderContainer = styled.div`
   padding: 0 8rem;
