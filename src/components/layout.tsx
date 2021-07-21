@@ -8,6 +8,11 @@ import { darkTheme } from '../themes/dark'
 const Container = styled.div`
   display: flex;
   justify-content: center;
+  width:100%;
+`
+const Main = styled.main`
+
+  width:100%;
 `
 
 export default function Layout({ children }) {
@@ -18,7 +23,7 @@ export default function Layout({ children }) {
         <NavBar></NavBar>
 
         <Container>
-          <main>{children}</main>
+          <Main>{children}</Main>
         </Container>
         <Footer />
       </ThemeProvider>
