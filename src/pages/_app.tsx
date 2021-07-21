@@ -82,6 +82,7 @@ const GlobalStyles = () => {
           font-family: 'SegoeUI';
           color: ${(theme as any).text};
           position: absolute;
+          width: 100%;
         }
         h1,
         h2,
