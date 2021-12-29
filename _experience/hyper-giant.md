@@ -1,6 +1,6 @@
 ---
 company: 'Hyper Giant'
-title: 'Full-Stack Developer'
+title: 'Lead Software Developer'
 sortDate: '2019-04-09T10:35:07.322Z'
 start: 'Apr. 2019'
 end: 'Current'
