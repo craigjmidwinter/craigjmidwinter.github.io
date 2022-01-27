@@ -13,6 +13,14 @@ const GlobalStyles = () => {
   return (
     <Global
       styles={css`
+        @media print {
+          body {
+            background: white !important;
+          }
+          div {
+            background: white !important;
+            color: black !important;
+        }
         @font-face {
           font-family: SegoeUI;
           src: local('Segoe UI Light'),

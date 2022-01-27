@@ -6,6 +6,9 @@ import ReactMarkdown from 'react-markdown'
 const ResumeContainer = styled.div``
 const ParagraphContainer = styled.div`
   padding: 0 8.6rem 8.6rem 8.6rem;
+@media print {
+  padding: 0 2rem 2rem 2rem;
+}
 `
 
 export default function ResumeBody({ experiences }) {

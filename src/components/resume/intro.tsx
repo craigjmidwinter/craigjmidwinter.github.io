@@ -5,11 +5,17 @@ const IntroHeader = styled.div`
   display: flex;
   justify-content: center;
   padding: 10.75rem 0;
+  @media print {
+  padding: 0rem 0 !important;
+  }
 `
 const IntroRow = styled.div`
   display: flex;
   width: 75%;
   justify-content: space-around;
+  @media print {
+  width: 100%;
+  }
 `
 const IntroTextContainer = styled.div`
   text-align: left;
@@ -36,6 +42,9 @@ const IntroBody = styled.div`
   color: #b1acac;
 `
 const AvatarContainer = styled.div`
+  @media print {
+    max-width: 14rem;
+  }
   margin: 1rem;
   flex: 1;
   max-width: 28.25rem;

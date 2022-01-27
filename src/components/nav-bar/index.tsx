@@ -8,6 +8,9 @@ const Container = styled.div`
   height: 8.5rem;
   justify-content: space-between;
   align-items: center;
+  @media print {
+    display: none !important;
+  }
 `
 const Links = styled.div`
   display: flex;

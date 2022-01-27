@@ -3,14 +3,34 @@ import styled from '@emotion/styled'
 const Section = styled.div`
   background-color: ${(props) =>
     (props as any).shaded ? props.theme.shaded : props.theme.background};
+@media print {
+
+  -webkit-print-color-adjust: exact;
+  padding: 0 1rem;
+  border-bottom: solid 2px #ddd;
+  background-color: ${(props) =>
+    (props as any).shaded ? '#ddd !important': props.theme.background};
+  div{
+  background-color: ${(props) =>
+    (props as any).shaded ? '#ddd !important': props.theme.background};
+
+  }
+}
 `
 const HeaderContainer = styled.div`
   padding: 0 8rem;
+@media print {
+  padding: 0;
+}
   ${(props) => (props as any).rightAlign && 'text-align: right;'}
 `
 const SectionHeader = styled.h1`
   font-size: 3.5rem;
   display: inline-block;
+@media print {
+  font-size: 2rem;
+}
+
   ${(props) =>
     (props as any).bulletHeading
       ? `
