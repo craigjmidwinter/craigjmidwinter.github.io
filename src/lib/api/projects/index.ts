@@ -2,17 +2,15 @@ import fs from 'fs'
 import { join } from 'path'
 import matter from 'gray-matter'
 
-const experienceDir = join(process.cwd(), '_experience')
+const projectDir = join(process.cwd(), '_project')
 
-export function getExperienceFilenames() {
-  return fs.readdirSync(experienceDir)
+export function getProjectFilenames() {
+  return fs.readdirSync(projectDir)
 }
-export interface Experience {
+export interface Project {
   company: string
   title: string
   sortDate: Date
-  start: string
-  end: string
   tech: string
   content?: string
 }
@@ -29,29 +27,27 @@ function getValueIfExistsAndIsWanted(
   }
   return data[key]
 }
-export function getExperienceBySlug(slug, fields: string[] = []): Experience {
+export function getProjectBySlug(slug, fields: string[] = []): Project {
   const realSlug = slug.replace(/\.md$/, '')
-  const fullPath = join(experienceDir, `${realSlug}.md`)
+  const fullPath = join(projectDir, `${realSlug}.md`)
   const fileContents = fs.readFileSync(fullPath, 'utf8')
   const { data, content } = matter(fileContents)
 
-  const item: Experience = {
+  const item: Project = {
     content: fields.includes('content') && content,
     company: getValueIfExistsAndIsWanted('company', fields, data),
     title: getValueIfExistsAndIsWanted('title', fields, data),
-    start: getValueIfExistsAndIsWanted('start', fields, data),
     sortDate: getValueIfExistsAndIsWanted('sortDate', fields, data),
-    end: getValueIfExistsAndIsWanted('end', fields, data),
     tech: getValueIfExistsAndIsWanted('tech', fields, data),
   }
 
   return item
 }
 
-export function getAllExperiences(fields = []): Experience[] {
-  const slugs = getExperienceFilenames()
+export function getAllProjects(fields = []): Project[] {
+  const slugs = getProjectFilenames()
   const items = slugs
-    .map((slug) => getExperienceBySlug(slug, fields))
+    .map((slug) => getProjectBySlug(slug, fields))
     .sort((item1, item2) => {
       return (item1 as any).sortDate > (item2 as any).sortDate ? -1 : 1
     })

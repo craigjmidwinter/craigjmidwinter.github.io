@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import ReactMarkdown from 'react-markdown'
+import ReactMarkdown, { ReactNode } from 'react-markdown'
 const ExperienceContainer = styled.div`
   padding: 8.6rem;
   border-bottom: solid 2px ${(props) => props.theme.shaded};
@@ -38,13 +38,20 @@ const ExperienceTech = styled.div`
 `
 const ExperienceBody = styled.div``
 
+type ExperienceProps = {
+  children: string
+  company: string
+  title: string
+  term?: string
+  tech?: string
+}
 export default function ExperienceSection({
   children,
   company,
   title,
   term,
   tech,
-}) {
+}: ExperienceProps) {
   return (
     <ExperienceContainer>
       <ExperienceSubheading>

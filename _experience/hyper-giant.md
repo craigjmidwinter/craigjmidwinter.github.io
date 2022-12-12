@@ -6,7 +6,6 @@ start: 'Apr. 2019'
 end: 'Current'
 tech: 'Node.js, React, Typescript, GoLang, C#, Postgres, Redis, GraphQL, Kubernetes, Terraform'
 ---
-- Experienced with modern technologies such as Node.js, React, Typescript, C#, Postgres, Redis, GraphQL, Kubernetes, and Terraform
 - Led back-end development efforts for key internal product initiatives in the Space and Machine Learning/Data Science problem spaces
 - Demonstrated front-end development skills on embedded client teams working with resource-constrained devices and non-traditional development tools (e.g. Smart TVs)
 - Provided support for DevOps team including building and maintaining CI/CD pipelines, implementing infrastructure as code, and monitoring and troubleshooting production environments
