@@ -8,11 +8,10 @@ import { darkTheme } from '../themes/dark'
 const Container = styled.div`
   display: flex;
   justify-content: center;
-  width:100%;
+  width: 100%;
 `
 const Main = styled.main`
-
-  width:100%;
+  width: 100%;
 `
 
 export default function Layout({ children }) {

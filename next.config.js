@@ -4,17 +4,26 @@ const reactSvg = require('next-react-svg')
 const withPlugins = require('next-compose-plugins')
 const path = require('path')
 
-module.exports = withPlugins([
+/**
+ * @type {import('next').NextConfig}
+ */
+const nextConfig = {
+  /* config options here */
+}
+module.exports = withPlugins(
   [
-    optimizedImages,
-    {
-      optimizeImagesInDev: false,
-    },
+    [
+      optimizedImages,
+      {
+        optimizeImagesInDev: false,
+      },
+    ],
+    [
+      reactSvg,
+      {
+        include: path.resolve(__dirname, 'public/assets/svg'),
+      },
+    ],
   ],
-  [
-    reactSvg,
-    {
-      include: path.resolve(__dirname, 'public/assets/svg'),
-    },
-  ],
-])
+  nextConfig
+)
