@@ -93,6 +93,16 @@ const GlobalStyles = () => {
           font-family: 'Poppins';
           font-weight: 700;
         }
+
+        @media print {
+          body {
+            background: white !important;
+          }
+          div {
+            background: white !important;
+            color: black !important;
+          }
+        }
       `}
     />
   )

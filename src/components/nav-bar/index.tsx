@@ -8,6 +8,9 @@ const Container = styled.div`
   height: 8.5rem;
   justify-content: space-between;
   align-items: center;
+  @media print {
+    display: none;
+  }
 `
 const Links = styled.div`
   display: flex;
@@ -66,7 +69,7 @@ export default function NavBar() {
             <Link href={item.link} key={i}>
               {/* @ts-expect-error ts-migrate(2322) FIXME: Type '{ children: Element; isSelected: boolean; }'... Remove this comment to see the full error message */}
               <LinkItem isSelected={router.route === item.link}>
-                <a>{item.text}</a>
+                {item.text}
               </LinkItem>
             </Link>
           )

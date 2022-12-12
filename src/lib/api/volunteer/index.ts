@@ -2,18 +2,16 @@ import fs from 'fs'
 import { join } from 'path'
 import matter from 'gray-matter'
 
-const experienceDir = join(process.cwd(), '_experience')
+const volunteerDir = join(process.cwd(), '_volunteer')
 
-export function getExperienceFilenames() {
-  return fs.readdirSync(experienceDir)
+export function getVolunteerFilenames() {
+  return fs.readdirSync(volunteerDir)
 }
-export interface Experience {
+export interface Volunteer {
   company: string
   title: string
   sortDate: Date
-  start: string
-  end: string
-  tech: string
+  term: string
   content?: string
 }
 function getValueIfExistsAndIsWanted(
@@ -29,29 +27,27 @@ function getValueIfExistsAndIsWanted(
   }
   return data[key]
 }
-export function getExperienceBySlug(slug, fields: string[] = []): Experience {
+export function getVolunteerBySlug(slug, fields: string[] = []): Volunteer {
   const realSlug = slug.replace(/\.md$/, '')
-  const fullPath = join(experienceDir, `${realSlug}.md`)
+  const fullPath = join(volunteerDir, `${realSlug}.md`)
   const fileContents = fs.readFileSync(fullPath, 'utf8')
   const { data, content } = matter(fileContents)
 
-  const item: Experience = {
+  const item: Volunteer = {
     content: fields.includes('content') && content,
     company: getValueIfExistsAndIsWanted('company', fields, data),
     title: getValueIfExistsAndIsWanted('title', fields, data),
-    start: getValueIfExistsAndIsWanted('start', fields, data),
     sortDate: getValueIfExistsAndIsWanted('sortDate', fields, data),
-    end: getValueIfExistsAndIsWanted('end', fields, data),
-    tech: getValueIfExistsAndIsWanted('tech', fields, data),
+    term: getValueIfExistsAndIsWanted('term', fields, data),
   }
 
   return item
 }
 
-export function getAllExperiences(fields = []): Experience[] {
-  const slugs = getExperienceFilenames()
+export function getAllVolunteers(fields = []): Volunteer[] {
+  const slugs = getVolunteerFilenames()
   const items = slugs
-    .map((slug) => getExperienceBySlug(slug, fields))
+    .map((slug) => getVolunteerBySlug(slug, fields))
     .sort((item1, item2) => {
       return (item1 as any).sortDate > (item2 as any).sortDate ? -1 : 1
     })

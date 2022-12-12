@@ -5,26 +5,38 @@ const IntroHeader = styled.div`
   display: flex;
   justify-content: center;
   padding: 10.75rem 0;
+  @media print {
+    padding: 0rem 0;
+  }
 `
 const IntroRow = styled.div`
   display: flex;
   width: 75%;
   justify-content: space-around;
+  @media print {
+    width: 100%;
+  }
 `
 const IntroTextContainer = styled.div`
   text-align: left;
   vertical-align: middle;
   max-width: 65%;
   height: 100%;
- display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  @media print {
+    padding-left: 1rem;
+    max-width: 75%;
+  }
 `
 const IntroName = styled.h1`
   font-size: 3.5rem;
   margin-bottom: 1.75rem;
   font-weight: 900;
+  @media print {
+    font-size: 2.5rem;
+  }
 `
 const IntroEmail = styled.h2`
   font-size: 1.25rem;
@@ -34,11 +46,17 @@ const IntroBody = styled.div`
   font-size: 1.25rem;
   max-width: 35rem;
   color: #b1acac;
+  @media print {
+    max-width: inherit;
+  }
 `
 const AvatarContainer = styled.div`
   margin: 1rem;
   flex: 1;
   max-width: 28.25rem;
+  @media print {
+    max-width: 14rem;
+  }
 `
 const Avatar = styled.div`
   :before {
@@ -79,25 +97,24 @@ const Box2 = styled.div`
   top: 0;
   border-radius: 1.5rem;
 `
-
-export default function Intro() {
+export interface IntroProps {
+  email: string
+  introBody: string
+}
+export default function Intro({ email, introBody }: IntroProps) {
   return (
     <IntroHeader>
       <IntroRow>
         <IntroTextContainer>
           <IntroName>Craig J. Midwinter</IntroName>
-          <IntroBody>
-            Experienced Developer who specializes in quickly adapting to new
-            languages and tools, and developing solutions in challenging problem
-            domains.
-          </IntroBody>
-          <IntroEmail>craig.j.midwinter@gmail.com</IntroEmail>
+          <IntroBody>{introBody}</IntroBody>
+          <IntroEmail>{email}</IntroEmail>
         </IntroTextContainer>
         <AvatarContainer>
           <Avatar>
             <Box1 />
             <Box2 />
-            <IntroAvatar src={require('../../images/avatar.svg')} />
+            <IntroAvatar src={require('../../../images/avatar.svg')} />
           </Avatar>
         </AvatarContainer>
       </IntroRow>

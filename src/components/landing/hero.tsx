@@ -88,11 +88,9 @@ const socialLinks = [
 const IconBadge = ({ icon: Icon, link }) => {
   return (
     <Link href={link}>
-      <a>
-        <BadgeContainer>
-          <Icon />
-        </BadgeContainer>
-      </a>
+      <BadgeContainer>
+        <Icon />
+      </BadgeContainer>
     </Link>
   )
 }
@@ -115,12 +113,10 @@ export default function LandingHero() {
           </HeroText>
           <ButtonContainer>
             <Link href="/resume">
-              <a>
-                <HeroButton>
-                  <HeroButtonText>View Resume</HeroButtonText>
-                  <Arrow />
-                </HeroButton>
-              </a>
+              <HeroButton>
+                <HeroButtonText>View Resume</HeroButtonText>
+                <Arrow />
+              </HeroButton>
             </Link>
           </ButtonContainer>
         </InfoContainer>
