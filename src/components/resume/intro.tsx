@@ -114,7 +114,7 @@ export default function Intro({ email, introBody }: IntroProps) {
           <Avatar>
             <Box1 />
             <Box2 />
-            <IntroAvatar src={require('../../../images/avatar.svg')} />
+            <IntroAvatar src={require('../../images/avatar.svg')} />
           </Avatar>
         </AvatarContainer>
       </IntroRow>

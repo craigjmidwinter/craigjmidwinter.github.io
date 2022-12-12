@@ -2,13 +2,16 @@ import styled from '@emotion/styled'
 import ResumeSection from './resume-section'
 import ExperienceSection from './experience-section'
 import ReactMarkdown from 'react-markdown'
-import { ResumeProps } from '../types'
-import { Project } from '../../../lib/api/projects'
-import { Volunteer } from '../../../lib/api/volunteer'
+import { ResumeProps } from './types'
+import { Project } from '../../lib/api/projects'
+import { Volunteer } from '../../lib/api/volunteer'
 
 const ResumeContainer = styled.div``
 const ParagraphContainer = styled.div`
   padding: 0 8.6rem 8.6rem 8.6rem;
+  @media print {
+    padding: 0.25rem;
+  }
 `
 type ResumeBodyProps = Pick<
   ResumeProps,
