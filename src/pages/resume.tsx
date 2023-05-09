@@ -14,10 +14,10 @@ export default function Index({ experiences, projects, volunteer }) {
         pageTitle={'Craig J. Midwinter - Full Stack Developer'}
         experiences={experiences}
         introBody={
-          'Experienced Developer who specializes in quickly adapting to new languages and tools, and developing solutions in challenging problem domains.'
+          'Passionate developer who specializes in quickly adapting to new languages and tools, and developing solutions in challenging problem domains, with specific experience building tooling for ML models and Data Science as well as geospatial data visualization'
         }
         summary={
-          'Currently primarily using ReactJS on the front-end and working with NodeJS, C#, and Go in containerized environments deployed to managed Kubernetes clusters on the back-end, using Terraform to manage cloud infrastructure on AWS and Digital Ocean.'
+          'Currently primarily working with NodeJS/Typescript with some Go, C# and Python in containerized environments deployed to managed Kubernetes clusters on the back-end, ReactJS on the front-end and using Terraform to manage cloud infrastructure on AWS and Digital Ocean.'
         }
         email={'craig.j.midwinter@gmail.com'}
         projects={projects}
