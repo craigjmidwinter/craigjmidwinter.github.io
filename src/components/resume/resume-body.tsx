@@ -44,9 +44,8 @@ export default function ResumeBody({
           )
         })}
       </ResumeSection>
-   
       <ResumeSection
-                     shaded
+        shaded
         bulletHeading
         rightAlignHeader
         title="Volunteer Experience"
