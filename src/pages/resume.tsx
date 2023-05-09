@@ -23,9 +23,8 @@ export default function Index({ experiences, projects, volunteer }) {
         projects={projects}
         volunteerExperience={volunteer}
         funFacts={`
-- I am currently running a three-node bare-metal k8s cluster in my basement as a homelab
 - I have been a home automation enthusiast for over a decade. Every light in my house is automated
-- I am a huge fan of The Real Housewives reality TV franchise
+- I am a huge fan of reality TV and host/produce a podcast about The Real Housewives and other Bravo reality TV shows called "Bravo Outsider"
 `}
       />
     </>
