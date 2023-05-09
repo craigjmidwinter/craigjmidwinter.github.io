@@ -1,6 +1,6 @@
 ---
 company: 'Hyper Giant'
-title: 'Lead Software Developer'
+title: 'Lead Software Engineer'
 sortDate: '2019-04-09T10:35:07.322Z'
 start: 'Apr. 2019'
 end: 'Current'
@@ -13,3 +13,4 @@ tech: 'Node.js, React, Typescript, GoLang, C#, Postgres, Redis, GraphQL, Kuberne
 - Demonstrated experience designing, implementing, and deploying complex systems with a microservice architecture
 - Brought in as a fixer on teams to identify and clear blockers and implement more efficient workflows
 - Mentored junior developers, sharing knowledge and expertise to help them grow in their careers.
+- Lead the development of a new internal product, including designing the architecture, and leading the engineering team through implementation
