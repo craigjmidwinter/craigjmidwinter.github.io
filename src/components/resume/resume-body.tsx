@@ -44,21 +44,9 @@ export default function ResumeBody({
           )
         })}
       </ResumeSection>
+   
       <ResumeSection
-        shaded
-        bulletHeading
-        rightAlignHeader
-        title="Select Personal Projects"
-      >
-        {projects.map(({ company, title, content, tech }: Project) => {
-          return (
-            <ExperienceSection company={company} title={title} tech={tech}>
-              {content}
-            </ExperienceSection>
-          )
-        })}
-      </ResumeSection>
-      <ResumeSection
+                     shaded
         bulletHeading
         rightAlignHeader
         title="Volunteer Experience"
@@ -73,7 +61,7 @@ export default function ResumeBody({
           }
         )}
       </ResumeSection>
-      <ResumeSection shaded underlineHeading title="Fun Facts">
+      <ResumeSection underlineHeading title="Fun Facts">
         <ParagraphContainer>
           <ReactMarkdown>{funFacts}</ReactMarkdown>
         </ParagraphContainer>
