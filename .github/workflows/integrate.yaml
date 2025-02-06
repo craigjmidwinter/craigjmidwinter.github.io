@@ -26,7 +26,7 @@ jobs:
       - name: Install and Build 🔧
         uses: actions/setup-node@v1
         with:
-          node-version: '14'
+          node-version: '18'
       - run: yarn install
       - run: yarn deploy
       - name: Deploy 🚀
