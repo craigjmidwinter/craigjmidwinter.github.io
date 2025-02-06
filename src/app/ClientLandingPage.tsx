@@ -3,7 +3,6 @@
 
 import dynamic from "next/dynamic";
 import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
-import Construction from "@/components/construction";
 
 // Dynamically import ThreeCanvas with SSR disabled
 const ThreeCanvas = dynamic(() => import("./ThreeCanvas"), { ssr: false });
@@ -50,8 +49,8 @@ const GlobalStyle = createGlobalStyle`
 const Container = styled.div`
   position: relative;
   min-height: 100vh;
-  background: url("/bg.png") no-repeat center center;
-  background-size: cover;
+  background: url("/bg.png") repeat center center;
+  background-size: 35%;
   overflow: hidden;
   background-color: #1dd9c1;
 `;
@@ -139,7 +138,6 @@ export default function ClientLandingPage() {
                 <ThreeCanvas />
 
                 <Content>
-                    {/*<Construction />*/}
 
                     <ContentWrapper>
                         <Title>Craig Midwinter</Title>

@@ -1,9 +1,5 @@
-// under construction banner
 import React from 'react';
 import styled from "styled-components";
-import Image from "next/image";
-
-//fixed banner along the top of the page full width black
 
 const BannerContainer = styled.div`
     background-color: black;
