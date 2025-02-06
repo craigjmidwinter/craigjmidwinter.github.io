@@ -1,8 +1,0 @@
-{
-  "presets": ["@babel/preset-env", "next/babel"],
-  "plugins": [
-    "react-optimized-image/plugin",
-    ["@babel/transform-runtime"]
-
-  ]
-}
