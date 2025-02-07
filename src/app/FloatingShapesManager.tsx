@@ -26,6 +26,7 @@ export default function FloatingShapesManager({ count }: FloatingShapesManagerPr
     // 1) SHAPE DEFS & REFS
     //
     const shapeRefs = useRef<React.RefObject<FloatingShapeHandle>[]>([]);
+
     if (shapeRefs.current.length !== count) {
         shapeRefs.current = Array.from({ length: count }, () =>
             React.createRef<FloatingShapeHandle>()
