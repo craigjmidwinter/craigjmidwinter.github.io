@@ -6,7 +6,7 @@ import React, {
     useMemo,
     useEffect,
     forwardRef,
-    useImperativeHandle,
+    useImperativeHandle, ReactElement,
 } from "react";
 import * as THREE from "three";
 
@@ -31,7 +31,7 @@ function randomBetween(min: number, max: number) {
 }
 
 const FloatingShape = forwardRef<FloatingShapeHandle, FloatingShapeProps>(
-    ({ type, color }, ref) => {
+    ({type, color}, ref) => {
         const groupRef = useRef<THREE.Group>(null);
 
         // 1. Generate random scale once
@@ -84,18 +84,6 @@ const FloatingShape = forwardRef<FloatingShapeHandle, FloatingShapeProps>(
         );
 
         // Lightning (line geometry)
-        const lightningGeometry = useMemo(() => {
-            const geometry = new THREE.BufferGeometry();
-            const vertices = new Float32Array([
-                0, 1, 0,
-                0.2, 0.7, 0,
-                -0.1, 0.4, 0,
-                0.15, 0.1, 0,
-                -0.05, -0.2, 0,
-            ]);
-            geometry.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
-            return geometry;
-        }, []);
 
         // Star (2D shape geometry)
         const starShape = useMemo(() => {
@@ -219,19 +207,19 @@ const FloatingShape = forwardRef<FloatingShapeHandle, FloatingShapeProps>(
         }, [velocity]);
 
         // 8. Conditionally decide which geometry to render
-        let shapeContent: JSX.Element | null = null;
+        let shapeContent: ReactElement | null = null;
 
         if (type === "box") {
             shapeContent = (
                 <>
                     <mesh scale={[1.2, 1.2, 1.2]} geometry={boxGeometry} renderOrder={-1}>
-                        <meshBasicMaterial color="black" side={THREE.BackSide} />
+                        <meshBasicMaterial color="black" side={THREE.BackSide}/>
                     </mesh>
                     <mesh geometry={boxGeometry}>
-                        <meshToonMaterial color={color} />
+                        <meshToonMaterial color={color}/>
                     </mesh>
                     <lineSegments scale={[1.05, 1.05, 1.05]} geometry={boxEdgesGeometry}>
-                        <lineBasicMaterial color="black" linewidth={2} />
+                        <lineBasicMaterial color="black" linewidth={2}/>
                     </lineSegments>
                 </>
             );
@@ -243,35 +231,30 @@ const FloatingShape = forwardRef<FloatingShapeHandle, FloatingShapeProps>(
                         geometry={triangleGeometry}
                         renderOrder={-1}
                     >
-                        <meshBasicMaterial color="black" side={THREE.BackSide} />
+                        <meshBasicMaterial color="black" side={THREE.BackSide}/>
                     </mesh>
                     <mesh geometry={triangleGeometry}>
-                        <meshToonMaterial color={color} />
+                        <meshToonMaterial color={color}/>
                     </mesh>
                     <lineSegments
                         scale={[1.05, 1.05, 1.05]}
                         geometry={triangleEdgesGeometry}
                     >
-                        <lineBasicMaterial color="black" linewidth={2} />
+                        <lineBasicMaterial color="black" linewidth={2}/>
                     </lineSegments>
                 </>
             );
         } else if (type === "sphere") {
             shapeContent = (
                 <mesh geometry={sphereGeometry}>
-                    <meshToonMaterial color={color} />
+                    <meshToonMaterial color={color}/>
                 </mesh>
             );
-        } else if (type === "lightning") {
-            shapeContent = (
-                <line geometry={lightningGeometry}>
-                    <lineBasicMaterial color={color} />
-                </line>
-            );
+
         } else if (type === "star") {
             shapeContent = (
                 <mesh geometry={starGeometry}>
-                    <meshToonMaterial color={color} />
+                    <meshToonMaterial color={color}/>
                 </mesh>
             );
         }

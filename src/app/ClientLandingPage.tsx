@@ -49,8 +49,8 @@ const GlobalStyle = createGlobalStyle`
 const Container = styled.div`
   position: relative;
   min-height: 100vh;
-  background: url("/bg.png") repeat center center;
-  background-size: 35%;
+  background: url("/bg-2.svg") repeat center center;
+  background-size: 300%;
   overflow: hidden;
   background-color: #1dd9c1;
 `;
