@@ -25,11 +25,11 @@ export default function FloatingShapesManager({ count }: FloatingShapesManagerPr
     //
     // 1) SHAPE DEFS & REFS
     //
-    const shapeRefs = useRef<React.RefObject<FloatingShapeHandle>[]>([]);
+    const shapeRefs = useRef<React.RefObject<FloatingShapeHandle | null>[]>([]);
 
     if (shapeRefs.current.length !== count) {
         shapeRefs.current = Array.from({ length: count }, () =>
-            React.createRef<FloatingShapeHandle>()
+            React.createRef<FloatingShapeHandle | null>()
         );
     }
 
