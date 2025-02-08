@@ -206,7 +206,7 @@ export default function ClientLandingPage() {
                     <HeroContent style={{ x: slideOut, opacity: fadeOut }}>
                         <h1>Craig Midwinter</h1>
                         <Subtitle>Software Engineer • Podcast Host</Subtitle>
-                        <Button href="/resume.pdf" target="_blank">Resume</Button>
+                        <Button href="/resume.pdf" target="_blank">Résumé</Button>
                         <SocialLinks>
                             <SocialLink href="https://github.com/craigjmidwinter" target="_blank">GitHub</SocialLink>
                             <SocialLink href="https://www.linkedin.com/in/craig-midwinter-b26193155/" target="_blank">LinkedIn</SocialLink>
