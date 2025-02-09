@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {motion, MotionValue, useScroll, useTransform} from "framer-motion";
+import {motion, useScroll, useTransform} from "framer-motion";
 import React from "react";
 
 const HeroSection = styled(motion.div)`

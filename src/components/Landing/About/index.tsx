@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {motion, MotionValue, useScroll, useTransform} from "framer-motion";
+import {motion, useScroll, useTransform} from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
