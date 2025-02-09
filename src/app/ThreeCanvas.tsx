@@ -5,7 +5,7 @@ import React from "react";
 import { Canvas } from "@react-three/fiber";
 import FloatingShapesManager from "@/app/FloatingShapesManager";
 
-export default function ThreeCanvas() {
+export default function ThreeCanvas(): React.ReactElement {
     return (
         <Canvas
             style={{
@@ -16,11 +16,11 @@ export default function ThreeCanvas() {
                 height: "100%",
                 zIndex: 2,
             }}
-            camera={{ position: [0, 0, 5], fov: 75 }}
+            camera={{ position: [0, 0, 5] }}
         >
             <ambientLight intensity={2} />
             {/* Only render the floating shapes manager */}
-            <FloatingShapesManager count={10} />
+            <FloatingShapesManager count={15} />
         </Canvas>
     );
 }
