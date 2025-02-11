@@ -1,11 +1,8 @@
 // app/FloatingShapesManager.tsx
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
-import FloatingShape, {
-    FloatingShapeHandle,
-    ShapeType,
-} from "./FloatingShape";
+import React, {useEffect, useRef, useState} from "react";
+import FloatingShape, {FloatingShapeHandle, ShapeType,} from "./FloatingShape";
 import * as THREE from "three";
 
 interface FloatingShapesManagerProps {

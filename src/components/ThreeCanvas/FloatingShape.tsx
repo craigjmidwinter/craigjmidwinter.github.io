@@ -1,13 +1,7 @@
 // app/FloatingShape.tsx
 "use client";
 
-import React, {
-    useRef,
-    useMemo,
-    useEffect,
-    forwardRef,
-    useImperativeHandle, ReactElement,
-} from "react";
+import React, {forwardRef, ReactElement, useEffect, useImperativeHandle, useMemo, useRef,} from "react";
 import * as THREE from "three";
 
 export type ShapeType = "box" | "triangle" | "sphere" | "lightning" | "star";

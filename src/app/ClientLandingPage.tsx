@@ -1,12 +1,13 @@
 "use client";
 
 import React from "react";
-import dynamic from "next/dynamic";
 import styled, {createGlobalStyle, ThemeProvider} from "styled-components";
 import {About} from "@/components/Landing/About";
 import {Hero} from "../components/Landing/Hero";
+import {Podcast} from "@/components/Landing/Podcast";
+import ThreeCanvas from "@/components/ThreeCanvas/ThreeCanvas";
+import {PlaylistItem} from "@/service/youtube/types";
 
-const ThreeCanvas = dynamic(() => import("./ThreeCanvas"), { ssr: false });
 
 const theme = {
     accent: "#f76eec",
@@ -55,6 +56,13 @@ const GlobalStyle = createGlobalStyle`
             font-size: 3rem;
         }
     }
+
+    h4 {
+        font-size: 3rem;
+        @media (max-width: 768px) {
+            font-size: 3rem;
+        }
+    }
 `;
 
 const Container = styled.div`
@@ -64,8 +72,12 @@ const Container = styled.div`
     background-color: #000;
 `;
 
+interface ClientLandingProps {
+    episodes: PlaylistItem[];
+}
 
-export default function ClientLandingPage() {
+export default function ClientLanding({episodes}: ClientLandingProps) {
+
     return (
         <ThemeProvider theme={theme}>
             <GlobalStyle/>
@@ -73,7 +85,10 @@ export default function ClientLandingPage() {
                 <ThreeCanvas/>
                 <Hero />
                 <About/>
+                <Podcast episodes={episodes}/>
+
             </Container>
         </ThemeProvider>
     );
 }
+

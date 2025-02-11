@@ -2,8 +2,8 @@
 "use client";
 
 import React from "react";
-import { Canvas } from "@react-three/fiber";
-import FloatingShapesManager from "@/app/FloatingShapesManager";
+import {Canvas} from "@react-three/fiber";
+import FloatingShapesManager from "@/components/ThreeCanvas/FloatingShapesManager";
 
 export default function ThreeCanvas(): React.ReactElement {
     return (

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {motion, MotionValue, useScroll, useTransform} from "framer-motion";
+import {motion, useScroll, useTransform} from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
@@ -11,7 +11,7 @@ import {generateZigZagPolygon} from "@/utils";
  * You can tweak the polygon points for a different style/size of the zig-zag.
  */
 const AboutSection = styled(motion.div)`
-    min-height: 100vh;
+    min-height: 105vh;
     position: relative;
     padding: 0;
     background: url("/SVG/Asset 3.svg") repeat center center;
