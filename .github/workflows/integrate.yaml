@@ -29,6 +29,8 @@ jobs:
           node-version: '18'
       - run: yarn install
       - run: yarn build
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }} # Pass the YouTube API key to the build environment
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.1
         with:
