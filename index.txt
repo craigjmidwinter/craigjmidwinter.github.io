@@ -1,12 +1,86 @@
 1:"$Sreact.fragment"
 2:I[5244,[],""]
 3:I[3866,[],""]
-4:I[2751,["916","static/chunks/916-2c3e598d8a1a06ba.js","974","static/chunks/app/page-df5aba62b1fe1c3c.js"],"default"]
 5:I[6213,[],"OutletBoundary"]
 7:I[6213,[],"MetadataBoundary"]
 9:I[6213,[],"ViewportBoundary"]
 b:I[4835,[],""]
-0:{"P":null,"b":"BM2eLkvQzE53wzSm03Qu5","p":"","c":["",""],"i":false,"f":[[["",{"children":["__PAGE__",{}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[null,["$","html",null,{"lang":"en","children":[["$","head",null,{"children":[["$","link",null,{"rel":"preconnect","href":"https://fonts.googleapis.com"}],["$","link",null,{"rel":"preconnect","href":"https://fonts.gstatic.com","crossOrigin":""}],["$","link",null,{"href":"https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap","rel":"stylesheet"}]]}],["$","body",null,{"children":["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[],[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]]}]]}],{"children":["__PAGE__",["$","$1","c",{"children":[["$","$L4",null,{}],null,["$","$L5",null,{"children":"$L6"}]]}],{},null,false]},null,false],["$","$1","h",{"children":[null,["$","$1","ZAbnu4eV25PbVrnn7qlMr",{"children":[["$","$L7",null,{"children":"$L8"}],["$","$L9",null,{"children":"$La"}],null]}]]}],false]],"m":"$undefined","G":["$b","$undefined"],"s":false,"S":true}
+0:{"P":null,"b":"wYDbSqm1bHybf8ITkcStU","p":"","c":["",""],"i":false,"f":[[["",{"children":["__PAGE__",{}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[null,["$","html",null,{"lang":"en","children":[["$","head",null,{"children":[["$","link",null,{"rel":"preconnect","href":"https://fonts.googleapis.com"}],["$","link",null,{"rel":"preconnect","href":"https://fonts.gstatic.com","crossOrigin":""}],["$","link",null,{"href":"https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap","rel":"stylesheet"}]]}],["$","body",null,{"children":["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[],[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]]}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$L4",null,["$","$L5",null,{"children":"$L6"}]]}],{},null,false]},null,false],["$","$1","h",{"children":[null,["$","$1","skJxQHhnjdVSx9QFVsG9y",{"children":[["$","$L7",null,{"children":"$L8"}],["$","$L9",null,{"children":"$La"}],null]}]]}],false]],"m":"$undefined","G":["$b","$undefined"],"s":false,"S":true}
 a:[["$","meta","0",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
 8:[["$","meta","0",{"charSet":"utf-8"}],["$","title","1",{"children":"Craig Midwinter - Personal Website"}],["$","meta","2",{"name":"description","content":"Welcome to my personal website. Check out my resume, GitHub, LinkedIn, podcast, and blog posts."}],["$","link","3",{"rel":"icon","href":"/favicon.ico","type":"image/x-icon","sizes":"16x16"}]]
 6:null
+c:I[2880,["367","static/chunks/b536a0f1-a86de3246468997f.js","831","static/chunks/bd904a5c-599cbde3c1cedaed.js","413","static/chunks/1329d575-e6c05d6f49195db7.js","544","static/chunks/544-311ce6839fc71ca0.js","974","static/chunks/app/page-5cfe5f68ed775687.js"],"default"]
+d:T566,We want to hear your takes! Give our hotline a call and leave a message with your thoughts on what's going on in the Bravo universe at 1-833-927-0178.
+
+Join us on the Bravo Outsider Podcast as we embark on a thrilling exploration of The Real Housewives of Salt Lake City's explosive season finale. 
+
+🥂 About Bravo Outsider
+The Bravo Outsider Podcast offers an outside perspective on Bravo shows like The Real Housewives, unlike any other Bravo podcast! We focus on the artistic value of these shows while providing strategic analysis of the social game at the core of the Bravo docu-soap. We love thick literary references and diving into themes before diving into the drama!
+
+
+🍸Featured Bravolebs:
+
+Real Housewives of Salt Lake City: Heather Gay, Lisa Barlow, Meredith Marks, Angie Katsanevas, Mary Cosby, Bronwyn Newport, Britani Bateman, Meili Workman
+
+
+📣 Stay Connected:
+Find Bravo Outsider:
+On your podcast platform of choice: https://podcasters.spotify.com/pod/show/bravo-outsider/
+Instagram: ⁠⁠https://www.instagram.com/bravooutsider
+TikTok: ⁠⁠https://www.tiktok.com/@bravooutsider
+https://www.bravooutsider.com
+
+Find Craig Midwinter:
+chess.com: https://www.chess.com/member/craigjmidwinter
+
+Find Dylan Ferguson:
+Substack: https://dylanferguson.substack.com/
+
+📖 Credits
+Music by FASSounds from Pixabay
+
+
+#RHOSLC #bravotv #bravo #realitytv #RealHousewives.e:Tae8,We want to hear your takes! Give our hotline a call and leave a message with your thoughts on what's going on in the Bravo universe at 1-833-927-0178.
+
+In this episode, we unravel the drama from the latest "Real Housewives of Salt Lake City" escapades, where Brittany's secret recording scandal has everyone questioning privacy and consent. We dissect the tactical editing choices that cast suspicion on Brittany and ponder her future in the group. Meanwhile, Mary's comedic brilliance shines through, balancing humor with the profound discussions led by Heather about cultural and religious contexts.
+
+Switching gears, we explore the intricate friendship dynamics in "Southern Charm," where Craig and Austin's emotional disconnect offers a unique look into male friendships on reality TV. Through literary parallels and standout moments, we analyze the complexities of vulnerability and emotional expression among the men.
+
+As we unpack these storylines, we invite you to share your favorite reality TV moments and join the conversation through voicemails. Whether it's the dramatic tension in the Sprinter van or the intimate yet awkward camera angles, this episode is packed with insights into the art of storytelling in reality television. Tune in for a lively discussion on standout reality TV stars and much more!
+
+Chapters:
+00:00 - Intro
+00:51 - Real Housewives of Salt Lake City Recap S05E15
+27:14 - Share your thoughts
+27:56 - Southern Charm Recap S10E05
+54:12 - Outro
+
+
+🥂 About Bravo Outsider
+The Bravo Outsider Podcast offers an outside perspective on Bravo shows like The Real Housewives, unlike any other Bravo podcast! We focus on the artistic value of these shows while providing strategic analysis of the social game at the core of the Bravo docu-soap. We love thick literary references and diving into themes before diving into the drama!
+
+
+🍸Featured Bravolebs:
+Southern Charm: Venita Aspen, Leva Bonaparte, Craig Conover, Taylor Ann Green, Austen Kroll, Madison LeCroy, Rodrigo Reyes, Shep Rose, Patricia Altschul, Whitney Sudler-Smith, Salley Carson, Molly O'Connell, and Ryan Albert
+
+Real Housewives of Salt Lake City: Heather Gay, Lisa Barlow, Meredith Marks, Angie Katsanevas, Mary Cosby, Bronwyn Newport, Britani Bateman, Meili Workman
+
+
+📣 Stay Connected:
+Find Bravo Outsider:
+On your podcast platform of choice: https://podcasters.spotify.com/pod/show/bravo-outsider/
+Instagram: ⁠⁠https://www.instagram.com/bravooutsider
+TikTok: ⁠⁠https://www.tiktok.com/@bravooutsider
+https://www.bravooutsider.com
+
+Find Craig Midwinter:
+chess.com: https://www.chess.com/member/craigjmidwinter
+
+Find Dylan Ferguson:
+Substack: https://dylanferguson.substack.com/
+
+📖 Credits
+Music by FASSounds from Pixabay
+
+
+#RHOSLC #SouthernCharm #bravo #realitytv #RealHousewives.4:["$","$Lc",null,{"episodes":[{"kind":"youtube#playlistItem","etag":"J2QjOGCR7tAKH-3NUxwnQ7QhWHY","id":"UExpRkJiSG5QejVNU3FGV2ZHeF9xc0xZcUxGdjNrdExDVS5FRjdGNDMzN0I2RTI3MDlG","snippet":{"publishedAt":"2025-01-22T02:58:38Z","channelId":"UCzVSFLK3zusxFaszCE71B0g","title":"Explosive Allegations in the RHOSLC Finale | RHOSLC S05E16 | Bravo Outsider Podcast","description":"$d","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/VbbVzEOX1QM/default.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/VbbVzEOX1QM/mqdefault.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/VbbVzEOX1QM/hqdefault.jpg","width":480,"height":360},"standard":{"url":"https://i.ytimg.com/vi/VbbVzEOX1QM/sddefault.jpg","width":640,"height":480},"maxres":{"url":"https://i.ytimg.com/vi/VbbVzEOX1QM/maxresdefault.jpg","width":1280,"height":720}},"channelTitle":"Bravo Outsider","playlistId":"PLiFBbHnPz5MSqFWfGx_qsLYqLFv3ktLCU","position":1,"resourceId":{"kind":"youtube#video","videoId":"VbbVzEOX1QM"},"videoOwnerChannelTitle":"Bravo Outsider","videoOwnerChannelId":"UCzVSFLK3zusxFaszCE71B0g"},"status":{"privacyStatus":"public"}},{"kind":"youtube#playlistItem","etag":"BwgARmOV6XHDJBuY9Aq93H3IKu8","id":"UExpRkJiSG5QejVNU3FGV2ZHeF9xc0xZcUxGdjNrdExDVS41RDUzRjJFQ0Y0MUI3NzU1","snippet":{"publishedAt":"2025-01-13T14:57:33Z","channelId":"UCzVSFLK3zusxFaszCE71B0g","title":"Fear and Loathing in Puerto Vallarta | RHOSLC S05E15 & Southern Charm S10E05","description":"$e","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/aZfbFwgPvSU/default.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/aZfbFwgPvSU/mqdefault.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/aZfbFwgPvSU/hqdefault.jpg","width":480,"height":360},"standard":{"url":"https://i.ytimg.com/vi/aZfbFwgPvSU/sddefault.jpg","width":640,"height":480},"maxres":{"url":"https://i.ytimg.com/vi/aZfbFwgPvSU/maxresdefault.jpg","width":1280,"height":720}},"channelTitle":"Bravo Outsider","playlistId":"PLiFBbHnPz5MSqFWfGx_qsLYqLFv3ktLCU","position":2,"resourceId":{"kind":"youtube#video","videoId":"aZfbFwgPvSU"},"videoOwnerChannelTitle":"Bravo Outsider","videoOwnerChannelId":"UCzVSFLK3zusxFaszCE71B0g"},"status":{"privacyStatus":"public"}}]}]
