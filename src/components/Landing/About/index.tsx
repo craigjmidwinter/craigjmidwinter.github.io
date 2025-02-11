@@ -11,7 +11,7 @@ import {generateZigZagPolygon} from "@/utils";
  * You can tweak the polygon points for a different style/size of the zig-zag.
  */
 const AboutSection = styled(motion.div)`
-    min-height: 100vh;
+    min-height: 105vh;
     position: relative;
     padding: 0;
     background: url("/SVG/Asset 3.svg") repeat center center;

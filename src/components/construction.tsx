@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from "styled-components";
+import Image from "next/image";
 
 const BannerContainer = styled.div`
     background-color: black;
@@ -20,9 +21,9 @@ const BannerContainer = styled.div`
 export default function Construction() {
     return (
         <BannerContainer>
-            <img src="/construct.gif" alt="construction sign" width="50" height="50" />
-            <img src="/construct-text.gif" alt="Under Construction" />
-            <img src="/construct.gif" alt="construction sign" width="50" height="50" />
+            <Image src="/construct.gif" alt="construction sign" width="50" height="50"/>
+            <Image src="/construct-text.gif" alt="Under Construction"/>
+            <Image src="/construct.gif" alt="construction sign" width="50" height="50"/>
         </BannerContainer>
     )
 }
