@@ -4,7 +4,6 @@ slug: 2018-05-making-my-dumb-bed-smart-home-assistant-bed-occupancy-sensor
 date_published: 2018-05-20T23:43:00.000Z
 date_updated: 2018-12-31T14:49:22.000Z
 tags: Home Assistant, MQTT, NodeMCU, Arduino, Home Automation, Programming
-cover_image: "/assets/blog/IMG_20180518_174346.jpg"
 ---
 
 I’ll try not to be as long-winded as I usually am, but I’m pretty proud of the bed sensor I built. Here’s a video of it working in Home Assistant:
@@ -14,14 +13,11 @@ Now, this sensor is similar to the one in [this build on the 24-7-home-security 
 I’ve got a king sized bed and I wanted to get a reading on both using two FSRs. The one drawback to the ESP8266MOD is that it only has a single analog input pin– this means, if you want to read the two separately, you’ll need to multiplex them, or build two sensors. I just ended up building two sensors.
 
 Let’s take a look at the guts of this thing:
-
-![](/assets/blog/IMG_20180518_174346.jpg)
-
+![](/src/images/2018/12/IMG_20180518_174346.jpg)
 I thought I had taken more and better photos of this before I sealed it up and put it in place, but I guess I didn’t/ The strip thing you see goes on for 2 feet. That’s the FSR and it just sits underneath the mattress but on top of the box spring. In the final version, I made the wires that connect it to the controller much longer so that the controllers can just sit on the floor under the bed.
 
 There’s not a heck of a lot to see in the Arduino sketch. Most of it I just patched together from pieces of code I found around the internet. All it does is connect to wifi, read the analog pin and then publish the value to my MQTT server.
 
-```c
     #include 
     #include 
     int fsrAnalogPin = 0; // FSR is connected to analog 0
@@ -98,11 +94,9 @@ There’s not a heck of a lot to see in the Arduino sketch. Most of it I just pa
         Serial.print(".");
       }
     }
-```
 
 Once it was in place and reporting I watched to see the values it was reporting while I wasn’t in bed compared to the values that it was reporting while I was in bed. The difference in the numbers was significant and finding a number to use as the threshold between the occupied and unoccupied states was really easy. Now, I just created these sensors within Home Assistant
 
-```yaml
     - platform: mqtt
       state_topic: 'sensor/bed/left'
       name: 'bed_left_value'
@@ -126,6 +120,5 @@ Once it was in place and reporting I watched to see the values it was reporting 
         bed_both:
           friendly_name: "Bed - Both"
           value_template: "{% if states.sensor.bed_jess.state == 'Occupied' and states.sensor.bed_craig.state == 'Occupied' %}Occupied{% else %}Unoccupied{% endif %}"
-```
 
 Boom! That’s all there is to it! Right now, I’ve just got it set up so that if we are both in bed, it turns off all the lights in the house other than the ones in the bedroom and arms the alarm system, and then if one of us gets out of bed it will turn on the corridor and bathroom lights on a low brightness in case one of us gets up during the night. I’ll try to remember to post any unique automations I come up with that use this sensor. If you’ve got a bed sensor or anything similar, let me know what some of your favourite automations that make use of it are in the comments!

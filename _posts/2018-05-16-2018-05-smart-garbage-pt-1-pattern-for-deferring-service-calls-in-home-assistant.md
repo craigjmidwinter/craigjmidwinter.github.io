@@ -24,7 +24,7 @@ So, this automation started really simply. Since Garbage day is Friday, I just s
       action:
       - service: notify.149twitter
         data:
-          message: "Tomorrow is garbage day @craigjmidwinter"
+          message: "Tomorrow is garbage day @craigjward"
 
 Ok, not bad, but it could be better. What if I’m not home? How about I defer these notifications until I get home when I can actually do something about it so that I don’t forget again?
 
@@ -45,7 +45,7 @@ We can easily make sure this doesn’t fire while we are away by adding a condit
       action:
       - service: notify.149twitter
         data:
-          message: "Tomorrow is garbage day @craigjmidwinter"
+          message: "Tomorrow is garbage day @craigjward"
 
 But what happens if we are away when our reminder is supposed to fire while we’re out? We need an automation to handle that situation. It’s going to look very similar to the one for our home state.
 
@@ -85,7 +85,7 @@ Perfect. Now we can create automations for our state change for when we arrive h
       action:
       - service: notify.149twitter
         data:
-          message: "Tomorrow is garbage day @craigjmidwinter"
+          message: "Tomorrow is garbage day @craigjward"
       - service: input_boolean.turn_off
         entity_id: input_boolean.garbage_day_pending
 
@@ -95,7 +95,7 @@ Ok, great! But having these service calls duplicated sucks, what if we want to a
       sequence:
         - service: notify.149twitter
           data:
-            message: "Tomorrow is garbage day @craigjmidwinter"
+            message: "Tomorrow is garbage day @craigjward"
         - service: notify.facebook
           data:
             message: "Tomorrow is garbage day"
