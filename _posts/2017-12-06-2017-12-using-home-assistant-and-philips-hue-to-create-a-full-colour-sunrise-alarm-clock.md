@@ -4,23 +4,30 @@ slug: 2017-12-using-home-assistant-and-philips-hue-to-create-a-full-colour-sunri
 date_published: 2017-12-06T21:58:00.000Z
 date_updated: 2018-12-21T20:51:44.000Z
 tags: Home Assistant, YAML, Philips Hue, Home Automation
+cover_image: /assets/blog/sunrise.jpg
 ---
 
 This is a new automation in my set-up, but it’s one I’m pretty happy with, not only because I think it’s a pretty cool effect, but for me, it’s actually a real money-saver.
 
 Here’s how I used [Philips Hue](http://amzn.to/2jkHCCj) and [Home Assistant](https://home-assistant.io/) to build a natural coloured sunrise in my bedroom and save over $400/year--
 
+![](https://www.youtube.com/watch?v=mccJNHih7a8)
+
 **How does this save me money?**
 
 I am addicted to snoozing on alarms in the morning.
 
-In the mornings, I can either have a nice relaxing 30 minute walk into the office, or I can rush to the bus stop about 7 minutes away and catch an 10 minute bus. This choice getting left to be made by the sleepiest version of myself is no good-- sleepy Craig sucks. He’s a lazy piece of shit. He’d sell his first-born child for an extra 13 minutes of sleep in to morning (this is why we don’t have children).
+In the mornings, I can either have a nice relaxing 30-minute walk into the office, or I can rush to the bus stop about 7
+minutes away and catch an 10 minute bus. This choice getting left to be made by the sleepiest version of myself is no
+good-- sleepy Craig sucks. He’s a lazy piece of shit. He’d sell his first-born child for an extra 13 minutes of sleep in
+to morning.
 
 Over time, taking the bus adds up. By a conservative estimate of the e-cash fare ($2.35, for now...), and saving 4 trips/week for 48 weeks, that’s $451.20 back in my pocket! Fuck yeah!
 
 This automation has significantly cut down on how many times I hit snooze, and I also find that waking up is less jarring and I’m a lot less groggy as a result.
 
-If you are a Home Assistant user and you have Philips Hue bulbs or some other coloured smart lighting system setup that supports transitions, I definitely recommend setting something like this up!
+If you are a Home Assistant user, and you have Philips Hue bulbs or some other coloured smart lighting system setup that
+supports transitions, I definitely recommend setting something like this up!
 
 **How does it work?**
 
@@ -34,6 +41,7 @@ If you’ve played around with Home Assistant a bit, you might have already got 
 
 Here’s what our sunrise script looks like-- It’s a long one, but I’ve got some comments there to give you an idea of what each block is doing and separated it into blocks for readability:
 
+```yaml
     sunrise:
       sequence:
         # light 1 dark red to medium warm orange
@@ -115,6 +123,7 @@ Here’s what our sunrise script looks like-- It’s a long one, but I’ve got 
             entity_id: light.upstairs_corridor
             brightness: 200
             transition: 5
+```
 
 There are a couple of things worth noting about this script. What makes this effect work well is the use of the light entities ‘transition’ attribute in combination with the ‘delay’ action in the script.
 
@@ -130,6 +139,7 @@ I’ve got this set as two separate automations in my set-up. One for weekdays, 
 
 Here’s the entities I’ve created:
 
+```yaml
     input_boolean:
       weekday_sunrise:
       weekend_sunrise:
@@ -169,6 +179,7 @@ Here’s the entities I’ve created:
           weekend_alarm_time:
             friendly_name: 'Time'
             value_template: '{{ "%02d:%02d" | format(states("input_number.weekend_alarm_hour") | int, states("input_number.weekend_alarm_minutes") | int) }}'
+```
 
 **Okay, whoa, whoa, whoa! What the fuck are those sensors? They look complicated.**
 
@@ -176,37 +187,52 @@ Yeah, you can add those and not touch them, but if you want to know what they ar
 
 As you may or may not know, [Home Assistant has support for a template engine](https://home-assistant.io/docs/configuration/templating/) called [Jinja](http://jinja.pocoo.org/). This allows you to evaluate and manipulate data at execution. These sensors that we are creating here basically takes the data and instructions that we are giving it and evaluate it as the sensors state. This is a really powerful tool to have in your Home Assistant arsenal, and I’d highly recommend looking at the Home Assistant documentation and the Jinja documentation to get a better grasp on this.
 
-I’ll try to breakdown this statement and what happens behind the scenes:
+I’ll try to break down this statement and what happens behind the scenes:
 
+```yaml
 {{ "%02d:%02d" | format(states("input_number.weekday_alarm_hour") | int, states("input_number.weekday_alarm_minutes") | int) }}
+```
 
 We’ll start looking at this from the inside-out
 
+```yaml
 {{ "%02d:%02d" | **format(states("input_number.weekday_alarm_hour")** | int, states("input_number.weekday_alarm_minutes") | int) }}
-
+```
 This item in bold is just getting the state of the entity that it’s being passed. In this case, it’s going to be a string of characters representing a number-- If you remember when we created this entity, from 0-23 representing the hour we want to wake up at. Let’s pretend that we’ve got this set to 6. So this is going to end up returning “6”, and our statement now essentially looks like this:
 
+```yaml
 {{ "%02d:%02d" | format(**“6”** | int, states("input_number.weekday_alarm_minutes") | int) }}
+```
 
 Now, we’ve got the same thing happening to the other number entity.
 
+```yaml
 {{ "%02d:%02d" | format(“6” | int, **states("input_number.weekday_alarm_minutes")** | int) }}
+```
 
 This represented minutes, so it’s going to be between 0-59. Let’s pretend we’ve got this set to 30. As you can probably guess, this is going to return “30”
 
+```yaml
 {{ "%02d:%02d" | format(“6” | int, **“30”**| int) }}
+```
 
 Ok, now what is that line symbol ('|') we see in here? That’s a pipe symbol and in jinja, it’s the filter operator. Essentially, it takes what is on the left and filters it through what is on the right side.
 
+```yaml
 {{ "%02d:%02d" | format(**“6” | int**, **“30”| int**) }}
+```
 
 In the case above, we are taking “6” and putting it though the int filter. This int filter basically says to take the characters on the left side and make them a number that the computer can use. So “6” | int becomes 6 and “30” | 30. Now our statement looks like this:
 
+```yaml
 {{ "%02d:%02d" | format(**6, 30**) }}
+```
 
 Ok, that’s a bit easier to read now. Now we’ve just got some crazy characters, the filter with our numbers representing the time.
 
+```yaml
 {{ **"%02d:%02d" | format(6, 30)** }}
+```
 
 So, the format filter means to apply Python string formatting. Python string formatting is a way for you to say “I want a string of characters that looks like this” and then give it some data and get a string that looks the way you asked it to.
 
@@ -214,7 +240,9 @@ The crazy string of characters represents how we want the resulting string to lo
 
 [PyFormat.info](https://pyformat.info/) has some good information on all the ways you can format a string, but what you need to know about this is that the ‘%’ sign means that we are going to put the a value that is getting passed in here, the ‘d’ is the type of data that is going here (d means int). The stuff in between says how we want to display it-- the 2 means it should be 2 characters long and 0 is the character we should use to pad it if the value is too short. So for our first value 6 inserted at the first %02d becomes 06 and the second value at the second %02d becomes 30. The ‘:’ character unchanged since it is outside of the replacement which leaves us with
 
+```yaml
 {{ "06:30” }}
+```
 
 The double curly brackets in jinja just means to evaluate what is inside and output it. We already know what that is-- 06:30! That’s our sensors state!
 
@@ -222,6 +250,7 @@ The double curly brackets in jinja just means to evaluate what is inside and out
 
 Ok, remember those other entities we set up? The non-crazy ones?
 
+```yaml
     input_boolean:
       weekday_sunrise:
       weekend_sunrise:
@@ -251,11 +280,13 @@ Ok, remember those other entities we set up? The non-crazy ones?
         min: 0
         max: 59
         step: 5
+```
 
 Yeah, those ones.
 
 I just added those their own groups like this and then added them to one of my views:
 
+```yaml
     weekday_sunrise_panel:
         name: Weekday Alarm Clock
         entities:
@@ -271,11 +302,13 @@ I just added those their own groups like this and then added them to one of my v
           - sensor.weekend_alarm_time
           - input_number.weekend_alarm_hour
           - input_number.weekend_alarm_minutes
+```
 
 **The automation**
 
 Ok, so now that we’ve got our script ready to go and our entities set up in the front end, let’s make our automations!
 
+```yaml
     - alias: 'Weekday Sunrise'
       initial_state: 'on'
       trigger:
@@ -324,6 +357,7 @@ Ok, so now that we’ve got our script ready to go and our entities set up in th
       action:
         - service: script.turn_on
           entity_id: script.sunrise
+```
 
 Here’s our two automations. Both are pretty much exactly the same, with a couple of exceptions.
 

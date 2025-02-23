@@ -6,12 +6,21 @@ date_updated: 2018-12-14T03:46:14.000Z
 tags: Home Assistant, Home Automation, NHL, Goallight, Philips Hue, Goalfeed, YAML
 ---
 
+**2025 Update:** *The Goalfeed integration is now a free addon instead of a component with a paid subscription.
+Everything else in this guide should still be relevant though.
+See [Goalfeed Hassio Addon](https://github.com/goalfeed/hassio-goalfeed-repository)
+
 Ok, so here’s one of the automations that I think is pretty fun-- my neighbours might disagree though. This is how I use Home Assistant to automatically trigger a goal celebration whenever the Winnipeg Jets score!
 
-So, this relies on the [Goalfeed component](https://home-assistant.io/components/goalfeed/) that is in the 0.63 release of Home Assistant, which requires an account with [goalfeed.ca](https://goalfeed.ca/) (full disclosure, I wrote and operate this service and there's a $1.99/month subscription to cover server cost and external services etc). Once you’ve got the account and your credentials are in your configuration, Home Assistant will fire events every time an NHL or MLB team scores. These events can be used to trigger whatever automation you want.
+~~So, this relies on the [Goalfeed component](https://home-assistant.io/components/goalfeed/) that is in the 0.63
+release of Home Assistant, which requires an account with [goalfeed.ca](https://goalfeed.ca/) (full disclosure, I wrote
+and operate this service and there's a $1.99/month subscription to cover server cost and external services etc). Once
+you’ve got the account and your credentials are in your configuration,~~ Home Assistant will fire events every time an
+NHL or MLB team scores. These events can be used to trigger whatever automation you want.
 
 Now, the way this component works is that it fires an event called ‘goal’ for every goal or run scored, the event has some event data that is included which basically just identifies which team scored. Ultimately, the automation is going to look like this:
 
+```yaml
     - alias: 'Jets Goal'
       hide_entity: true
       trigger:
@@ -30,16 +39,19 @@ Now, the way this component works is that it fires an event called ‘goal’ fo
           media_content_type: audio/mp3
       - service: script.turn_on
         entity_id: script.goal_start
+```
 
 Since we don’t want to trigger this automation every single time any team scores, we’ve got to specify the event data that we want to match in the automation trigger. You’ll notice there’s a lot going on in the action of this automation.
 
 First, in the action, I have this delay instruction with this template:
 
+```yaml
       - delay: "00:00:{{ states.input_number.goalfeed.state | int }}"
-    
+```    
 
 I’ve added an input_number entity in my config like this:
 
+```yaml
     input_number:
       goalfeed:
         name: Goalfeed Delay
@@ -47,6 +59,7 @@ I’ve added an input_number entity in my config like this:
         min: 0
         max: 180
         step: 1
+```
 
 The reason for this is that the goalfeed events usually come in really quickly. I watch most games online, and depending on the source and my connection, the time between when the event comes in and when I see the goal sometimes requires a bit of tweaking, so having a nice little slider in the front end to configure this is key.
 
@@ -58,6 +71,7 @@ The last item is turns on a script, which basically makes the light show work. I
 
 The input boolean that we turn on in the first automation we use as a trigger for a second automation that ends the goal celebration. That automation looks like this:
 
+```yaml
     - alias: 'Turn off goal'
       trigger:
         platform: state
@@ -73,11 +87,13 @@ The input boolean that we turn on in the first automation we use as a trigger fo
         entity_id: script.goal_stop
       - service: homeassistant.turn_off
         entity_id: input_boolean.goaling
+```
 
 This is pretty straightforward-- when the input_boolean has been ‘on’ for 30 seconds, this automation runs, it runs a stop script and sets the input_boolean back to ‘off’.
 
 Ok, now let’s take a look at the scripts for the light sequence.
 
+```yaml
     goal_start:
       sequence:
       - service: scene.turn_on
@@ -137,6 +153,7 @@ Ok, now let’s take a look at the scripts for the light sequence.
         data:
           brightness: 255
           rgb_color: [255, 172, 68]
+```
 
 So, there are four scripts here in my setup. The first is the start script. This handles turning off all of my non-colour changing lights and then starts the goal loop.
 
