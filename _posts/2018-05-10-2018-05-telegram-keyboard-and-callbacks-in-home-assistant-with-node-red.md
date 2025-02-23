@@ -6,13 +6,7 @@ date_updated: 2018-12-21T20:50:30.000Z
 tags: Home Assistant, Home Automation, Telegram, Node-RED
 ---
 
-
-https://github.com/goalfeed/hassio-goalfeed-repository
-Last week I
-made [this blog post](/blog/2017-11-my-house-automatically-orders-pizza-for-me-dominos-pizza-automation-using-home-assistant)
-describing how to use the Telegram inline keyboard and callback functions within Home Assistant. I posted the article to
-Reddit and a user left a comment wondering how to accomplish this within Node-RED, so I thought I’d make a quick post on
-how to do that.
+Last week I made [this blog post](https://midwinter.cc/post/the-simple-guide-to-creating-actionable-notifications-in-home-assistant-using-telegram-s-custom-inline-keyboard-and-telegram_callbacks_SJiJnOqpG/) describing how to use the Telegram inline keyboard and callback functions within Home Assistant. I posted the article to Reddit and a user left a comment wondering how to accomplish this within Node-RED, so I thought I’d make a quick post on how to do that.
 
 Now, I am not a Node-RED expert by any means-- it’s actually been a couple of years since I’ve tried doing anything with it, but I’ve noticed more and more people are starting to use it to handle their automations and I can definitely see it’s advantages. Personally, I haven’t encountered any real insurmountable limitations using Home Assistants baked-in YAML-based automation engine, and I’m not the most visually-oriented person so I’m not in a huge rush to start changing over all my automations, but it’s definitely a tool that I would consider in the future.
 
@@ -25,12 +19,11 @@ If you are looking for a real Node-RED guru or a crash-course on some of the fun
 I’m going to assume that you already have Node-RED running and configured with your Home Assistant installation. If you haven’t, check out [this post on DIY Futurism](https://diyfuturism.com/index.php/2017/11/26/the-open-source-smart-home-getting-started-with-home-assistant-node-red/) for how to do that. Additionally, like my previous post on this matter, I’m going to assume that you have configured the telegram_bot platform using [the webhook](https://www.home-assistant.io/components/telegram_bot.webhooks/) or [polling method](https://www.home-assistant.io/components/telegram_bot.polling/) on your Home Assistant install.
 
 Ok, now that that’s all out of the way, let’s get our hands dirty!
-![](https://s3.us-west-2.amazonaws.com/mid-midwinter.cc/images/BkVNvaZRz.png)
-
+![](/src/images/2018/12/BkVNvaZRz--1-.png)
 ## Inline Keyboard
 
 If you have ever created an automation for Home Assistant in Node-RED, this is going to look pretty familiar to you. In this case, for demonstration purposes I’m just using the Inject node to trigger the initial message. In any other practical automation, you’ll probably use some other event within Home Assistant and/or have some sort of logic that is going to trigger it, but whatever that might be, the message is going to flow to the call service node in order to trigger our message. Let’s take a look at that node to see what it looks like:
-![](https://s3.us-west-2.amazonaws.com/mid-midwinter.cc/images/r1bqwaZCz.png)
+![](/src/images/2018/12/r1bqwaZCz--1-.png)
 The really important bits of this are the ‘domain’, ‘service’, and ‘data’ field. Domain and service are pretty straight-forward. The domain is going to be ‘telegram_bot’ and the service is ‘send_message’. Now, let’s look at the data-- you can’t see it all in the screenshot and it’s hard to read all on one line anyways, so here’s a better look:
 
     {
@@ -48,7 +41,7 @@ You can see in our json object we are setting the target to our chat id, then se
 ## Telegram Callbacks
 
 Now, let’s take a look at the automation flow to handle the reply!
-![](https://s3.us-west-2.amazonaws.com/mid-midwinter.cc/images/BypVOTZ0z.png)
+![](/src/images/2018/12/BypVOTZ0z.png)
 Look at this! It’s nice and small-- let’s break it down!
 
 The first piece here is the events:all node. It sends a message down the flow for every single event that happens within Home Assistant. Obviously, we only want to react to certain events, so we’re going to pipe this into a function node to filter it out. The code in that function looks like this:
@@ -65,13 +58,13 @@ This function here is the main reason why I said that I am not entirely sure if 
 With that said, I think this is an elegant enough way of handling the data here. If you are planning on having a lot of different telegram_callback automations, I’d recommend saving the first two nodes in this as a sub-flow so that you can reuse it as the entrypoint for all your callback automations.
 
 On to the next node!
-![](https://s3.us-west-2.amazonaws.com/mid-midwinter.cc/images/HyPi-T@0M.png)
+![](/src/images/2018/12/HyPi-T@0M.png)
 The next node here is a simple switch and if we look at how this node is configured, you can see that it is matching on the two commands that we defined in our keyboard in the initial message, with a separate exit-point for each of the two responses.
-![](https://s3.us-west-2.amazonaws.com/mid-midwinter.cc/images/r1zaKabRf.png)
+![](/src/images/2018/12/r1zaKabRf.png)
 From both the exit point of the ‘No’ and the 'Yes' response we just flow into a change node. They both look very similar to this, the only difference is what we set the reply message to. We use this change node to add a field called message to the data object and set it to the message we want to send in the callback.  I’ve also got the yes exit point flowing into another service call just to illustrate where we would branch off and fire our automation.
 
 Both the yes and no change nodes flow into the same service call node. Here’s how that looks--
-![](https://s3.us-west-2.amazonaws.com/mid-midwinter.cc/images/HkGm9aZAM.png)![](https://149walnut.com/images/HkGm9aZAM.png)
+![](/src/images/2018/12/HkGm9aZAM.png)![](https://149walnut.com/images/HkGm9aZAM.png)
 This node calls the answer_callback_query service of telegram_bot. We set the data in this node to be an empty object by using a set of empty curly-boys (that’s definitely a technical term). We don’t need to set the data here for the same reason that we can share this node for both yes and no-- The Home Assistant service call node will look for the data object in the payload we created and use that for the data in the service call if it exists!
 
 That should about cover it! Please feel free to comment with any questions or improvements you might have!

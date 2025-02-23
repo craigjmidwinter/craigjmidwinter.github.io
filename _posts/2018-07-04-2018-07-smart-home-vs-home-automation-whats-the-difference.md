@@ -4,7 +4,6 @@ slug: 2018-07-smart-home-vs-home-automation-whats-the-difference
 date_published: 2018-07-05T00:11:00.000Z
 date_updated: 2018-12-21T20:47:44.000Z
 tags: Smart Home, Home Automation
-cover_image: "/assets/blog/capacitors-chip-circuit-board-57007.jpg"
 ---
 
 Whether you’re researching smart bulbs or exploring the capabilities of your new voice assistant, you’ve probably encountered the terms Smart Home and Home Automation, and you’ve got yourself wondering, is there a difference?

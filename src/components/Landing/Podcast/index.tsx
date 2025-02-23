@@ -5,6 +5,7 @@ import {motion, useScroll, useTransform} from "framer-motion";
 import React from "react";
 import {generateZigZagPolygon} from "@/utils";
 import {PlaylistItem} from "@/service/youtube/types";
+import Image from "next/image";
 
 /*
   PodcastContainer:
@@ -13,10 +14,8 @@ import {PlaylistItem} from "@/service/youtube/types";
 */
 const PodcastContainer = styled(motion.div)`
     position: relative;
-    height: 115vh;
-    min-height: 1080px;
+    height: 100vh;
     z-index: 2;
-
 `;
 
 /*
@@ -209,7 +208,7 @@ export function Podcast({episodes = []}: PodcastProps) {
                 </p>
                 <PodcastLayout>
                     <LogoContainer>
-                        <img src="/bravo-outsider.jpg" alt="Bravo Outsider Podcast Logo"/>
+                        <Image src="/bravo-outsider.jpg" alt="Bravo Outsider Podcast Logo"/>
                     </LogoContainer>
                     <PodcastInfo>
                         <h4>Latest Episodes</h4>
@@ -228,7 +227,7 @@ export function Podcast({episodes = []}: PodcastProps) {
                                         rel="noopener noreferrer"
                                     >
                                         <div className="thumbnail">
-                                            <img src={thumbnailUrl} alt={title}/>
+                                            <Image src={thumbnailUrl} alt={title}/>
                                         </div>
                                         <div className="episode-info">
                                             <div className="title">{title}</div>
