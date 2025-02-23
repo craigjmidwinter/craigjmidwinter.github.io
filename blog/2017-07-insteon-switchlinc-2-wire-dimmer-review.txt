@@ -1,0 +1,32 @@
+1:"$Sreact.fragment"
+2:I[15244,[],""]
+3:I[43866,[],""]
+5:I[86213,[],"OutletBoundary"]
+7:I[86213,[],"MetadataBoundary"]
+9:I[86213,[],"ViewportBoundary"]
+b:I[34835,[],""]
+0:{"P":null,"b":"cJ_3B2T7oi6g9cI1NlS7C","p":"","c":["","blog","2017-07-insteon-switchlinc-2-wire-dimmer-review"],"i":false,"f":[[["",{"children":["blog",{"children":[["slug","2017-07-insteon-switchlinc-2-wire-dimmer-review","d"],{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[null,["$","html",null,{"lang":"en","children":[["$","head",null,{"children":[["$","link",null,{"rel":"preconnect","href":"https://fonts.googleapis.com"}],["$","link",null,{"rel":"preconnect","href":"https://fonts.gstatic.com","crossOrigin":""}],["$","link",null,{"href":"https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap","rel":"stylesheet"}]]}],["$","body",null,{"children":["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[],[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]]}]]}],{"children":["blog",["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children","blog","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["slug","2017-07-insteon-switchlinc-2-wire-dimmer-review","d"],["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children","blog","children","$0:f:0:1:2:children:2:children:0","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$L4",null,["$","$L5",null,{"children":"$L6"}]]}],{},null,false]},null,false]},null,false]},null,false],["$","$1","h",{"children":[null,["$","$1","p8SQGChqYJFNnqrkhFx2C",{"children":[["$","$L7",null,{"children":"$L8"}],["$","$L9",null,{"children":"$La"}],null]}]]}],false]],"m":"$undefined","G":["$b","$undefined"],"s":false,"S":true}
+c:I[86880,["844","static/chunks/ee560e2c-c5c28398d0153d35.js","322","static/chunks/322-53eb1d32bf710b44.js","173","static/chunks/173-52b2b489d82616e2.js","590","static/chunks/590-97f4dc9b90039a27.js","953","static/chunks/app/blog/%5Bslug%5D/page-9af1e0a685a480c8.js"],"default"]
+d:T77e,
+I've got an old house with old electrical, and when it comes to smart lighting, the lack of common/neutral wire is a bit limiting. Luckily, [Insteon makes these wicked little 2-wire dimmers](http://amzn.to/2gSHaNb) that work in any traditional 2-wire box.
+![](https://s3.us-west-2.amazonaws.com/mid-midwinter.cc/images/rJiwlVb8Z.png)
+I've got 5 of these suckers in my house, and I can't say enough about them. If you are looking to teach an old house new tricks, these are definitely a great choice. These dimmers are RF-only, in contrast to the dual band in the normal Insteon dimmer switch offering, but I have to say, the range and reliability doesn't suffer a bit. One of these switches in my installation is pretty far from the hub and other switches and I have never had an issue communicating with it.
+
+Now, it should be noted that if you don't already have an Insteon hub or PLM of some sort you'll need one in order to take advantage of the smart capabilities of this switch, but without one they'll still function like a normal dimmer. I've notice the [Insteon starter kits](http://amzn.to/2eEjB9T) seem to go on sale every so often on Amazon (as of this posting it's $40 USD), and they include the hub and two plug-in dimmer modules (for lamps).
+
+Another thing to note is that these are not compatible replacements for three-way switches. By the looks of the reviews on the Amazon listing, it seems as though people have been burnt by that before.
+
+## Pros
+
+- Fast and Reliable - Have had no issues communicating with these, and they always respond really quickly
+- Compatible - Works great in houses with older wiring
+- Great range - I'm still able to communicate with these dimmers even when they aren't too close to another device
+
+## Cons
+
+- Lack dual band - these won't act as a repeater in your installation
+- Pricey - these dimmers tend to be slightly more expensive than other smart dimmer options
+4:["$","$Lc",null,{"post":{"slug":"2017-07-insteon-switchlinc-2-wire-dimmer-review","title":"Insteon SwitchLinc 2-wire Dimmer Review","date_published":"$D2017-08-09T23:10:00.000Z","date_updated":"$D2018-12-12T01:15:16.000Z","tags":"Insteon, Home Automation, Reviews","cover_image":"","content":"$d"}}]
+a:[["$","meta","0",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+8:[["$","meta","0",{"charSet":"utf-8"}],["$","title","1",{"children":"Craig Midwinter - Personal Website"}],["$","meta","2",{"name":"description","content":"Welcome to my personal website. Check out my resume, GitHub, LinkedIn, podcast, and blog posts."}],["$","link","3",{"rel":"icon","href":"/favicon.ico","type":"image/x-icon","sizes":"16x16"}]]
+6:null
