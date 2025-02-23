@@ -4,10 +4,11 @@ import React from "react";
 import styled, {createGlobalStyle, ThemeProvider} from "styled-components";
 import {About} from "@/components/Landing/About";
 import {Hero} from "../components/Landing/Hero";
-import {Podcast} from "@/components/Landing/Podcast";
 import ThreeCanvas from "@/components/ThreeCanvas/ThreeCanvas";
 import {PlaylistItem} from "@/service/youtube/types";
-
+import {Post} from "@/service/blog";
+import {Blog} from "@/components/Landing/Blog";
+import {Podcast} from "@/components/Landing/Podcast";
 
 const theme = {
     accent: "#f76eec",
@@ -74,10 +75,10 @@ const Container = styled.div`
 
 interface ClientLandingProps {
     episodes: PlaylistItem[];
+    posts: Post[];
 }
 
-export default function ClientLanding({episodes}: ClientLandingProps) {
-
+export default function ClientLanding({episodes, posts}: ClientLandingProps) {
     return (
         <ThemeProvider theme={theme}>
             <GlobalStyle/>
@@ -86,9 +87,8 @@ export default function ClientLanding({episodes}: ClientLandingProps) {
                 <Hero />
                 <About/>
                 <Podcast episodes={episodes}/>
-
+                <Blog posts={posts}/>
             </Container>
         </ThemeProvider>
     );
 }
-

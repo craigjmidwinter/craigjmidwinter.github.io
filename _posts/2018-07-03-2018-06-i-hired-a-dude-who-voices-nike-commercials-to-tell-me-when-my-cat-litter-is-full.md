@@ -4,6 +4,7 @@ slug: 2018-06-i-hired-a-dude-who-voices-nike-commercials-to-tell-me-when-my-cat-
 date_published: 2018-07-04T00:00:00.000Z
 date_updated: 2018-12-21T20:48:22.000Z
 tags: Home Assistant, Home Automation, Node-RED
+cover_image: /assets/blog/computer-electronics-laptop-755416.jpg
 ---
 
 So, recently I decided to step my game up with my audio notifications for my home automation setup. I’m in the process of slowly redoing some of my YAML automations in Node-RED, and I thought what better of a time to make some improvements.
@@ -13,6 +14,8 @@ Up until recently I had been just using the built-in Home Assistant tts.google_s
 So, naturally, I went on Fiverr.
 
 After some searching and listening to a lot of different samples I came across a gig from a guy named Uni V Sol who had a very impressive demo reel.
+
+![](https://www.youtube.com/watch?v=8Iz0qAC7ymo)
 
 Perfect. If major brands like Nike, Pepsi and AT&T trusted him to deliver their important messages, I’m sure I could trust him to deliver important notifications about my cat’s litter box being full.
 
@@ -26,8 +29,6 @@ Now that I’ve got my fancy new notifications, let’s put them to use
 
 I don’t really care about if these go off when I’m not home, but I don’t want them to go off while the house is in ‘Night Mode’ and wake us up. Since I’ve got more than a few notifications that need to be handled in the same way I decided to create a reusable sub-flow that I could just pass messages into from other flows.
 
-The flow for this is pretty simple, take a look–
-![](/src/images/2018/12/Screenshot-2018-06-24-15.10.54.png)
 The first node there is the entry point– every flow that is going to pass this flow a message is going to have a corresponding node that is the other side of the virtual wire. This is where the messages come in.
 
 The way that I’ve configure this to work is that incoming messages should all have a property on the message named file that is set to the url of the file we want to play, so we’ll always send a message where msg.file = “https://server/our-notification.mp3.
@@ -40,4 +41,5 @@ After that it’s fairly self-explanatory– First it sets the volume of my ever
 
 The reason for the blank spacer is because for reasons that still remain a mystery to me, often when Home Assistant tries to play an audio file and it hasn’t yet taken control of the chromecast group, I can hear the chime indicating that HASS has connected, but the audio fails to play. If it’s followed by audio in the next few minutes while HASS still has control, it plays without a hitch, so I’ve got this little blank file in there to make it work more smoothly. If you know why it does this or have a fix for it, please let me know in the comments!
 
-And that about does it for this flow! [If you want to check out how I’ve set up my cat litter notification, check out this post](https://149walnut.com/2018-06-automatic-litterbox-notifications-using-an-home-assistant-and-node-red-with-an-external-rest-api/)!
+And that about does it for this
+flow! [If you want to check out how I’ve set up my cat litter notification, check out this post](/blog/2018-06-automatic-litterbox-notifications-using-an-home-assistant-and-node-red-with-an-external-rest-api/)!
