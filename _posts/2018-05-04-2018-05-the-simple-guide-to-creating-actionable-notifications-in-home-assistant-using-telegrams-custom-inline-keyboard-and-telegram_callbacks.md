@@ -9,7 +9,7 @@ tags: Home Assistant, Telegram, YAML, Home Automation
 *Note: If you'd like to see how this is implemented with Node-RED instead, [check this post](https://midwinter.cc/post/telegram-keyboard-and-callbacks-in-home-assistant-with-node-red_r1Fa56ZRz/#top).*
 
 A while ago I made [this post](https://midwinter.cc/post/my-house-orders-pizza-for-me-dominos-pizza-automation-using-home-assistant_SJY1zsc0W/) about creating an automation and Home Assistant integration to allow my house to order pizza for me. In the months since, I’ve noticed it referenced on a few occasions when people have been looking for more information on how to use the inline keyboard functionality in conjunction with the Telegram callbacks in order to create an actionable notification in Home Assistant.
-![](https://s3.us-west-2.amazonaws.com/mid-midwinter.cc/images/BJWTz95Tf.png)
+![](/src/images/2018/12/BJWTz95Tf.png)
 Since that post is a bit long and only partially focuses on that functionality, I thought I’d cut the bullshit and make a quick post that focuses on it. If anyone has questions about this, feel free to leave a comment and I’ll try to answer. I’ll also try and keep this page updated with the answers to any questions that come up over time.
 
 This post makes the assumption that you are familiar with the basic structure for defining automations in Home Assistant. It also makes the assumption that you have added the telegram bot to your configuration by following the instructions for either the [webhook method](https://www.home-assistant.io/components/telegram_bot.webhooks/) or the [polling method](https://www.home-assistant.io/components/telegram_bot.polling/).
@@ -18,7 +18,6 @@ I’ll stick with the original example since it is really straight forward. At i
 
 The first is your prompt, this is going to be your initial trigger automation. This automation is what sends your initial message on Telegram with your options. It will look something like this--
 
-```yaml
     - alias: 'Want pizza?'
       hide_entity: true
       trigger:
@@ -40,7 +39,6 @@ The first is your prompt, this is going to be your initial trigger automation. T
             inline_keyboard:
               - "Gimme Pizza:/gimmepizza"
               - "No thanks:/nopizza"
-```
 
 The trigger and condition portions of this should look fairly familiar to you, you’ve probably got a bunch of automations that look like this in your current setup. The interesting bit is the action-- we’re calling the telegram_bot.send_message service and then using a data_template to define the message. Most of it is pretty self explanatory, the target field is the user_id and the message and title fields are the main contents of your message. The interesting part about this is the inline_keyboard field. This is where you set up your buttons!
 
@@ -50,7 +48,6 @@ This payload command can be reused in other prompt-like telegram message automat
 
 Now that we are able to send these messages from Home Assistant to our Telegram users, we need to define a way to handle those commands we’ve got coming in!
 
-```yaml
     - alias: 'No pizza'
       hide_entity: true
       trigger:
@@ -79,7 +76,6 @@ Now that we are able to send these messages from Home Assistant to our Telegram 
         - service: dominos.order
           data:
             order_entity_id: dominos.medium_pan
-```
 
 As you can see we’ve got one automation for each answer. Both automations are triggered using the built-in event platform, and the same telegram_callback event_type, the difference is that we define different event_data for them, each automation matching the payload for the corresponding button!
 
