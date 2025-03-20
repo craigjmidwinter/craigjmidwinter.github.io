@@ -1,7 +1,8 @@
 // app/layout.tsx
 import { ReactNode } from "react";
+import { Metadata } from "next";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Craig Midwinter - Personal Website",
   description:
       "Welcome to my personal website. Check out my resume, GitHub, LinkedIn, podcast, and blog posts.",
@@ -19,7 +20,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <div id="root">
+          {children}
+        </div>
+      </body>
       </html>
   );
 }
