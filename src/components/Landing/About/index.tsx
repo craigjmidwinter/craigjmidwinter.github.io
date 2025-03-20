@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform} from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
-import React, { useRef } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { generateZigZagPolygon } from "@/utils";
 
 const AboutSection = styled(motion.section)`
@@ -29,7 +29,6 @@ const AboutWrapper = styled.div`
 const AboutContent = styled(motion.div)`
     max-width: 900px;
     margin: 0 auto;
-    opacity: 0;
     position: relative;
     z-index: 3 !important;
 `;
@@ -56,12 +55,47 @@ const AboutText = styled.div`
 
 export function About() {
     const aboutRef = useRef(null);
+    const [isClient, setIsClient] = useState(false);
     const { scrollYProgress } = useScroll({ target: aboutRef, offset: ["start end", "end start"] });
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     // Adjust the animation offset based on scroll progress
     const sectionOffset = useTransform(scrollYProgress, [0, 0.5], ["-10vh", "0vh"]);
     const teaseOpacity = useTransform(scrollYProgress, [0.2, 0.35], [1, 0]);
     const contentOpacity = useTransform(scrollYProgress, [0.3, 0.5], [0, 1]);
+
+    // For static export, show content immediately
+    if (!isClient) {
+        return (
+            <AboutSection>
+                <AboutWrapper>
+                    <AboutContent style={{ opacity: 1 }}>
+                        <h2>About Me</h2>
+                        <AboutText>
+                            <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
+                                {`
+👋 Hi! I'm Craig!
+
+I'm currently Director of Engineering at Hypergiant/Accelint. Prior to that, I've held various engineering roles, leading a variety of frontend and backend projects ranging from AI/ML model operations to command and control software for geospatial data.
+
+As a leader, I believe that creating high-performing teams means building a foundation of trust and transparency. Creating space for risk-taking and learning from failure is key to fostering a culture of innovation and growth.
+
+As an engineer, I love diving into complex problem domains. I've worked all over the stack but my heart lives in the backend—transforming data and getting my hands dirty with integrations and infrastructure.
+
+In my spare time, I host a podcast called Bravo Outsider where we analyze The Real Housewives and other Bravo reality TV shows from an artistic lens.
+
+📫 How to reach me: craig.j.midwinter@gmail.com
+                                `}
+                            </ReactMarkdown>
+                        </AboutText>
+                    </AboutContent>
+                </AboutWrapper>
+            </AboutSection>
+        );
+    }
 
     return (
         <AboutSection ref={aboutRef} style={{ y: sectionOffset }}>

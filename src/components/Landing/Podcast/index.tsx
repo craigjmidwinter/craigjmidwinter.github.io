@@ -2,7 +2,7 @@
 
 import styled from "styled-components";
 import {motion, useScroll, useTransform} from "framer-motion";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {generateZigZagPolygon} from "@/utils";
 import {PlaylistItem} from "@/service/youtube/types";
 
@@ -181,18 +181,73 @@ const EpisodeCard = styled.a`
 interface PodcastProps {
     /**
      * We assume each `episodes[i].formattedPublishedDate` is generated
-     * server-side (e.g. "1/21/2025"), so there’s no hydration mismatch.
+     * server-side (e.g. "1/21/2025"), so there's no hydration mismatch.
      */
     episodes?: Array<PlaylistItem & { formattedPublishedDate?: string }>;
 }
 
 export function Podcast({episodes = []}: PodcastProps) {
+    const [isClient, setIsClient] = useState(false);
     const {scrollYProgress} = useScroll();
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     // Match the About section animation values:
     const teaseOpacity = useTransform(scrollYProgress, [0.3, 0.4], [1, 0]);
     const contentOpacity = useTransform(scrollYProgress, [0.35, 0.5], [0, 1]);
     const containerOffset = useTransform(scrollYProgress, [0, 0.5], ["-10vh", "0vh"]);
+
+    // For static export, show content immediately
+    if (!isClient) {
+        return (
+            <PodcastContainer>
+                <PodcastBackground/>
+                <PodcastContent style={{opacity: 1}}>
+                    <h2>Bravo Outsider Podcast</h2>
+                    <p>
+                        I produce and host a podcast called <em>Bravo Outsider</em> where we
+                        look at The Real Housewives and other Bravo reality TV shows from an
+                        artistic lens.
+                    </p>
+                    <PodcastLayout>
+                        <LogoContainer>
+                            <img src="/bravo-outsider.jpg" alt="Bravo Outsider Podcast Logo"/>
+                        </LogoContainer>
+                        <PodcastInfo>
+                            <h4>Latest Episodes</h4>
+                            <EpisodesGrid>
+                                {episodes.map((episode) => {
+                                    const snippet = episode.snippet;
+                                    const thumbnailUrl = snippet?.thumbnails?.medium?.url || "";
+                                    const title = snippet?.title || "Episode";
+                                    const published = episode.formattedPublishedDate || "";
+                                    const youtubeLink = `https://www.youtube.com/watch?v=${snippet?.resourceId?.videoId}`;
+                                    return (
+                                        <EpisodeCard
+                                            key={episode.id}
+                                            href={youtubeLink}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            <div className="thumbnail">
+                                                <img src={thumbnailUrl} alt={title}/>
+                                            </div>
+                                            <div className="episode-info">
+                                                <div className="title">{title}</div>
+                                                <div className="meta">Published on {published}</div>
+                                            </div>
+                                        </EpisodeCard>
+                                    );
+                                })}
+                            </EpisodesGrid>
+                        </PodcastInfo>
+                    </PodcastLayout>
+                </PodcastContent>
+            </PodcastContainer>
+        );
+    }
 
     return (
         <PodcastContainer style={{y: containerOffset}}>
