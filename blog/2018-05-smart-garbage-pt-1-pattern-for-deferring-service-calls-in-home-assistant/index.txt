@@ -1,0 +1,165 @@
+1:"$Sreact.fragment"
+2:I[15244,[],""]
+3:I[43866,[],""]
+5:I[86213,[],"OutletBoundary"]
+7:I[86213,[],"MetadataBoundary"]
+9:I[86213,[],"ViewportBoundary"]
+b:I[34835,[],""]
+:HL["/craigjmidwinter.github.io/_next/static/css/a2fe316cdd23b4ed.css","style"]
+0:{"P":null,"b":"w_tnSzuQa1qxRBTjk73d2","p":"/craigjmidwinter.github.io","c":["","blog","2018-05-smart-garbage-pt-1-pattern-for-deferring-service-calls-in-home-assistant",""],"i":false,"f":[[["",{"children":["blog",{"children":[["slug","2018-05-smart-garbage-pt-1-pattern-for-deferring-service-calls-in-home-assistant","d"],{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/craigjmidwinter.github.io/_next/static/css/a2fe316cdd23b4ed.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"en","children":[["$","head",null,{"children":[["$","link",null,{"rel":"preconnect","href":"https://fonts.googleapis.com"}],["$","link",null,{"rel":"preconnect","href":"https://fonts.gstatic.com","crossOrigin":""}],["$","link",null,{"href":"https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap","rel":"stylesheet"}]]}],["$","body",null,{"children":["$","div",null,{"id":"root","children":["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[],[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]]}]]}],{"children":["blog",["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children","blog","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["slug","2018-05-smart-garbage-pt-1-pattern-for-deferring-service-calls-in-home-assistant","d"],["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children","blog","children","$0:f:0:1:2:children:2:children:0","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$L4",null,["$","$L5",null,{"children":"$L6"}]]}],{},null,false]},null,false]},null,false]},null,false],["$","$1","h",{"children":[null,["$","$1","7fdE78-b1Y9owgTGf7htG",{"children":[["$","$L7",null,{"children":"$L8"}],["$","$L9",null,{"children":"$La"}],null]}]]}],false]],"m":"$undefined","G":["$b","$undefined"],"s":false,"S":true}
+c:I[86880,["844","static/chunks/ee560e2c-c5c28398d0153d35.js","322","static/chunks/322-53eb1d32bf710b44.js","173","static/chunks/173-52b2b489d82616e2.js","590","static/chunks/590-97f4dc9b90039a27.js","953","static/chunks/app/blog/%5Bslug%5D/page-9af1e0a685a480c8.js"],"default"]
+d:T1bdc,
+Garbage day is the same day every week, but somehow I haven’t developed a steady routine surrounding it. Our garbage is picked up out front, but the main way we enter and leave the house is through the back door. As a result, I’ve got a bad habit of forgetting to put out the garbage and recycling. While I haven’t come up with a way to make the bins take themselves out, I’ve come out with a nice solution to remind me to take them out and bring them back in.
+
+This is the first part in a series of posts about how I’ve implemented my Garbage reminders. I wanted to cover this automation, because while it’s a ridiculously unnecessary automation, I think some of the components and patterns in its implementation can be followed and used individually in really interesting ways. In this post, I’m going to focus on the pattern that I follow when I need to defer a service call within Home Assistant.
+
+So, this automation started really simply. Since Garbage day is Friday, I just set a static reminder on Thursday evening to notify me to put the garbage out, and one on Friday after work to bring it back in. The automations for both are essentially the exact same just at a different time with different message text, so we’ll just look at the first one
+
+    - alias: 'Garbage Day'
+      initial_state: 'on'
+      trigger:
+        platform: time
+        at: '20:15:00'
+      condition:
+      - condition: time
+        weekday:
+          - thu
+      action:
+      - service: notify.149twitter
+        data:
+          message: "Tomorrow is garbage day @craigjmidwinter"
+
+Ok, not bad, but it could be better. What if I’m not home? How about I defer these notifications until I get home when I can actually do something about it so that I don’t forget again?
+
+We can easily make sure this doesn’t fire while we are away by adding a condition to our first automation so that it only fires when we are home–
+
+    - alias: 'Garbage Day - Home'
+      initial_state: 'on'
+      trigger:
+        platform: time
+        at: '20:15:00'
+      condition:
+      - condition: time
+        weekday:
+          - thu
+      - condition: state
+        entity_id: device_tracker.craig_craig
+        state: 'home'
+      action:
+      - service: notify.149twitter
+        data:
+          message: "Tomorrow is garbage day @craigjmidwinter"
+
+But what happens if we are away when our reminder is supposed to fire while we’re out? We need an automation to handle that situation. It’s going to look very similar to the one for our home state.
+
+    - alias: 'Garbage Day - Not Home'
+      initial_state: 'on'
+      trigger:
+        platform: time
+        at: '20:15:00'
+      condition:
+      - condition: time
+        weekday:
+          - thu
+      - condition: template
+        value_template: "{{ not is_state('device_tracker.craig_craig', 'home') }}"
+      action:
+      - service: input_boolean.turn_on
+        entity_id: input_boolean.garbage_day_pending
+
+There are a couple of key differences in this automation. The first is the template condition that we added. I’ve decided to use a template condition here instead of a simple state condition that checks for not_home because I’ve got some zones set up, so this device tracking isn’t necessarily always in the not_home state when I’m out.
+
+The second difference is that instead of calling the notification service, I’m turning on an input boolean that we need to add to our main configuration like this–
+
+    input_booleans:
+      garbage_day_pending:
+
+Perfect. Now we can create automations for our state change for when we arrive home, and use these being in the on state as a condition, and then in the action, we’ll trigger the service call we want to make, and then set our pending input boolean to off since the job is complete.
+
+    - alias: 'Deferred Garbage Day Notification'
+      trigger:
+        platform: state
+        entity_id: device_tracker.craig_craig
+        to: 'home'
+      condition:
+      - condition: state
+        entity_id: input_boolean.garbage_day_pending
+        state: 'on'
+      action:
+      - service: notify.149twitter
+        data:
+          message: "Tomorrow is garbage day @craigjmidwinter"
+      - service: input_boolean.turn_off
+        entity_id: input_boolean.garbage_day_pending
+
+Ok, great! But having these service calls duplicated sucks, what if we want to add on another notification platform like a facebook message or something? Then we’d need to make that change in more than one place, so lets move these to their own scripts and just call the scripts from both places. The scripts will look like this:
+
+    garbage_notify:
+      sequence:
+        - service: notify.149twitter
+          data:
+            message: "Tomorrow is garbage day @craigjmidwinter"
+        - service: notify.facebook
+          data:
+            message: "Tomorrow is garbage day"
+            target:
+              - !secret facebook_id_craig
+              - !secret facebook_id_jess
+
+Then our complete, updated automations will look like this:
+
+    - alias: 'Garbage Day - Home'
+      initial_state: 'on'
+      trigger:
+        platform: time
+        at: '20:15:00'
+      condition:
+      - condition: time
+        weekday:
+          - thu
+      - condition: state
+        entity_id: device_tracker.craig_craig
+        state: 'home'
+      action:
+      - service: script.turn_on
+        entity_id: script.garbage_notify
+    
+    - alias: 'Garbage Day - Not Home'
+      initial_state: 'on'
+      trigger:
+        platform: time
+        at: '20:15:00'
+      condition:
+      - condition: time
+        weekday:
+          - thu
+      - condition: template
+        value_template: "{{ not is_state('device_tracker.craig_craig', 'home') }}"
+      action:
+      - service: input_boolean.turn_on
+        entity_id: input_boolean.garbage_day_pending
+    
+    - alias: 'Deferred Garbage Day Notification'
+      trigger:
+        platform: state
+        entity_id: device_tracker.craig_craig
+        to: 'home'
+      condition:
+      - condition: state
+        entity_id: input_boolean.garbage_day_pending
+        state: 'on'
+      action:
+      - service: script.turn_on
+        entity_id: script.garbage_notify
+      - service: input_boolean.turn_off
+        entity_id: input_boolean.garbage_day_pending
+
+Fuck yeah! Now I’ll never forget to take the trash out ever again. This same pattern for deferring service calls is a super handy tool to use in order to add better context to notifications and automations.
+
+It’s a small thing, but I personally find that it really helps make the house feel smarter– so much so that I’m considering writing a feature for Home Assistant to handle this sort of flow in a queue-worker system (for example, instead of having setting a switch, and then checking the switch when you get home to trigger the service call, you would just send the information about the service call to a ‘home’ queue and manage when the worker should be processing the jobs).
+
+That’s it for part one! Stay tuned for part two where I’ll go over how I’m determining whether the garbage is at the curb already!
+4:["$","$Lc",null,{"post":{"slug":"2018-05-smart-garbage-pt-1-pattern-for-deferring-service-calls-in-home-assistant","title":"Smart Garbage! – Pattern for deferring service calls in Home Assistant","date_published":"$D2018-05-16T23:27:00.000Z","date_updated":"$D2018-12-31T14:49:50.000Z","tags":"Home Assistant, Home Automation, YAML, Design Patterns","cover_image":"","content":"$d"}}]
+a:[["$","meta","0",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+8:[["$","meta","0",{"charSet":"utf-8"}],["$","title","1",{"children":"Craig Midwinter - Personal Website"}],["$","meta","2",{"name":"description","content":"Welcome to my personal website. Check out my resume, GitHub, LinkedIn, podcast, and blog posts."}],["$","link","3",{"rel":"icon","href":"/craigjmidwinter.github.io/favicon.ico","type":"image/x-icon","sizes":"16x16"}]]
+6:null
