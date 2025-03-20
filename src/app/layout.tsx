@@ -2,6 +2,7 @@
 import { ReactNode } from "react";
 import { Metadata } from "next";
 import "./globals.css";
+import StyledComponentsRegistry from "@/lib/registry";
 
 export const metadata: Metadata = {
   title: "Craig Midwinter - Personal Website",
@@ -22,9 +23,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         />
       </head>
       <body>
-        <div id="root">
-          {children}
-        </div>
+        <StyledComponentsRegistry>
+          <div id="root">
+            {children}
+          </div>
+        </StyledComponentsRegistry>
       </body>
       </html>
   );
