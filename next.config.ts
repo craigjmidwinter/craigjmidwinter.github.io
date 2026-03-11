@@ -5,8 +5,6 @@ const nextConfig: NextConfig = {
   output: "export",
   distDir: "dist",
   images: { unoptimized: true },
-  assetPrefix: "/craigjmidwinter.github.io/",
-  basePath: "/craigjmidwinter.github.io",
   trailingSlash: true,
 };
 
