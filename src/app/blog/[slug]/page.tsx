@@ -3,6 +3,7 @@
 import React from "react";
 import {getAllPosts, getPostBySlug, Post} from "@/service/blog";
 import ClientBlogPost from "./ClientBlogPost";
+import {notFound} from "next/navigation";
 
 export function generateStaticParams(): { slug: string }[] {
     const posts: Post[] = getAllPosts();
@@ -18,7 +19,7 @@ export default async function BlogPostPage({params}: BlogPostPageProps) {
     const post = getPostBySlug(slug);
 
     if (!post) {
-        return <p>Post not found.</p>; // Handle potential null cases
+        notFound();
     }
     return <ClientBlogPost post={post}/>;
 }

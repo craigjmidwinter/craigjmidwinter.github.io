@@ -53,6 +53,20 @@ const AboutText = styled.div`
     }
 `;
 
+const ABOUT_ME_CONTENT = `
+👋 Hi! I'm Craig!
+
+I'm currently Director of Engineering at Hypergiant/Accelint. Prior to that, I've held various engineering roles, leading a variety of frontend and backend projects ranging from AI/ML model operations to command and control software for geospatial data.
+
+As a leader, I believe that creating high-performing teams means building a foundation of trust and transparency. Creating space for risk-taking and learning from failure is key to fostering a culture of innovation and growth.
+
+As an engineer, I love diving into complex problem domains. I've worked all over the stack but my heart lives in the backend—transforming data and getting my hands dirty with integrations and infrastructure.
+
+In my spare time, I host a podcast called Bravo Outsider where we analyze The Real Housewives and other Bravo reality TV shows from an artistic lens.
+
+📫 How to reach me: craig.j.midwinter@gmail.com
+`;
+
 export function About() {
     const aboutRef = useRef(null);
     const [isClient, setIsClient] = useState(false);
@@ -76,19 +90,7 @@ export function About() {
                         <h2>About Me</h2>
                         <AboutText>
                             <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
-                                {`
-👋 Hi! I'm Craig!
-
-I'm currently Director of Engineering at Hypergiant/Accelint. Prior to that, I've held various engineering roles, leading a variety of frontend and backend projects ranging from AI/ML model operations to command and control software for geospatial data.
-
-As a leader, I believe that creating high-performing teams means building a foundation of trust and transparency. Creating space for risk-taking and learning from failure is key to fostering a culture of innovation and growth.
-
-As an engineer, I love diving into complex problem domains. I've worked all over the stack but my heart lives in the backend—transforming data and getting my hands dirty with integrations and infrastructure.
-
-In my spare time, I host a podcast called Bravo Outsider where we analyze The Real Housewives and other Bravo reality TV shows from an artistic lens.
-
-📫 How to reach me: craig.j.midwinter@gmail.com
-                                `}
+                                {ABOUT_ME_CONTENT}
                             </ReactMarkdown>
                         </AboutText>
                     </AboutContent>
@@ -107,19 +109,7 @@ In my spare time, I host a podcast called Bravo Outsider where we analyze The Re
                     <h2>About Me</h2>
                     <AboutText>
                         <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
-                            {`
-👋 Hi! I'm Craig!
-
-I'm currently Director of Engineering at Hypergiant/Accelint. Prior to that, I've held various engineering roles, leading a variety of frontend and backend projects ranging from AI/ML model operations to command and control software for geospatial data.
-
-As a leader, I believe that creating high-performing teams means building a foundation of trust and transparency. Creating space for risk-taking and learning from failure is key to fostering a culture of innovation and growth.
-
-As an engineer, I love diving into complex problem domains. I've worked all over the stack but my heart lives in the backend—transforming data and getting my hands dirty with integrations and infrastructure.
-
-In my spare time, I host a podcast called Bravo Outsider where we analyze The Real Housewives and other Bravo reality TV shows from an artistic lens.
-
-📫 How to reach me: craig.j.midwinter@gmail.com
-                            `}
+                            {ABOUT_ME_CONTENT}
                         </ReactMarkdown>
                     </AboutText>
                 </AboutContent>

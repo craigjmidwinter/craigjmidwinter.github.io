@@ -76,9 +76,14 @@ export default function FloatingShapesManager({ count }: FloatingShapesManagerPr
     };
 
     useEffect(() => {
+        const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (prefersReducedMotion) return;
+
         const restitution = 0.9; // how bouncy shapes are
 
         const handleCollisions = () => {
+            if (document.hidden) return;
+
             // Collect all shape data from refs
             const shapes = shapeRefs.current
                 .map((r) => r.current)
@@ -173,12 +178,19 @@ export default function FloatingShapesManager({ count }: FloatingShapesManagerPr
     // 4) ANIMATE CONFETTI
     //
     useEffect(() => {
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
         let previousTime = performance.now();
 
         const animateConfetti = () => {
             const currentTime = performance.now();
             const delta = (currentTime - previousTime) / 1000;
             previousTime = currentTime;
+
+            if (document.hidden) {
+                requestAnimationFrame(animateConfetti);
+                return;
+            }
 
             // Move confetti, reduce lifetime
             setConfettiList((prev) =>

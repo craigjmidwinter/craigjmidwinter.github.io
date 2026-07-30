@@ -55,7 +55,9 @@ const NavItem = styled.li`
 
         &:hover {
             color: #f0f;
-            animation: ${glitch} 0.3s infinite;
+            @media (prefers-reduced-motion: no-preference) {
+                animation: ${glitch} 0.3s infinite;
+            }
 
             &::before {
                 content: ">";

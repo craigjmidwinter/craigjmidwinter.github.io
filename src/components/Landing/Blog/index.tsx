@@ -76,7 +76,9 @@ const GlitchTitle = styled.h2`
     margin-bottom: 3rem;
     font-size: 8rem;
     position: relative;
-    animation: ${titleGlitch} 10s infinite;
+    @media (prefers-reduced-motion: no-preference) {
+        animation: ${titleGlitch} 10s infinite;
+    }
     font-family: 'Thunderstorm', sans-serif;
     color: #fff;
 
@@ -92,7 +94,9 @@ const GlitchTitle = styled.h2`
     }
 
     &:hover {
-        animation: ${titleGlitch} 0.8s infinite;
+        @media (prefers-reduced-motion: no-preference) {
+            animation: ${titleGlitch} 0.8s infinite;
+        }
 
         &::before {
             opacity: 0.5;

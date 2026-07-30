@@ -8,6 +8,20 @@ export const metadata: Metadata = {
   title: "Craig Midwinter - Personal Website",
   description:
       "Welcome to my personal website. Check out my resume, GitHub, LinkedIn, podcast, and blog posts.",
+  openGraph: {
+    title: "Craig Midwinter - Personal Website",
+    description:
+        "Director of Engineering, software generalist, and host of the Bravo Outsider podcast.",
+    url: "https://craigjmidwinter.github.io",
+    siteName: "Craig Midwinter",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Craig Midwinter - Personal Website",
+    description:
+        "Director of Engineering, software generalist, and host of the Bravo Outsider podcast.",
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
