@@ -4,12 +4,19 @@ import {fetchPlaylistItems} from "@/service/youtube";
 import {getAllPosts} from "@/service/blog";
 
 export default async function Page() {
-    const playlistId = 'PLiFBbHnPz5MSqFWfGx_qsLYqLFv3ktLCU';
-    const episodes = await fetchPlaylistItems(playlistId, 2);
+    // Oscars Outsider episodes (same playlist oscarsoutsider.com builds from)
+    const playlistId = 'PLDYT8ZhjQbnwIrSVrbcav3rGZvojw22Ml';
+    let episodes: Awaited<ReturnType<typeof fetchPlaylistItems>> = [];
+    try {
+        episodes = await fetchPlaylistItems(playlistId, 2);
+    } catch (error) {
+        // The podcast section falls back to placeholder tiles; a YouTube API
+        // failure should not take down the whole build.
+        console.error("Podcast episodes unavailable at build time:", error);
+    }
     const posts = getAllPosts();
-    const latestPosts = posts.slice(0, 3);
-    
-    return <ClientLandingPage episodes={episodes} posts={latestPosts}/>;
+
+    return <ClientLandingPage episodes={episodes} posts={posts}/>;
 }
 
 // Force static generation

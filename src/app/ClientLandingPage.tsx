@@ -1,76 +1,72 @@
 "use client";
 
 import React from "react";
-import styled, {createGlobalStyle, ThemeProvider} from "styled-components";
-import {About} from "@/components/Landing/About";
-import {Hero} from "../components/Landing/Hero";
-import ThreeCanvas from "@/components/ThreeCanvas/ThreeCanvas";
+import {createGlobalStyle} from "styled-components";
 import {PlaylistItem} from "@/service/youtube/types";
 import {Post} from "@/service/blog";
-import {Blog} from "@/components/Landing/Blog";
-import {Podcast} from "@/components/Landing/Podcast";
-
-const theme = {
-    accent: "#f76eec",
-    text: "#231f20",
-};
+import {Nav} from "@/components/Jazz/Nav";
+import {Hero} from "@/components/Jazz/Hero";
+import {Marquee} from "@/components/Jazz/Marquee";
+import {Work} from "@/components/Jazz/Work";
+import {About} from "@/components/Jazz/About";
+import {Podcast} from "@/components/Jazz/Podcast";
+import {Archive} from "@/components/Jazz/Archive";
+import {Contact} from "@/components/Jazz/Contact";
 
 const GlobalStyle = createGlobalStyle`
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
+    * {
+        box-sizing: border-box;
+    }
 
-    @font-face {
-        font-family: 'Thunderstorm';
-        src: url('/thunderstorm-signature-webfont.woff2') format('woff2'),
-        url('/thunderstorm-signature-webfont.woff') format('woff'),
-        url('/thunderstorm-signature-webfont.eot') format('embedded-opentype');
-        font-weight: 400;
-        font-style: normal;
+    html, body {
+        /* clip (not hidden) so the sticky nav keeps working */
+        overflow-x: clip;
+        max-width: 100%;
     }
 
     body {
         margin: 0;
-        background: white;
-        color: #231f20;
-        font-family: 'Montserrat', sans-serif;
-        overflow-x: hidden;
+        background: #fbfaf7;
+        color: #111;
+        font-family: 'Space Grotesk', sans-serif;
+        -webkit-font-smoothing: antialiased;
     }
 
-    h1, h2, h3, h4, h5, h6 {
-        font-family: 'Thunderstorm', 'Montserrat', sans-serif;
-        color: #f76eec;
-        text-shadow: 2px 2px 0 #000;
-        margin: 0;
-        padding: 0;
-        font-weight: normal;
+    a {
+        color: #111;
     }
 
-    h2 {
-        font-size: 7rem;
-        @media (max-width: 768px) {
-            font-size: 2.5rem;
+    a:hover {
+        color: #00a7a0;
+    }
+
+    ::selection {
+        background: #e9e64a;
+        color: #111;
+    }
+
+    :focus-visible {
+        outline: 2px solid #111;
+        outline-offset: 2px;
+    }
+
+    @keyframes jzmarq {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(-50%);
         }
     }
 
-    h1 {
-        font-size: 9rem;
-        @media (max-width: 768px) {
-            font-size: 3rem;
+    @keyframes jzdrift {
+        0%, 100% {
+            transform: translateY(0) rotate(var(--r, 0deg));
+        }
+        50% {
+            transform: translateY(-10px) rotate(calc(var(--r, 0deg) + 8deg));
         }
     }
-
-    h4 {
-        font-size: 3rem;
-        @media (max-width: 768px) {
-            font-size: 3rem;
-        }
-    }
-`;
-
-const Container = styled.div`
-    position: relative;
-    overflow: hidden;
-    background: url("/80s/1980s Fashion Patterns Vol 2_Tech Noir.jpg") repeat center center;
-    background-color: #000;
 `;
 
 interface ClientLandingProps {
@@ -80,15 +76,18 @@ interface ClientLandingProps {
 
 export default function ClientLanding({episodes, posts}: ClientLandingProps) {
     return (
-        <ThemeProvider theme={theme}>
-            <GlobalStyle/>
-            <Container>
-                <ThreeCanvas/>
+        <>
+            <GlobalStyle />
+            <Nav />
+            <main>
                 <Hero />
-                <About/>
-                <Podcast episodes={episodes}/>
-                <Blog posts={posts}/>
-            </Container>
-        </ThemeProvider>
+                <Marquee />
+                <Work />
+                <About />
+                <Podcast episodes={episodes} />
+                <Archive posts={posts} />
+            </main>
+            <Contact />
+        </>
     );
 }

@@ -5,22 +5,22 @@ import "./globals.css";
 import StyledComponentsRegistry from "@/lib/registry";
 
 export const metadata: Metadata = {
-  title: "Craig Midwinter - Personal Website",
+  title: "Craig Midwinter | Software Engineering Leader",
   description:
-      "Welcome to my personal website. Check out my resume, GitHub, LinkedIn, podcast, and blog posts.",
+      "Engineering leader who still ships code. Director of Engineering at Lyntris (formerly Hypergiant), builder of MLOps platforms and AI agent tooling, host of the Oscars Outsider podcast.",
   openGraph: {
-    title: "Craig Midwinter - Personal Website",
+    title: "Craig Midwinter | Software Engineering Leader",
     description:
-        "Director of Engineering, software generalist, and host of the Bravo Outsider podcast.",
-    url: "https://craigjmidwinter.github.io",
+        "Engineering leader who still ships code. Director of Engineering at Lyntris (formerly Hypergiant), builder of MLOps platforms and AI agent tooling, host of the Oscars Outsider podcast.",
+    url: "https://midwinter.io",
     siteName: "Craig Midwinter",
     type: "website",
   },
   twitter: {
     card: "summary",
-    title: "Craig Midwinter - Personal Website",
+    title: "Craig Midwinter | Software Engineering Leader",
     description:
-        "Director of Engineering, software generalist, and host of the Bravo Outsider podcast.",
+        "Engineering leader who still ships code. Director of Engineering at Lyntris (formerly Hypergiant), builder of MLOps platforms and AI agent tooling, host of the Oscars Outsider podcast.",
   },
 };
 
@@ -28,11 +28,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
       <html lang="en">
       <head>
-        {/* Preconnect to Google Fonts and load the retro font */}
+        {/* Preconnect to Google Fonts and load the site typefaces */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link
-            href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+            href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap"
             rel="stylesheet"
         />
       </head>
