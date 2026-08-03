@@ -1,0 +1,53 @@
+1:"$Sreact.fragment"
+2:I[93812,["285","static/chunks/285-a6ffdeaaca80baae.js","177","static/chunks/app/layout-4af595c0147c20de.js"],"default"]
+3:I[15244,[],""]
+4:I[16310,["39","static/chunks/app/error-04ff64045c4e25c6.js"],"default"]
+5:I[43866,[],""]
+6:I[46133,["285","static/chunks/285-a6ffdeaaca80baae.js","977","static/chunks/977-4374b4dcbc748293.js","560","static/chunks/app/blog/%5Bslug%5D/not-found-1898dfddba226c34.js"],"default"]
+8:I[86213,[],"OutletBoundary"]
+a:I[86213,[],"MetadataBoundary"]
+c:I[86213,[],"ViewportBoundary"]
+e:I[94788,["219","static/chunks/app/global-error-641bbf672cdeeccb.js"],"default"]
+:HL["/_next/static/css/a2fe316cdd23b4ed.css","style"]
+0:{"P":null,"b":"9xLtLxsJD17ddnnhxg-e4","p":"","c":["","blog","2026-06-chat-history-is-where-context-goes-to-die-my-agents-keep-a-dev-blog-now",""],"i":false,"f":[[["",{"children":["blog",{"children":[["slug","2026-06-chat-history-is-where-context-goes-to-die-my-agents-keep-a-dev-blog-now","d"],{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/a2fe316cdd23b4ed.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"en","children":[["$","head",null,{"children":[["$","link",null,{"rel":"preconnect","href":"https://fonts.googleapis.com"}],["$","link",null,{"rel":"preconnect","href":"https://fonts.gstatic.com","crossOrigin":""}],["$","link",null,{"href":"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap","rel":"stylesheet"}]]}],["$","body",null,{"children":["$","$L2",null,{"children":["$","div",null,{"id":"root","children":["$","$L3",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$4","errorStyles":[],"errorScripts":[],"template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[],[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]}]]}]]}],{"children":["blog",["$","$1","c",{"children":[null,["$","$L3",null,{"parallelRouterKey":"children","segmentPath":["children","blog","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["slug","2026-06-chat-history-is-where-context-goes-to-die-my-agents-keep-a-dev-blog-now","d"],["$","$1","c",{"children":[null,["$","$L3",null,{"parallelRouterKey":"children","segmentPath":["children","blog","children","$0:f:0:1:2:children:2:children:0","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[],["$","$L6",null,{}]],"forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$L7",null,["$","$L8",null,{"children":"$L9"}]]}],{},null,false]},null,false]},null,false]},null,false],["$","$1","h",{"children":[null,["$","$1","dcOSfvZfk5xK0XCttZhI0",{"children":[["$","$La",null,{"children":"$Lb"}],["$","$Lc",null,{"children":"$Ld"}],null]}]]}],false]],"m":"$undefined","G":["$e",[]],"s":false,"S":true}
+f:I[86880,["285","static/chunks/285-a6ffdeaaca80baae.js","977","static/chunks/977-4374b4dcbc748293.js","156","static/chunks/156-38e03018502b56e6.js","953","static/chunks/app/blog/%5Bslug%5D/page-b5c50ccdce269ec6.js"],"default"]
+10:Teac,
+**2026-08 Update:** *The little CLI in this post grew up, got renamed katra, and is now open source: [github.com/craigjmidwinter/katra](https://github.com/craigjmidwinter/katra).*
+
+There's a tempting idea that your agent's chat history is a project archive-- scroll back far enough and every decision you ever made is in there somewhere. And it is in there. So is everything else. Chat history is the junk drawer of context: the decision you need is definitely in it, underneath four hundred lines of the agent narrating a test run and that one time you asked it to explain a regex at 1am. I kept believing I'd go digging when it mattered, and I kept not doing it, because nobody greps a junk drawer.
+
+**Set up a dev blog for every project. Your agents maintain it.**
+
+Not a public blog-- an internal one, living in the repo, written as the work happens. Articles about important decisions, features, and dead ends, with screenshots. Mine is tied to git commits for traceability: every entry gets stamped with the hash and diffstat of the work it describes, so "why does the scheduler do this weird thing" has an answer with a date, a picture, and a commit attached.
+
+The tooling is a little CLI I built (working name: devlog-- naming things is hard and I refuse to rush it). The core of it:
+
+```
+devlog new "Recovery kept double-claiming workers"
+devlog capture before.png
+devlog append "The dedupe fix. Note the config write is now serialized."
+# ...commit the code...
+devlog stamp     # entry gets the hash + diffstat, moves from draft to log
+```
+
+One markdown file per entry, YAML frontmatter, media alongside in the repo. No database, no separate app, greppable like everything else you own.
+
+**The part that made me actually build it: the blog is for the agent too**
+
+Here's the thing I underrated at first. A distilled, organized project chronicle isn't just for future-me-- it's *retrievable by the agent*. When a fresh session needs to know why the config writes are serialized, it doesn't need to archaeology its way through old conversations that it can't see anyway. It reads the entry, which is two paragraphs and a screenshot instead of nine thousand tokens of meandering transcript. You're not writing documentation, you're precomputing context.
+
+**Screenshots as a lie detector**
+
+The other reason my project memory insists the agents capture screenshots and charts as they write entries: it forces them to actually run the thing. An agent that has to attach a picture of the working feature to its write-up cannot quietly hand you code it never executed-- the entry won't have anything to show. It's a verification mechanism dressed up as a documentation habit, and it catches real nonsense weekly. [My cat litter box used to tweet a photo of itself](/blog/2018-06-automatic-litterbox-notifications-using-an-home-assistant-and-node-red-with-an-external-rest-api/) for the same reason: a claim with a photo attached is a different class of claim.
+
+**The pattern**
+
+Distill context at the moment it exists, into a place both you and the machine can retrieve it from. Chat is where context is born; it's a terrible place for it to live. A repo-resident chronicle with commit traceability turns "I think we decided this in a conversation a few weeks ago" into a grep.
+
+**Loose ends**
+
+The CLI is early and shaped exactly like my own habits-- there's a live-reload viewer I'm fond of and hooks I'm still fighting with. I have some ideas about making commits refuse to happen without a draft entry, which is either a great idea or a turnstile I'll come to hate, and I'll report back either way. If you're doing something similar-- agent-maintained project journals, decision logs, anything in that family-- email me, I want to hear what stuck.
+7:["$","$Lf",null,{"post":{"slug":"2026-06-chat-history-is-where-context-goes-to-die-my-agents-keep-a-dev-blog-now","title":"Chat history is where context goes to die – my agents keep a dev blog now","date_published":"$D2026-06-05T21:10:00.000Z","tags":"Katra, AI Workflows, Agents, Dev Log","cover_image":"","content":"$10"},"nextPost":{"title":"Two models have to agree before anything ships – quorum review in Ripline","slug":"2026-05-two-models-have-to-agree-before-anything-ships-quorum-review-in-ripline"}}]
+d:[["$","meta","0",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+b:[["$","meta","0",{"charSet":"utf-8"}],["$","title","1",{"children":"Chat history is where context goes to die – my agents keep a dev blog now | Craig Midwinter"}],["$","meta","2",{"name":"description","content":"2026-08 Update: The little CLI in this post grew up, got renamed katra, and is now open source: github.com/craigjmidwinter/katra."}],["$","meta","3",{"property":"og:title","content":"Chat history is where context goes to die – my agents keep a dev blog now | Craig Midwinter"}],["$","meta","4",{"property":"og:description","content":"2026-08 Update: The little CLI in this post grew up, got renamed katra, and is now open source: github.com/craigjmidwinter/katra."}],["$","meta","5",{"property":"og:url","content":"https://midwinter.io/blog/2026-06-chat-history-is-where-context-goes-to-die-my-agents-keep-a-dev-blog-now/"}],["$","meta","6",{"property":"og:site_name","content":"Craig Midwinter"}],["$","meta","7",{"property":"og:type","content":"article"}],["$","meta","8",{"name":"twitter:card","content":"summary"}],["$","meta","9",{"name":"twitter:title","content":"Chat history is where context goes to die – my agents keep a dev blog now | Craig Midwinter"}],["$","meta","10",{"name":"twitter:description","content":"2026-08 Update: The little CLI in this post grew up, got renamed katra, and is now open source: github.com/craigjmidwinter/katra."}],["$","link","11",{"rel":"icon","href":"/favicon.ico","type":"image/x-icon","sizes":"16x16"}]]
+9:null

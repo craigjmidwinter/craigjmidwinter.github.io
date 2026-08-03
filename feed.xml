@@ -6,7 +6,63 @@
         <description>Notes from a house that talks back. Home automation writing from Craig Midwinter.</description>
         <language>en</language>
         <atom:link href="https://midwinter.io/feed.xml" rel="self" type="application/rss+xml"/>
-        <lastBuildDate>Thu, 05 Jul 2018 00:11:00 GMT</lastBuildDate>
+        <lastBuildDate>Mon, 03 Aug 2026 18:30:00 GMT</lastBuildDate>
+        <item>
+            <title>The gauntlet loop needs a pit crew</title>
+            <link>https://midwinter.io/blog/2026-08-the-gauntlet-loop-needs-a-pit-crew</link>
+            <guid isPermaLink="true">https://midwinter.io/blog/2026-08-the-gauntlet-loop-needs-a-pit-crew</guid>
+            <pubDate>Mon, 03 Aug 2026 18:30:00 GMT</pubDate>
+            <description>I&apos;ve been running a lot of gauntlet loops lately. If you haven&apos;t met the pattern, it&apos;s Matt Shumer&apos;s coinage-- his own write-up is the source to read, and Claude of Duty is the demonstration that made it famous: a Call of Duty-style FPS in Three.js, built from a single published prompt. The shape…</description>
+        </item>
+        <item>
+            <title>Don&apos;t give the agent your inbox, give it a mail slot – mail-muncher</title>
+            <link>https://midwinter.io/blog/2026-08-do-not-give-the-agent-your-inbox-mail-muncher</link>
+            <guid isPermaLink="true">https://midwinter.io/blog/2026-08-do-not-give-the-agent-your-inbox-mail-muncher</guid>
+            <pubDate>Sat, 01 Aug 2026 20:45:00 GMT</pubDate>
+            <description>I&apos;m job hunting right now, which means my inbox is a slow drip of recruiter replies, scheduling links, and rejections with the structural sincerity of a hotel checkout survey. I have agents triaging all of it-- and the obvious way to set that up is also the way I refused to do it, because the…</description>
+        </item>
+        <item>
+            <title>No draft, no commit – katra, the dev log my agents have to keep</title>
+            <link>https://midwinter.io/blog/2026-07-no-draft-no-commit-katra-the-dev-log-my-agents-have-to-keep</link>
+            <guid isPermaLink="true">https://midwinter.io/blog/2026-07-no-draft-no-commit-katra-the-dev-log-my-agents-have-to-keep</guid>
+            <pubDate>Thu, 16 Jul 2026 21:20:00 GMT</pubDate>
+            <description>2026-08 Update: Katra is now open source: github.com/craigjmidwinter/katra.</description>
+        </item>
+        <item>
+            <title>Cut a seam – what I do when the agent stops reading the manual</title>
+            <link>https://midwinter.io/blog/2026-07-cut-a-seam-when-the-agent-stops-reading-the-manual</link>
+            <guid isPermaLink="true">https://midwinter.io/blog/2026-07-cut-a-seam-when-the-agent-stops-reading-the-manual</guid>
+            <pubDate>Mon, 13 Jul 2026 20:50:00 GMT</pubDate>
+            <description>2026-08 Update: Katra is now open source: github.com/craigjmidwinter/katra.</description>
+        </item>
+        <item>
+            <title>Chat history is where context goes to die – my agents keep a dev blog now</title>
+            <link>https://midwinter.io/blog/2026-06-chat-history-is-where-context-goes-to-die-my-agents-keep-a-dev-blog-now</link>
+            <guid isPermaLink="true">https://midwinter.io/blog/2026-06-chat-history-is-where-context-goes-to-die-my-agents-keep-a-dev-blog-now</guid>
+            <pubDate>Fri, 05 Jun 2026 21:10:00 GMT</pubDate>
+            <description>2026-08 Update: The little CLI in this post grew up, got renamed katra, and is now open source: github.com/craigjmidwinter/katra.</description>
+        </item>
+        <item>
+            <title>Two models have to agree before anything ships – quorum review in Ripline</title>
+            <link>https://midwinter.io/blog/2026-05-two-models-have-to-agree-before-anything-ships-quorum-review-in-ripline</link>
+            <guid isPermaLink="true">https://midwinter.io/blog/2026-05-two-models-have-to-agree-before-anything-ships-quorum-review-in-ripline</guid>
+            <pubDate>Tue, 12 May 2026 22:05:00 GMT</pubDate>
+            <description>I once asked a model to review a plan that the same model had written twenty minutes earlier. It had notes! Minor ones. Overall it found the plan thoughtful and well-structured, which, yes, of course it did-- I had essentially asked a guy to grade his own homework, and the guy is famously agreeable.</description>
+        </item>
+        <item>
+            <title>Inverting the harness – who runs whom, Ripline and Claude Code edition</title>
+            <link>https://midwinter.io/blog/2026-03-inverting-the-harness-who-runs-whom-in-ripline</link>
+            <guid isPermaLink="true">https://midwinter.io/blog/2026-03-inverting-the-harness-who-runs-whom-in-ripline</guid>
+            <pubDate>Sun, 29 Mar 2026 20:15:00 GMT</pubDate>
+            <description>Most days I live inside Claude Code. I type a thing, the agent reads files, runs commands, does the work, and I supervise like a foreman who&apos;s mostly there for moral support. In that arrangement the agent is the harness-- it&apos;s in charge of the loop, and everything else (the shell, the repo, me) is…</description>
+        </item>
+        <item>
+            <title>Adding bureaucracy and red tape to my agents – structured artifacts and node contracts in Ripline</title>
+            <link>https://midwinter.io/blog/2026-03-adding-bureaucracy-and-red-tape-to-my-agents-structured-artifacts-in-ripline</link>
+            <guid isPermaLink="true">https://midwinter.io/blog/2026-03-adding-bureaucracy-and-red-tape-to-my-agents-structured-artifacts-in-ripline</guid>
+            <pubDate>Sun, 15 Mar 2026 21:40:00 GMT</pubDate>
+            <description>I have a bad habit of kicking off multi-step agent runs before bed. There&apos;s something great about waking up to finished work-- and something uniquely deflating about waking up to four completed pipeline steps that all ran perfectly on top of garbage produced in step one.</description>
+        </item>
         <item>
             <title>Smart Home vs. Home Automation – What’s the difference?</title>
             <link>https://midwinter.io/blog/2018-07-smart-home-vs-home-automation-whats-the-difference</link>

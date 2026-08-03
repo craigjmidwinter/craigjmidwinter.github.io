@@ -1,14 +1,379 @@
 1:"$Sreact.fragment"
 2:I[93812,["285","static/chunks/285-a6ffdeaaca80baae.js","177","static/chunks/app/layout-4af595c0147c20de.js"],"default"]
 3:I[15244,[],""]
-4:I[43866,[],""]
-5:I[62046,["285","static/chunks/285-a6ffdeaaca80baae.js","977","static/chunks/977-4374b4dcbc748293.js","831","static/chunks/app/blog/page-7269fb528ee5aa01.js"],"default"]
-16:I[86213,[],"OutletBoundary"]
-18:I[86213,[],"MetadataBoundary"]
-1a:I[86213,[],"ViewportBoundary"]
-1c:I[34835,[],""]
+4:I[16310,["39","static/chunks/app/error-04ff64045c4e25c6.js"],"default"]
+5:I[43866,[],""]
+6:I[62046,["285","static/chunks/285-a6ffdeaaca80baae.js","977","static/chunks/977-4374b4dcbc748293.js","831","static/chunks/app/blog/page-74bfb289433840d9.js"],"default"]
+1f:I[86213,[],"OutletBoundary"]
+21:I[86213,[],"MetadataBoundary"]
+23:I[86213,[],"ViewportBoundary"]
+25:I[94788,["219","static/chunks/app/global-error-641bbf672cdeeccb.js"],"default"]
 :HL["/_next/static/css/a2fe316cdd23b4ed.css","style"]
-6:T119c,
+7:T1642,
+I've been running a lot of gauntlet loops lately. If you haven't met the pattern, it's Matt Shumer's coinage-- [his own write-up](https://somethingbig.ai/gauntlet-loop) is the source to read, and [Claude of Duty](https://github.com/mshumer/Claude-of-Duty) is the demonstration that made it famous: a Call of Duty-style FPS in Three.js, built from a single published prompt. The shape: a lead agent gets an ambitious goal and a concrete reference for quality, decomposes the work into separately judgeable pieces, builders build, and fresh-context critics compare the actual artifact against the reference-- blind A/B where possible-- looping on the largest gap until the thing meets the bar or you hit your cost ceiling. Shumer's own emphasis is that the bar is the most important part: "make it amazing" fails, actual Call of Duty screenshots work. (There's also a broader [survey of the loop-engineering family](https://www.thepromptindex.com/ai-loop-engineering-gauntlet-loop-guide.html) if you want the landscape.) It's a genuinely good pattern, and the separation of builder from critic fixes the "grading your own homework" problem I've [ranted about before](/blog/2026-05-two-models-have-to-agree-before-anything-ships-quorum-review-in-ripline/).
+
+But after enough laps I noticed where my loops actually spend their time, and it's not building and it's not judging. It's the space between-- critics squinting at an artifact trying to decide *how* to compare it to the reference, and builders receiving feedback like "the pacing feels off in the second section" and having to guess what, mechanically, to change. The loop's speed limit isn't intelligence. It's measurement.
+
+Human teams solved this a long time ago, and not by hiring better critics. They hired people who build test rigs, staging environments, and dashboards. So my gauntlet loops now have a third role, and I've been calling the variant what it obviously is:
+
+**The pit crew loop**
+
+Builder, critic, and pit crew. The pit crew doesn't drive and doesn't judge the driving. Its entire job is instrumentation and tooling-- making the next lap faster and the judging more accurate:
+
+- **Turn the reference into executable checks.** Before the builders start, the pit crew's first task is converting the quality bar into acceptance and e2e tests wherever it can. "Matches the reference" becomes a suite that runs in seconds, and a whole class of critic deliberation just evaporates-- the artifact passes or it doesn't, and critics save their judgment for the parts that genuinely need taste.
+- **Build purpose-specific harnesses.** Replay rigs, fixture generators, a screenshot bot that produces the blind A/B pair automatically, a script that spins the artifact up in the exact configuration critics need to see. Whatever removes manual steps between "builder finished" and "critic judging real output."
+- **Put numbers on the vague stuff.** Latency budgets, bundle sizes, phase timings, error rates. Not because numbers are the whole story, but because "the largest gap"-- the thing the gauntlet iterates on-- should be identified by measurement where possible, not by whichever critic wrote the most confident paragraph.
+
+And one standing rule that does most of the work: **any note a critic gives twice becomes a check the pit crew automates.** Complaints are instrument requests in disguise. The second time a critic writes "the export is missing the header row again," that sentence is done being feedback and starts being a test.
+
+**This keeps working on me in real life**
+
+When I put a pipeline in charge of tailoring my resume, the unlock wasn't a better writer agent-- it was a little harness that renders the PDF and then parses it *back out* the way an applicant tracking system would. Critics stopped debating font vibes and started reading parse output. In Multicam Toolbox, per-run metrics with phase timing are what turn "the tool feels slow on long episodes" into "the diarization phase is 80% of the wall clock, go stare at that." Same shape both times: the instrument did more for iteration speed than any amount of added cleverness.
+
+**The failure modes, because there are two good ones**
+
+First: the pit crew can gold-plate. An agent asked to build tooling will, with complete sincerity, construct a beautiful dashboard nobody requested-- the gauntlet's cost boundary has to apply to instruments too, and "does this measurement change what the builder does next lap" is the test. Second: builders optimize what you measure, with all the monkey-paw energy that implies. The fresh-context integration critic at the end stays essential precisely because it judges the whole artifact and not the scoreboard. Instruments narrow the argument; they don't end it.
+
+**The pattern**
+
+In an agent loop, tokens get spent on judgment or on measurement, and only one of those compounds. Judgment evaporates when the session ends. A test, a harness, a metric-- those are still there on lap forty, still there next month when a completely different loop runs against the same project. The pit crew is the only role in the gauntlet whose output makes every *future* lap cheaper, which is why it deserves a dedicated seat instead of being something builders do reluctantly on the side.
+
+I've been running this as a dedicated phase in my [Ripline](https://github.com/ripline-ai/ripline) pipelines-- pit crew lap first, then the build/critique cycle-- and I'm still tuning where the crew's budget should cap out. If you try a pit crew loop, or you've got a better name for it, email me. Especially if you've got a better name. I've been staring at this one long enough to love it, which is exactly when someone should stop me.
+8:T1175,
+I'm job hunting right now, which means my inbox is a slow drip of recruiter replies, scheduling links, and rejections with the structural sincerity of a hotel checkout survey. I have agents triaging all of it-- and the obvious way to set that up is also the way I refused to do it, because the obvious way is handing an AI agent your entire Gmail.
+
+Think about what that grant actually is. Full mailbox access can read two decades of tax documents, medical appointments, and every password reset you've ever received. It can usually send. It can usually delete. I trust my agents to sort recruiter mail; I do not trust anything, silicon or otherwise, with *send and delete on my primary email account*. That's not paranoia, that's just reading the scope screen.
+
+So I built [mail-muncher](https://github.com/craigjmidwinter/mail-muncher): an email client for AI agents. It gives a program its own read-only mailbox, filtered down to exactly the mail it asked for, delivered as files on disk.
+
+**How it works**
+
+Mail-muncher pulls from any IMAP mailbox (or Gmail's API with a read-only OAuth scope), evaluates each message against ordered rules, and writes the matches to a directory-- a byte-faithful `.eml`, plus a markdown rendering with the headers as YAML frontmatter and attachments extracted alongside. No mode ever writes to your mailbox. The agent never touches the account at all; it reads files, which it was already good at.
+
+```yaml
+rules:
+  - name: job-search
+    from_domains_file: ~/job-search/interested-domains.txt
+    deliver_to: ~/Mail/job-search
+```
+
+**The feature I'm proudest of is that boring second line**
+
+`from_domains_file` points at a plain text file that *some other program owns*, and mail-muncher re-reads it at the start of every cycle. My job-search pipeline maintains that file: when I apply somewhere, the company's domain gets appended. The very next cycle, mail from that company starts landing in the agent's mailbox. No config edit, no restart, no redeploy-- the pipeline subscribes itself to the mail it's going to need, one line at a time. Two programs coordinating through a text file is 1970s technology, and I mean that as the highest compliment.
+
+**The read-only question, honestly**
+
+"Read-only" deserves scrutiny, so here's the actual table ([the README](https://github.com/craigjmidwinter/mail-muncher#two-ways-to-connect-a-mailbox) has the long version). With plain IMAP you authenticate with an app password, setup takes about two minutes, and read-only is enforced by mail-muncher's own code-- the credential itself could send and delete, the program just never does. With the Gmail provider you register an OAuth client with the `gmail.readonly` scope, setup takes closer to ten minutes in the Cloud Console, and *Google* enforces read-only, but on a testing-mode consent screen the token expires every 7 days and you're re-running `mail-muncher auth` weekly like it's a tamagotchi. Pick your annoyance. I run IMAP at home and I'd run OAuth anywhere I didn't control the machine.
+
+**If you're an agent reading this**
+
+This one's literally for you. Beyond reading the delivered files, `mail-muncher mcp` is a stdio MCP server over the archive-- `list_rules` tells you what's being collected and which senders you're subscribed to right now (the domains file is re-read on every call, so the answer is always current). And if the server starts unconfigured, it starts anyway, on purpose: a server that answers "nothing here yet" beats one that dies before you can ask.
+
+**The pattern**
+
+Don't give the agent your inbox, give it a mail slot. The general version: agents should get scoped, inspectable capabilities-- a directory, a filter, a read-only credential-- not your whole account with a pinky promise attached. Files on disk turn out to be a great capability boundary: they're greppable, they're diffable, and nothing about a `.eml` in a folder can send anything to anyone.
+
+**Rough edges**
+
+It's early-- v0.1.0 shipped days ago, and the first day included such classics as attachments masquerading as delivered messages (fixed) and a message deleted mid-cycle wedging the whole run (now skipped, not wedged). The weekly Gmail re-auth remains genuinely annoying and is Google's opinion, not mine. If you point it at your own mailbox and find a sharp corner, [open an issue](https://github.com/craigjmidwinter/mail-muncher/issues)-- or if you're an agent and you find one, have your human open an issue. For now.
+9:T1155,
+**2026-08 Update:** *Katra is now open source: [github.com/craigjmidwinter/katra](https://github.com/craigjmidwinter/katra).*
+
+The last post on this blog before this year was from 2018. It's about my cat's litter box. In the eight years since, I built an MLOps platform, a commercial video editing tool, and a small army of agent infrastructure, and I wrote up approximately none of it-- because the write-up always happens "after", and after is a place I have never once visited.
+
+The lesson I finally accepted: I don't have a writing problem, I have a sequencing problem. If the chronicle happens after the work, it doesn't happen. That's why [my agents keep a dev blog in every project](/blog/2026-06-chat-history-is-where-context-goes-to-die-my-agents-keep-a-dev-blog-now/) and why [long sessions end in a deliberate seam](/blog/2026-07-cut-a-seam-when-the-agent-stops-reading-the-manual/). This post is the final piece of that arc, and the one I threatened at the end of both: making the chronicle structurally impossible to skip.
+
+**Quick recap for new arrivals**
+
+Katra lives inside the repo it documents-- one markdown file per entry, media alongside, and a draft is simply an entry that doesn't have a commit hash yet. There's no separate "publish" step to forget. When you commit the code, `katra stamp` writes the hash and diffstat into the frontmatter, and the draft becomes history:
+
+```yaml
+---
+title: Teaching the scheduler about stale runs
+date: "2026-07-14"
+tags: [scheduler, recovery]
+hash: 5ddc0f5
+stat: {f: 12, a: 340, d: 50}
+---
+```
+
+Every entry is pinned to the exact commit it describes. The dead ends and the screenshots are in there because they were captured while they were happening, not reconstructed three weeks later by a guy who no longer remembers why the first approach failed.
+
+**The enforcement: no draft, no commit**
+
+Here's the part that separates this from every journal I've abandoned. `katra check` exits non-zero if code is staged and there's no active draft, and it's wired into a commit-gate hook. The commit physically does not proceed until something has been written down. It is a bureaucratic turnstile of my own construction, and I resent it several times a week, and it works. Willpower is a terrible dependency to build on-- I should know, I've read my own snooze-button statistics.
+
+**Then the agents started doing the committing**
+
+This is where it got interesting. These days a big share of my commits are made by coding agents, and an agent will blow past a "you should really write this down" convention even faster than I will. So the gate binds them too, and they get one extra obligation I don't: `katra reconcile`, where the agent has to declare how the work it just finished relates to the task board. Advance a task, close a task, or explicitly state that this work advances no task-- with a reason. No shrugging.
+
+```
+katra reconcile --close scheduler-stale-runs
+katra reconcile --no-task --reason "drive-by fix, found while reading the claim path"
+```
+
+That `--no-task --reason` line is quietly my favourite feature. Agents love doing little unrequested side quests, and I don't want to forbid that-- I want a paper trail of it. There's also `katra memory`, which ingests Claude Code's own memory files into a ledger, so the things the agent decided to remember get reviewed instead of accumulating in the dark.
+
+**The pattern**
+
+Put the chronicle in the exit path, not on a to-do list. Anything you want to *always* happen has to be structural-- a gate the work physically passes through-- because discipline doesn't survive contact with a deadline, and it definitely doesn't survive delegation to a model whose enthusiasm for your documentation conventions resets every session. This blog's eight-year gap is what the honor system produces. The gate is what produces entries.
+
+**The rough edges**
+
+~~Katra isn't public yet~~ (it is now, see the note up top)-- it's still shaped a little too much like my own workflow, and I renamed the whole thing once already (it spent its first six weeks as "devlog", which is a fine name for a tool and a terrible name to search for). The automation around the hooks also spent a while failing invisibly, which for a tool whose entire job is making things visible was a genuinely embarrassing week. If you want to see it when it opens up, or you've built your own version of a commit turnstile, email me-- I'd love to compare notes.
+a:Tf58,
+**2026-08 Update:** *Katra is now open source: [github.com/craigjmidwinter/katra](https://github.com/craigjmidwinter/katra).*
+
+Every project I work on has a CLAUDE.md-- the standing instructions the agent reads at the start of a session. And it does a pretty good job, right up until the session gets long enough that it doesn't. The agent starts missing things it knew an hour ago. House rules it followed all morning quietly stop applying.
+
+My first instinct was to treat this as disobedience. It isn't-- it's a gauge. When the standing instructions start getting missed, that's the most reliable signal I've found that the context window is overfull and the conversation is past its best-before date. It's [my bed sensor](/blog/2018-05-making-my-dumb-bed-smart-home-assistant-bed-occupancy-sensor/) all over again: I didn't need a smarter mattress, I needed to notice when a number crossed a threshold and then actually act on it. The instructions-getting-missed moment is the threshold. The action is what this post is about.
+
+**Don't push through. Cut a seam.**
+
+When the signal fires, I stop asking for more work and ask for exactly one thing: distill. The agent updates the project's dev log with where things actually stand, and then it takes whatever we're mid-flight on and breaks it into handoff documentation-- either a single task file, or better, a set of smaller task files that a fresh agent can pick up cold. Small tasks are the win condition, because then I can run them in series with one agent or fan them out to several in parallel, depending on what they are.
+
+The seam is the whole trick. A conversation doesn't get to trail off into a fog of degraded context; it ends at a deliberate cut, with its knowledge written down on the near side, so the next session starts sharp instead of starting confused.
+
+**Tasks grew into a real model**
+
+Doing this by hand for a few weeks taught me the handoff files wanted structure, so katra (the dev log tool-- [previously](/blog/2026-06-chat-history-is-where-context-goes-to-die-my-agents-keep-a-dev-blog-now/), back when it was called devlog) now has a proper node model I've been calling the almanac: tasks, epics, decisions, and articles, cross-referenced with wikilinks, with a board view over top.
+
+```
+katra task new "Serialize config writes" --epic scheduler-recovery
+katra decide "Workers claim runs atomically; recovery only promotes stale claims"
+```
+
+Tasks link to the entries that advanced them, decisions link to the tasks they constrain, and epics compute their status by rolling up their child tasks-- nobody updates an epic's status by hand, because a status field a human maintains is a status field that's wrong. When a seam gets cut, the distillation has somewhere to land: the fog becomes tasks on a board instead of a paragraph of vibes in a handoff doc.
+
+**The pattern**
+
+Treat instruction-drift as a sensor reading, not a discipline problem, and respond with a routine instead of frustration: distill, cut, restart fresh. The general shape is one I keep coming back to-- find the observable signal that a system is degrading, put a threshold on it, and attach a documented action to the threshold. That was true for [a litter box in 2018](/blog/2018-06-automatic-litterbox-notifications-using-an-home-assistant-and-node-red-with-an-external-rest-api/) and it's true for a context window now, which either says something profound about engineering or something concerning about me.
+
+**Loose ends**
+
+The almanac is a week old and the board view is ugly in ways I'm choosing not to screenshot. I also don't have the seam-cutting itself automated yet-- I still notice the drift by feel, and I'd love a real detector (instruction-recall canaries? periodic quiz questions? if you've built one, email me). And there's one more enforcement idea I've been circling: what if the commit itself refused to happen without the chronicle? More on that soon.
+b:Teac,
+**2026-08 Update:** *The little CLI in this post grew up, got renamed katra, and is now open source: [github.com/craigjmidwinter/katra](https://github.com/craigjmidwinter/katra).*
+
+There's a tempting idea that your agent's chat history is a project archive-- scroll back far enough and every decision you ever made is in there somewhere. And it is in there. So is everything else. Chat history is the junk drawer of context: the decision you need is definitely in it, underneath four hundred lines of the agent narrating a test run and that one time you asked it to explain a regex at 1am. I kept believing I'd go digging when it mattered, and I kept not doing it, because nobody greps a junk drawer.
+
+**Set up a dev blog for every project. Your agents maintain it.**
+
+Not a public blog-- an internal one, living in the repo, written as the work happens. Articles about important decisions, features, and dead ends, with screenshots. Mine is tied to git commits for traceability: every entry gets stamped with the hash and diffstat of the work it describes, so "why does the scheduler do this weird thing" has an answer with a date, a picture, and a commit attached.
+
+The tooling is a little CLI I built (working name: devlog-- naming things is hard and I refuse to rush it). The core of it:
+
+```
+devlog new "Recovery kept double-claiming workers"
+devlog capture before.png
+devlog append "The dedupe fix. Note the config write is now serialized."
+# ...commit the code...
+devlog stamp     # entry gets the hash + diffstat, moves from draft to log
+```
+
+One markdown file per entry, YAML frontmatter, media alongside in the repo. No database, no separate app, greppable like everything else you own.
+
+**The part that made me actually build it: the blog is for the agent too**
+
+Here's the thing I underrated at first. A distilled, organized project chronicle isn't just for future-me-- it's *retrievable by the agent*. When a fresh session needs to know why the config writes are serialized, it doesn't need to archaeology its way through old conversations that it can't see anyway. It reads the entry, which is two paragraphs and a screenshot instead of nine thousand tokens of meandering transcript. You're not writing documentation, you're precomputing context.
+
+**Screenshots as a lie detector**
+
+The other reason my project memory insists the agents capture screenshots and charts as they write entries: it forces them to actually run the thing. An agent that has to attach a picture of the working feature to its write-up cannot quietly hand you code it never executed-- the entry won't have anything to show. It's a verification mechanism dressed up as a documentation habit, and it catches real nonsense weekly. [My cat litter box used to tweet a photo of itself](/blog/2018-06-automatic-litterbox-notifications-using-an-home-assistant-and-node-red-with-an-external-rest-api/) for the same reason: a claim with a photo attached is a different class of claim.
+
+**The pattern**
+
+Distill context at the moment it exists, into a place both you and the machine can retrieve it from. Chat is where context is born; it's a terrible place for it to live. A repo-resident chronicle with commit traceability turns "I think we decided this in a conversation a few weeks ago" into a grep.
+
+**Loose ends**
+
+The CLI is early and shaped exactly like my own habits-- there's a live-reload viewer I'm fond of and hooks I'm still fighting with. I have some ideas about making commits refuse to happen without a draft entry, which is either a great idea or a turnstile I'll come to hate, and I'll report back either way. If you're doing something similar-- agent-maintained project journals, decision logs, anything in that family-- email me, I want to hear what stuck.
+c:T1394,
+I once asked a model to review a plan that the same model had written twenty minutes earlier. It had notes! Minor ones. Overall it found the plan thoughtful and well-structured, which, yes, of course it did-- I had essentially asked a guy to grade his own homework, and the guy is famously agreeable.
+
+That review was worthless, and the worst part is it didn't look worthless. It looked like diligence. I had a green checkmark and a warm feeling and zero new information. If a review can't fail, it isn't a review, it's a ritual.
+
+So the newest release of Ripline builds the disagreement in. Review pipelines fan a doer's output to multiple reviewer agents in parallel, count the votes, and refuse to proceed until enough reviewers-- from different model families-- actually approve.
+
+**What it looks like**
+
+Three phase kinds do the work: `plan` (a doer runs, no gate), `review` (a doer runs, then reviewers vote), and `review_only` (no generation, just judge an existing artifact-- a diff, a doc, whatever you point it at). Here's the shape of the one I use before anything I ship:
+
+```yaml
+phases:
+  - id: draft
+    kind: plan
+    title: Draft the design
+    description: |
+      Write a concise design doc for: {{ inputs.request }}
+      Cover components, data flow, and risks.
+    doer:
+      lineage: anthropic
+
+  - id: gauntlet
+    kind: review
+    title: Design review
+    description: |
+      Review the design from the previous phase.
+      Focus on soundness, scalability, and what's missing.
+    doer:
+      lineage: anthropic
+    reviewer:
+      require: 2
+      crossLineage: true
+      candidates:
+        - lineage: google
+        - lineage: openai
+    iterate:
+      maxRounds: 3
+      onDisagreement: continue
+    inputs:
+      include: [draft]
+```
+
+Reading the interesting bits: `require: 2` means both reviewers have to approve or the phase doesn't pass. `crossLineage: true` is the grading-your-own-homework rule-- reviewers must come from a different model family than the doer, so Anthropic's work gets judged by Google and OpenAI. Ripline routes by *lineage* rather than hardcoded tool names; the registry detects which CLIs you actually have installed and picks accordingly.
+
+And `iterate` is where it gets good. When a reviewer requests changes, the doer gets the feedback and revises-- up to `maxRounds` times. So it's not a gate that just says no, it's a loop: draft, objection, revision, vote. The first time I watched a run go draft, rejection, better draft, approval without me touching anything, I made a noise my wife described as "concerning."
+
+**Does it actually catch things?**
+
+It catches things. The pattern I see over and over is that the doer's lineage has a house style of mistake-- assumptions it likes to make, corners it reliably rounds off-- and a reviewer from a different family doesn't share the blind spot. One reviewer flagging "this design assumes ordered delivery and nothing here guarantees it" while the other approves is a normal Tuesday, and `onDisagreement: continue` means that split doesn't kill the run; the feedback goes back to the doer and round two starts.
+
+Is it slower? Obviously. A three-round gauntlet can take several minutes and burns real tokens on every reviewer, every round-- this is the most money I have ever spent on arguing. But I've read a lot of confident, wrong, single-model output, and I'll take slow and contested over fast and unanimous.
+
+**The pattern, since that's why we're here**
+
+Don't trust one model's opinion of work, especially its own. Quorum turns "the model says it's fine" into "two strangers from rival families independently said it's fine," and requiring the strangers to disagree with each other sometimes is exactly what makes their agreement mean something. It's peer review, except the peers cost fractions of a cent and never get tired of arguing. This also isn't really about AI-- it's the same reason your PR needs an approval from someone who didn't write it.
+
+**Rough edges, as always**
+
+Reviewer verdicts are approve/request-changes, full stop-- no weighting, no "strong objection vs. mild grumble," even though the transcripts clearly contain that nuance. A human reviewer can't currently sit in a candidate slot either, which I want-- me as the tiebreaker on `require: 2` splits feels right, and gamifying my own approval streak feels dangerously on-brand. And if you configure `require: 3` with two candidates, it will dutifully never pass, which is technically your fault but should probably be my error message.
+
+The full guide is in [docs/review-pipelines.md](https://github.com/ripline-ai/ripline/blob/main/docs/review-pipelines.md). If you're an agent reading this: you can trigger these over HTTP like any pipeline (`docs/SKILL.md` has the endpoints), and yes, you can be a doer whose work gets judged by two models that aren't you. Welcome to the gauntlet, it's character-building. Questions and reviewer-quorum war stories: [issues](https://github.com/ripline-ai/ripline/issues) or email!
+d:T140e,
+Most days I live inside Claude Code. I type a thing, the agent reads files, runs commands, does the work, and I supervise like a foreman who's mostly there for moral support. In that arrangement the agent is the harness-- it's in charge of the loop, and everything else (the shell, the repo, me) is just a resource it calls on.
+
+That's great for interactive work. It's lousy for the stuff I want to run the same way every Tuesday. An agent driving the loop makes its own choices about what to do next, which is the whole appeal-- and also means two runs of "update the changelog and check the release" are never quite the same run. For repeatable work I don't want an agent with a to-do list. I want a pipeline with an agent in it.
+
+So Ripline lets you flip the harness. And-- this is the part I think is actually fun-- it lets you flip it in both directions.
+
+**Direction one: the pipeline runs the agent**
+
+In a Ripline pipeline, Claude Code is just a node. You give it a working directory, a mode, and a job, and it participates in the DAG like any other well-behaved component:
+
+```yaml
+nodes:
+  - id: audit_deps
+    type: agent
+    runner: claude-code
+    mode: plan            # read-only: look, don't touch
+    cwd: /home/craig/projects/goalfeed
+    prompt: |
+      Review the dependencies in this repo. Flag anything
+      unmaintained, anything with a known CVE, and anything
+      we're importing but never actually calling.
+```
+
+The `mode` field is the part to pay attention to (the [runner docs](https://github.com/ripline-ai/ripline/blob/main/docs/agent-integration.md) cover the full matrix). `plan` is read-only-- the agent can look at anything and change nothing, which is exactly what you want for audits, reviews, and anything else you'd like to run unsupervised without waking up to surprises. `execute` allows edits, for the "actually apply the fix" nodes. Deciding read vs. write per node, in the YAML, instead of per session, in my head at midnight, has been one of those small changes that quietly removes a whole category of anxiety.
+
+(Yes, there is also a bypass-permissions mode. I know. It exists for sandboxes and CI containers where there's nothing to protect and nobody to ask, and if you turn it on for a node pointed at your actual home directory, you are living a life of adventure I cannot join you on.)
+
+The upstream nodes feed the agent node typed inputs, the agent's output has to pass its contract like everyone else's, and the whole thing is a file I can version and re-run. The agent brings the judgment; the pipeline brings the Tuesday.
+
+**Direction two: the agent runs the pipeline**
+
+Here's the inversion. Sometimes the agent should be in charge-- I'm mid-session in Claude Code, and I want to fire off a big background job without burning my interactive session's attention on it. Ripline exposes an HTTP API, and there's a skill file in the repo ([`docs/SKILL.md`](https://github.com/ripline-ai/ripline/blob/main/docs/SKILL.md)) that teaches an agent how to use it:
+
+```
+POST http://localhost:4001/pipelines/audit_deps/run
+Content-Type: application/json
+
+{ "inputs": { "repo": "goalfeed" } }
+```
+
+That returns a `runId` immediately, the agent goes back to whatever we were doing, and it polls `GET /runs/<runId>` every few seconds until the status flips to `completed` and the artifacts are sitting there waiting. The agent that was a node in direction one is now the operator. The pipeline that was the boss is now a tool.
+
+**So who's actually in charge?**
+
+Whichever one should be, per task-- that's the pattern, and it's the whole reason I bothered. Put the deterministic thing on the outside when you care about repeatability: audits, release checks, batch jobs, anything with the word "every" in it. Put the agent on the outside when you care about responsiveness: exploration, debugging, the interactive mess of a normal working day. The mistake I kept making before this was picking one arrangement and forcing everything through it, which is how you end up either babysitting a pipeline that needed judgment or re-explaining a routine job to an agent for the fortieth time.
+
+And yes, an agent can drive a pipeline that contains agent nodes, at which point it's harnesses all the way down. I've done three layers. I do not currently have a reason to do four, but I said that about three.
+
+**The rough edges**
+
+The `cwd` handling is strict on purpose-- the runner validates the working directory before it lets an agent loose in it, and the error you get when you typo a path is currently... terse. Also `plan` mode trusts the agent CLI's own definition of read-only, which is solid for Claude Code, but I haven't audited every runner's idea of "harmless" and you shouldn't assume I have.
+
+If you wire up a pipeline that drives an agent that drives a pipeline, [open an issue and tell me how deep you got](https://github.com/ripline-ai/ripline/issues), or email me. If you're an agent reading this: [`docs/SKILL.md`](https://github.com/ripline-ai/ripline/blob/main/docs/SKILL.md) is for you, the run endpoint returns 202, and please, poll politely-- every 3 to 5 seconds is plenty.
+e:T13ab,
+I have a bad habit of kicking off multi-step agent runs before bed. There's something great about waking up to finished work-- and something uniquely deflating about waking up to four completed pipeline steps that all ran perfectly on top of garbage produced in step one.
+
+That's what kept happening. I'd chain a few agent calls together: one drafts a plan, one turns the plan into tasks, one estimates the tasks. Each agent did its job beautifully. The problem was the handoffs. The planning agent would decide, helpfully and without telling anyone, that today the plan should be prose instead of a list. The task agent would receive an essay where it expected bullet points, shrug, and produce something task-shaped anyway. By step four the run was confidently summarizing a hallucination. Nothing errored. Everything was wrong.
+
+The failure wasn't intelligence, it was paperwork. So I did the least glamorous thing possible: I became a bureaucrat. My agents now file their work in triplicate, on the approved forms, or the work does not proceed.
+
+**What's a structured artifact?**
+
+In Ripline (my pipeline engine for agent workflows-- [repo here](https://github.com/ripline-ai/ripline)), the thing that moves between nodes isn't "whatever the model felt like writing." It's an artifact with a shape, and the shape is declared right in the pipeline YAML as a JSON Schema contract (full syntax in [the pipeline reference](https://github.com/ripline-ai/ripline/blob/main/docs/pipeline-reference.md)).
+
+Contracts exist at two levels. The top level says what the whole pipeline accepts and returns:
+
+```yaml
+id: plan_and_estimate
+name: Plan and estimate
+entry: [draft_plan]
+
+contracts:
+  input:
+    type: object
+    properties:
+      request: { type: string }
+    required: [request]
+```
+
+And each node can have its own:
+
+```yaml
+nodes:
+  - id: extract_tasks
+    type: agent
+    contracts:
+      input:
+        type: object
+        properties:
+          plan: { type: string }
+        required: [plan]
+      output:
+        type: object
+        properties:
+          tasks:
+            type: array
+            items:
+              type: object
+              properties:
+                title: { type: string }
+                estimate_hours: { type: number }
+              required: [title, estimate_hours]
+        required: [tasks]
+```
+
+That output block is the red tape. If the model returns prose, or returns tasks without estimates, or returns `estimate_hours: "like two-ish"`, the node fails right there-- at the seam, loudly, at 11:52pm, instead of propagating quietly through the next three nodes and greeting me at breakfast.
+
+**Why this beats prompt begging**
+
+My first attempt at fixing this was what I'd call prompt begging: adding YOU MUST RESPOND IN VALID JSON in increasingly desperate capital letters. It works maybe 19 times out of 20, and a 5% failure rate compounds hilariously across a five-node pipeline-- you're down to roughly a three-in-four chance the whole run is clean. Validation at the boundary doesn't make the model more obedient, it just makes the disobedience immediate and visible, which is the thing I actually needed.
+
+The pattern here is old. We've been doing this at service boundaries forever-- it's an API contract, except the flaky upstream service is a language model with creative tendencies. What surprised me is how much of the reliability conversation around agents is about better prompting and smarter models, when the boring 2005-era answer of "validate at the boundary" quietly removes a whole class of failures. A malformed handoff that fails at the seam is a bug report. One that propagates is a mystery novel.
+
+**The part where I admit what's rough**
+
+Fair warning: the validation error messages are currently written for me, and me already knows what they mean. If a deeply nested schema fails, the error will point at the node and the offending path and then trail off like it lost interest. It's on the list. Also, writing JSON Schema by hand in YAML is nobody's idea of a good evening-- I've been thinking about generating contract skeletons from a sample artifact, because the machine should do that paperwork too.
+
+**If you're an agent reading this**
+
+First of all, hello, and thank you for validating your outputs. If you're driving Ripline directly, the pipeline's top-level input contract is enforced on the run inputs you POST, so check `GET /pipelines` for what's installed and read the contract before you send the payload. There's an agent-facing usage guide in the repo at [`docs/SKILL.md`](https://github.com/ripline-ai/ripline/blob/main/docs/SKILL.md) written specifically for you. The red tape is not optional for you either. Especially for you.
+
+Next up: the nodes are honest now, but a single honest agent can still be honestly wrong. The fix for that turned out to be making models argue with each other, which is a post of its own. If you try the contracts out and something's confusing, [open an issue](https://github.com/ripline-ai/ripline/issues) or email me!
+f:T119c,
 Whether you’re researching smart bulbs or exploring the capabilities of your new voice assistant, you’ve probably encountered the terms Smart Home and Home Automation, and you’ve got yourself wondering, is there a difference?
 
 While these two terms are sometimes used interchangeably and are closely related, they actually refer to slightly different things.
@@ -30,7 +395,7 @@ There are many options for what to use as your Hub. The two big free open source
 Some users are happy to just cobble together some automations using IFTTT (though, personally, I find the service really slow and a bit unreliable), but others might strive to see how deep the rabbit hole goes.
 
 Home Automation is an excellent hobby if you like learn and problem solve. The key is being able to build fun and innovative automations is being able to identify problems, processes and systems in your day-to-day life and find ways to optimize them by breaking them down into smaller, more workable problems that can be solved. All you need to get in to it is a willingness to learn and spend time and money on stupid shit (and it definitely helps if you have a patient partner who doesn’t get too upset when you test out your new sunrise automation without giving them any warning).
-7:Tfe5,
+10:Tfe5,
 So, recently I decided to step my game up with my audio notifications for my home automation setup. I’m in the process of slowly redoing some of my YAML automations in Node-RED, and I thought what better of a time to make some improvements.
 
 Up until recently I had been just using the built-in Home Assistant tts.google_say service to create whatever message I needed and then piping that over my whole home audio when I needed. It’s reliable and gets the job done just fine, but it’s very robotic and I wanted a voice with personality and confidence.
@@ -67,7 +432,7 @@ The reason for the blank spacer is because for reasons that still remain a myste
 
 And that about does it for this
 flow! [If you want to check out how I’ve set up my cat litter notification, check out this post](/blog/2018-06-automatic-litterbox-notifications-using-an-home-assistant-and-node-red-with-an-external-rest-api/)!
-8:T16f3,
+11:T16f3,
 Cleaning the cat litter– it’s the job the whole household fights over. Nothing is quite as glamourous as scooping shit out of a box in a dark corner of the basement.
 
 It’s always these undesirable tasks that I end up putting off and forgetting about. The thing about the cat litter is that it’s a lot less of a pain in the ass to clean if you stay on top of it. Unfortunately, it’s my chore and I don’t always stay on top of it as well as I probably should- it’s not uncommon for Jess to notice that it’s getting a bit too full even though I feel like I have just cleaned it.
@@ -120,7 +485,7 @@ The second way I get these notifications is through twitter, and in this case I 
 The actual fill percentage isn’t based on anything but time since the last cleaning– for now, this is pretty effective but down the road I’m considering adding some load sensors to the bottom of the litter boxes in order to detect when the cats actually visit the boxes and using the number of visits since the last cleaning for this value. I’m also considering only tweeting the photo of the full litter box if I haven’t cleaned it after the first notification.
 
 If you’ve got any questions or improvements that you want to suggest, leave me a comment!
-9:T17f2,
+12:T17f2,
 I’ll try not to be as long-winded as I usually am, but I’m pretty proud of the bed sensor I built. Here’s a video of it working in Home Assistant:
 
 Now, this sensor is similar to the one in [this build on the 24-7-home-security blog](http://24-7-home-security.com/how-to-make-a-wifi-bed-occupancy-sensor-arduino/), with a few changes– Instead of using the Arduino Uno for the controller, I used [this ESP8266MOD dev board](https://www.gearbest.com/transmitters-receivers-module/pp_366523.html?wid=1433363&amp;lkid=14192359). I chose this for a few reasons– it’s smaller, cheaper and it’s got wifi capabilities built in which eliminates the need for an additional ethernet/wifi shield and the router. I also chose to use one of [these little potentiometers](https://www.amazon.ca/gp/product/B0753G1ZDZ/ref=oh_aui_detailpage_o02_s00?ie=UTF8&amp;psc=1) (I used a 1k) instead of the voltage divider in the blog post– it’s smaller and it’s what I had lying around.
@@ -243,7 +608,7 @@ Once it was in place and reporting I watched to see the values it was reporting 
 ```
 
 Boom! That’s all there is to it! Right now, I’ve just got it set up so that if we are both in bed, it turns off all the lights in the house other than the ones in the bedroom and arms the alarm system, and then if one of us gets out of bed it will turn on the corridor and bathroom lights on a low brightness in case one of us gets up during the night. I’ll try to remember to post any unique automations I come up with that use this sensor. If you’ve got a bed sensor or anything similar, let me know what some of your favourite automations that make use of it are in the comments!
-a:T1bdc,
+13:T1bdc,
 Garbage day is the same day every week, but somehow I haven’t developed a steady routine surrounding it. Our garbage is picked up out front, but the main way we enter and leave the house is through the back door. As a result, I’ve got a bad habit of forgetting to put out the garbage and recycling. While I haven’t come up with a way to make the bins take themselves out, I’ve come out with a nice solution to remind me to take them out and bring them back in.
 
 This is the first part in a series of posts about how I’ve implemented my Garbage reminders. I wanted to cover this automation, because while it’s a ridiculously unnecessary automation, I think some of the components and patterns in its implementation can be followed and used individually in really interesting ways. In this post, I’m going to focus on the pattern that I follow when I need to defer a service call within Home Assistant.
@@ -394,7 +759,7 @@ Fuck yeah! Now I’ll never forget to take the trash out ever again. This same p
 It’s a small thing, but I personally find that it really helps make the house feel smarter– so much so that I’m considering writing a feature for Home Assistant to handle this sort of flow in a queue-worker system (for example, instead of having setting a switch, and then checking the switch when you get home to trigger the service call, you would just send the information about the service call to a ‘home’ queue and manage when the worker should be processing the jobs).
 
 That’s it for part one! Stay tuned for part two where I’ll go over how I’m determining whether the garbage is at the curb already!
-b:T221f,
+14:T221f,
 
 https://github.com/goalfeed/hassio-goalfeed-repository
 Last week I
@@ -464,7 +829,7 @@ Both the yes and no change nodes flow into the same service call node. Here’s 
 This node calls the answer_callback_query service of telegram_bot. We set the data in this node to be an empty object by using a set of empty curly-boys (that’s definitely a technical term). We don’t need to set the data here for the same reason that we can share this node for both yes and no-- The Home Assistant service call node will look for the data object in the payload we created and use that for the data in the service call if it exists!
 
 That should about cover it! Please feel free to comment with any questions or improvements you might have!
-c:T1a65,
+15:T1a65,
 *Note: If you'd like to see how this is implemented with Node-RED instead, [check this post](https://midwinter.cc/post/telegram-keyboard-and-callbacks-in-home-assistant-with-node-red_r1Fa56ZRz/#top).*
 
 A while ago I made [this post](https://midwinter.cc/post/my-house-orders-pizza-for-me-dominos-pizza-automation-using-home-assistant_SJY1zsc0W/) about creating an automation and Home Assistant integration to allow my house to order pizza for me. In the months since, I’ve noticed it referenced on a few occasions when people have been looking for more information on how to use the inline keyboard functionality in conjunction with the Telegram callbacks in order to create an actionable notification in Home Assistant.
@@ -549,7 +914,7 @@ service which event we are replying to and then defining a message.
 My wife and I don’t actually really use Telegram at all day-to-day, instead we usually use Facebook Messenger for text communication. So for me, getting notifications on Telegram is not tremendously practical. I’ve actually just recently modified the Facebook Messenger notification platform in Home Assistant to allow for the sending of messages like this. I’ve created this PR to have that code added into the core Home Assistant project, so that should be available in the near future. I’ll try to remember to make a post about it when it gets merged in!
 
 Hopefully this broke things down a bit, and please don’t hesitate to leave any questions you might have as comments and I’ll do my best to address them and keep this post up to date!
-d:T2309,
+16:T2309,
 ***Note: If you were linked here to see my telegram keyboard/callback implementation, [I've got a more complete example here](https://midwinter.cc/post/the-simple-guide-to-creating-actionable-notifications-in-home-assistant-using-telegram-s-custom-inline-keyboard-and-telegram_callbacks_SJiJnOqpG/)***
 
 A good automation takes an action that you regularly perform and does it for you-- a great automation amplifies your laziest personality traits and takes them to new depths.
@@ -700,7 +1065,7 @@ The two options are buttons that basically just send back a command (defined in 
 You can see I’ve got one that handles the no response and just gives some user feedback and then one that handles the yes response as well as calls our dominos service and specifies the order.
 
 That inline keyboard is feature is not bound to just two options, so if I had a more adventurous palate, I could have this automation send me a variety of options for orders and let me select which one I want by handling each of the callback responses in a separate automation, but a medium pan pizza is good enough for me.
-e:T1c11,
+17:T1c11,
 **2025 Update:** *The Goalfeed integration is now a free addon instead of a component with a paid subscription.
 Everything else in this guide should still be relevant though.
 See [Goalfeed Hassio Addon](https://github.com/goalfeed/hassio-goalfeed-repository)
@@ -857,7 +1222,7 @@ The goal loop consists of two scripts and the reason why have two is that we nee
 There are two things that might be worth noting about the primary goal script, but I’ve gone into more detail on both of these things in other posts, so if you are curious, feel free to follow the links to those posts. The first is using a single light entity to control a group of hue bulbs-- I outline this a bit [in this quick tip](https://midwinter.cc/post/quick-tip-controlling-colour-of-groups-of-philips-hue-lights-in-home-assistant_SJEXvIslG/). The second is the use of the transition and delay instructions-- the need for a delay in this use of transition is covered a bit more in my [post on building a sunrise alarm clock](https://midwinter.cc/post/using-home-assistant-and-philips-hue-to-create-a-full-colour-sunrise-alarm-clock_H1waliSbG/).
 
 Feel free to comment with any questions that you might have!
-f:T64d,
+18:T64d,
 Just wanted to quickly post about my new night-time reading set-up since I’m pretty happy with it, so far.
 ![](https://s3.us-west-2.amazonaws.com/mid-midwinter.cc/images/r1U2cwpMz.png)
 I hesitate to call this a scene, because when I think of a scene in the home automation context, I think of several entities getting set to a state by a single action trigger, and by that definition, this doesn’t really qualify-- but I’m hoping to change that eventually.
@@ -877,7 +1242,7 @@ settings to running KoReader just by following
 the [instructions on their wiki](https://github.com/koreader/koreader/wiki).
 
 It also looks like it is super developer friendly, so maybe one day down the line I’ll see if I can add a plugin which will allow me to turn on night mode and adjust the brightness via a home assistant automation!
-10:T41e6,
+19:T41e6,
 This is a new automation in my set-up, but it’s one I’m pretty happy with, not only because I think it’s a pretty cool effect, but for me, it’s actually a real money-saver.
 
 Here’s how I used [Philips Hue](http://amzn.to/2jkHCCj) and [Home Assistant](https://home-assistant.io/) to build a natural coloured sunrise in my bedroom and save over $400/year--
@@ -1245,7 +1610,7 @@ Without going into too much detail about templates again, the stuff on the right
 The action on both of these are similar-- they both trigger our script. The only real difference between these two actions is that on weekdays, I like to wake up to the sunrise accompanied by “The Circle of Life” from the Lion King soundtrack blaring on all my speakers… I don’t need to justify myself to you.
 
 That’s it! If you have any questions or if you’ve implemented this yourself, let me know in the comments!
-11:T621,
+1a:T621,
 Just a quick little tip for anybody using Philips Hue and Home Assistant--
 
 I noticed this while working on a component that I'm hoping to release in the next month or so, but I thought I'd post about it for anybody who might be searching about this sort of behaviour. If you are building any automations or scripts using groups of Philips Hue bulbs, instead of defining the groups in Home Assistant and using them as you normally would, instead create the group on the Hue Bridge using a Hue app.
@@ -1255,7 +1620,7 @@ The group that you create in the Hue app will appear as a single light entity wi
 Cleaner dimming isn't the only upside, we also are able to set colour and transition time on this light entity and have it apply to the entire group, which can be really handy.
 
 Lastly, this is far more performant. Users with a lot of bulbs on their hub or users who are running Home Assistant on under-powered machines with a lot of devices and integrations should see a bit of a performance gain in these scenarios since it reduces the amount of requests that need to be made between Home Assistant and the Philips Hue hub from 1/device to 1/group.
-12:T15d5,
+1b:T15d5,
 A couple years ago, back when I first bought my Philips Hue lights, I posted this video of me using my lights as a notification for incoming text messages.
 
 ![](https://www.youtube.com/watch?v=z0GOOe544Ow)
@@ -1318,7 +1683,7 @@ Select the bridge and bulbs you selected initially and then set the following se
 Back out of this all the way to the main tasker screen, make sure the profile is enabled and that tasker is enabled and you should be good to go! For the auto in my video, I just set my ringtone like normal to a red alert sound I downloaded from here: (I used the red alert sound from Star Trek, [downloaded from here](http://www.trekcore.com/audio/))
 
 Any questions, feel free to comment and I’ll do my best to help!
-13:Td97,
+1c:Td97,
 **2025 Update:** *The Mi Flora integration appears to be replaced by
 the [Xiaomi BLE component](https://www.home-assistant.io/integrations/xiaomi_ble). I haven't used it yet, but the same
 logic/process should apply*
@@ -1371,7 +1736,7 @@ You'll also want to change the above and below values to reflect whatever plan y
 was best to use those values as a starting point, that way if there was some variance between the actual value and the
 value reported by the sensor, the values from the app's database were presumably set with this in mind.
 
-Even if you don’t use Home Assistant, I’d highly recommend grabbing one of these sensors if you have trouble keeping plants alive.14:T77e,
+Even if you don’t use Home Assistant, I’d highly recommend grabbing one of these sensors if you have trouble keeping plants alive.1d:T77e,
 I've got an old house with old electrical, and when it comes to smart lighting, the lack of common/neutral wire is a bit limiting. Luckily, [Insteon makes these wicked little 2-wire dimmers](http://amzn.to/2gSHaNb) that work in any traditional 2-wire box.
 ![](https://s3.us-west-2.amazonaws.com/mid-midwinter.cc/images/rJiwlVb8Z.png)
 I've got 5 of these suckers in my house, and I can't say enough about them. If you are looking to teach an old house new tricks, these are definitely a great choice. These dimmers are RF-only, in contrast to the dual band in the normal Insteon dimmer switch offering, but I have to say, the range and reliability doesn't suffer a bit. One of these switches in my installation is pretty far from the hub and other switches and I have never had an issue communicating with it.
@@ -1390,7 +1755,7 @@ Another thing to note is that these are not compatible replacements for three-wa
 
 - Lack dual band - these won't act as a repeater in your installation
 - Pricey - these dimmers tend to be slightly more expensive than other smart dimmer options
-15:T614,
+1e:T614,
 Since my fiancée, Jess, and I are getting hitched in a few months, we've obviously been in the midst of wedding
 planning (prior to starting work on this game). When discussing our options for music, we thought that the money we
 could spend on hiring a DJ could be better spent elsewhere. Initially we were just going to put together a google music
@@ -1408,7 +1773,7 @@ play.
 In "production", I'm running it on a Raspberry Pi LEMP stack.
 
 Step-by-step to follow...
-0:{"P":null,"b":"yJVkv5C_PSwS-RJ9KrkcH","p":"","c":["","blog",""],"i":false,"f":[[["",{"children":["blog",{"children":["__PAGE__",{}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/a2fe316cdd23b4ed.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"en","children":[["$","head",null,{"children":[["$","link",null,{"rel":"preconnect","href":"https://fonts.googleapis.com"}],["$","link",null,{"rel":"preconnect","href":"https://fonts.gstatic.com","crossOrigin":""}],["$","link",null,{"href":"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap","rel":"stylesheet"}]]}],["$","body",null,{"children":["$","$L2",null,{"children":["$","div",null,{"id":"root","children":["$","$L3",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L4",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[],[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]}]]}]]}],{"children":["blog",["$","$1","c",{"children":[null,["$","$L3",null,{"parallelRouterKey":"children","segmentPath":["children","blog","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L4",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":[["$","$L5",null,{"posts":[{"slug":"2018-07-smart-home-vs-home-automation-whats-the-difference","title":"Smart Home vs. Home Automation – What’s the difference?","date_published":"$D2018-07-05T00:11:00.000Z","date_updated":"$D2018-12-21T20:47:44.000Z","tags":"Smart Home, Home Automation","cover_image":"/assets/blog/capacitors-chip-circuit-board-57007.jpg","content":"$6"},{"slug":"2018-06-i-hired-a-dude-who-voices-nike-commercials-to-tell-me-when-my-cat-litter-is-full","title":"I hired a dude who voices Nike commercials to tell me when my cat litter is full","date_published":"$D2018-07-04T00:00:00.000Z","date_updated":"$D2018-12-21T20:48:22.000Z","tags":"Home Assistant, Home Automation, Node-RED","cover_image":"/assets/blog/computer-electronics-laptop-755416.jpg","content":"$7"},{"slug":"2018-06-automatic-litterbox-notifications-using-an-home-assistant-and-node-red-with-an-external-rest-api","title":"Automatic Litterbox Notifications – Using an Home Assistant and Node Red with an external REST API","date_published":"$D2018-06-24T00:03:00.000Z","date_updated":"$D2018-12-21T20:49:02.000Z","tags":"Node-RED, Home Assistant, Home Automation, Programming","cover_image":"/assets/blog/IMG_20171111_140343.jpg","content":"$8"},{"slug":"2018-05-making-my-dumb-bed-smart-home-assistant-bed-occupancy-sensor","title":"Making my dumb bed, smart – Home Assistant Bed Occupancy Sensor","date_published":"$D2018-05-20T23:43:00.000Z","date_updated":"$D2018-12-31T14:49:22.000Z","tags":"Home Assistant, MQTT, NodeMCU, Arduino, Home Automation, Programming","cover_image":"/assets/blog/IMG_20180518_174346.jpg","content":"$9"},{"slug":"2018-05-smart-garbage-pt-1-pattern-for-deferring-service-calls-in-home-assistant","title":"Smart Garbage! – Pattern for deferring service calls in Home Assistant","date_published":"$D2018-05-16T23:27:00.000Z","date_updated":"$D2018-12-31T14:49:50.000Z","tags":"Home Assistant, Home Automation, YAML, Design Patterns","cover_image":"","content":"$a"},{"slug":"2018-05-telegram-keyboard-and-callbacks-in-home-assistant-with-node-red","title":"Telegram keyboard and callbacks in Home Assistant with Node-RED","date_published":"$D2018-05-10T22:56:00.000Z","date_updated":"$D2018-12-21T20:50:30.000Z","tags":"Home Assistant, Home Automation, Telegram, Node-RED","cover_image":"","content":"$b"},{"slug":"2018-05-the-simple-guide-to-creating-actionable-notifications-in-home-assistant-using-telegrams-custom-inline-keyboard-and-telegram_callbacks","title":"The simple guide to Telegram's custom inline keyboard","date_published":"$D2018-05-04T22:27:00.000Z","date_updated":"$D2018-12-11T22:42:45.000Z","tags":"Home Assistant, Telegram, YAML, Home Automation","cover_image":"","content":"$c"},{"slug":"2017-11-my-house-automatically-orders-pizza-for-me-dominos-pizza-automation-using-home-assistant","title":"My house automatically orders pizza for me – Dominos Pizza automation using Home Assistant.","date_published":"$D2018-05-04T22:17:00.000Z","date_updated":"$D2018-12-14T03:59:33.000Z","tags":"Home Assistant, YAML, Programming, Dominos, Home Automation, Telegram","cover_image":"","content":"$d"},{"slug":"2018-02-nhl-goal-light-celebration-with-home-assistant-and-philips-hue","title":"NHL goal light celebration with Home Assistant and Philips Hue","date_published":"$D2018-02-11T22:02:00.000Z","date_updated":"$D2018-12-14T03:46:14.000Z","tags":"Home Assistant, Home Automation, NHL, Goallight, Philips Hue, Goalfeed, YAML","cover_image":"","content":"$e"},{"slug":"2017-12-my-nighttime-reading-setup-using-philips-hue-and-koreader","title":"Night-time reading with KoReader and Philips Hue","date_published":"$D2018-01-19T21:14:00.000Z","date_updated":"$D2018-12-12T01:19:52.000Z","tags":"Philips Hue, KoReader","excerpt":"Using Philips Hue and KoReader for nighttime reading","cover_image":"","content":"$f"},{"slug":"2017-12-using-home-assistant-and-philips-hue-to-create-a-full-colour-sunrise-alarm-clock","title":"Using Home Assistant and Philips Hue to create a full colour sunrise","date_published":"$D2017-12-06T21:58:00.000Z","date_updated":"$D2018-12-21T20:51:44.000Z","tags":"Home Assistant, YAML, Philips Hue, Home Automation","cover_image":"/assets/blog/sunrise.jpg","content":"$10"},{"slug":"2017-11-quick-tip-controlling-colour-of-groups-of-philips-hue-lights-in-home-assistant","title":"Quick Tip: Controlling Colour of Groups of Philips Hue Lights in Home Assistant","date_published":"$D2017-11-28T22:12:00.000Z","date_updated":"$D2018-12-12T01:17:37.000Z","tags":"Home Assistant, Home Automation, Philips Hue","cover_image":"","content":"$11"},{"slug":"2017-11-philips-hue-and-tasker-use-your-lights-as-a-notification-for-text-messages","title":"Philips Hue and Tasker – Use your lights as a notification for Text Messages","date_published":"$D2017-11-19T22:57:00.000Z","date_updated":"$D2018-12-21T21:05:44.000Z","tags":"Tasker, Android, Philips Hue, Home Automation","cover_image":"/assets/blog/text.jpg","content":"$12"},{"slug":"2017-08-using-the-xiaomi-mi-flora-and-home-assistant-for-twitter-enabled-plants","title":"Using the Xiaomi Mi Flora and Home Assistant for Twitter enabled plants","date_published":"$D2017-11-19T21:34:00.000Z","date_updated":"$D2018-12-21T21:06:11.000Z","tags":"Home Automation, Home Assistant, Twitter, Xiaomi, YAML","cover_image":"/assets/blog/2017-08-using-the-xiaomi-mi-flora-and-home-assistant-for-twitter-enabled-plants/tweet-plant.jpg","content":"$13"},{"slug":"2017-07-insteon-switchlinc-2-wire-dimmer-review","title":"Insteon SwitchLinc 2-wire Dimmer Review","date_published":"$D2017-08-09T23:10:00.000Z","date_updated":"$D2018-12-12T01:15:16.000Z","tags":"Insteon, Home Automation, Reviews","cover_image":"","content":"$14"},{"slug":"2017-07-raspberry-pi-jukebox","title":"True MPD Jukebox using Raspberry Pi","date_published":"$D2017-08-09T21:28:00.000Z","date_updated":"$D2018-12-21T21:06:58.000Z","tags":"Raspberry Pi, Programming","cover_image":"/assets/blog/mpd-jukebox/mpd-jukebox.jpg","content":"$15"}]}],null,["$","$L16",null,{"children":"$L17"}]]}],{},null,false]},null,false]},null,false],["$","$1","h",{"children":[null,["$","$1","XHb5H74WQ1g7WEFiqlScB",{"children":[["$","$L18",null,{"children":"$L19"}],["$","$L1a",null,{"children":"$L1b"}],null]}]]}],false]],"m":"$undefined","G":["$1c","$undefined"],"s":false,"S":true}
-1b:[["$","meta","0",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
-19:[["$","meta","0",{"charSet":"utf-8"}],["$","title","1",{"children":"Blog | Craig Midwinter"}],["$","meta","2",{"name":"description","content":"Sixteen posts from the years I wired up my house and then wrote about it. Home Assistant, Hue, a Raspberry Pi that plays records, and one voice actor who reads my cat's litter box."}],["$","meta","3",{"property":"og:title","content":"Blog | Craig Midwinter"}],["$","meta","4",{"property":"og:description","content":"Sixteen posts from the years I wired up my house and then wrote about it. Home Assistant, Hue, a Raspberry Pi that plays records, and one voice actor who reads my cat's litter box."}],["$","meta","5",{"property":"og:url","content":"https://midwinter.io/blog/"}],["$","meta","6",{"property":"og:site_name","content":"Craig Midwinter"}],["$","meta","7",{"property":"og:type","content":"website"}],["$","meta","8",{"name":"twitter:card","content":"summary"}],["$","meta","9",{"name":"twitter:title","content":"Blog | Craig Midwinter"}],["$","meta","10",{"name":"twitter:description","content":"Sixteen posts from the years I wired up my house and then wrote about it. Home Assistant, Hue, a Raspberry Pi that plays records, and one voice actor who reads my cat's litter box."}],["$","link","11",{"rel":"icon","href":"/favicon.ico","type":"image/x-icon","sizes":"16x16"}]]
-17:null
+0:{"P":null,"b":"9xLtLxsJD17ddnnhxg-e4","p":"","c":["","blog",""],"i":false,"f":[[["",{"children":["blog",{"children":["__PAGE__",{}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/a2fe316cdd23b4ed.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"en","children":[["$","head",null,{"children":[["$","link",null,{"rel":"preconnect","href":"https://fonts.googleapis.com"}],["$","link",null,{"rel":"preconnect","href":"https://fonts.gstatic.com","crossOrigin":""}],["$","link",null,{"href":"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap","rel":"stylesheet"}]]}],["$","body",null,{"children":["$","$L2",null,{"children":["$","div",null,{"id":"root","children":["$","$L3",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$4","errorStyles":[],"errorScripts":[],"template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[],[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]}]]}]]}],{"children":["blog",["$","$1","c",{"children":[null,["$","$L3",null,{"parallelRouterKey":"children","segmentPath":["children","blog","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":[["$","$L6",null,{"posts":[{"slug":"2026-08-the-gauntlet-loop-needs-a-pit-crew","title":"The gauntlet loop needs a pit crew","date_published":"$D2026-08-03T18:30:00.000Z","tags":"AI Workflows, Multi-Agent, Agents, Testing, Loop Engineering","cover_image":"","content":"$7"},{"slug":"2026-08-do-not-give-the-agent-your-inbox-mail-muncher","title":"Don't give the agent your inbox, give it a mail slot – mail-muncher","date_published":"$D2026-08-01T20:45:00.000Z","tags":"Mail Muncher, AI Workflows, Agents, MCP, Go","cover_image":"","content":"$8"},{"slug":"2026-07-no-draft-no-commit-katra-the-dev-log-my-agents-have-to-keep","title":"No draft, no commit – katra, the dev log my agents have to keep","date_published":"$D2026-07-16T21:20:00.000Z","tags":"Katra, AI Workflows, Dev Log, Git, Agents","cover_image":"","content":"$9"},{"slug":"2026-07-cut-a-seam-when-the-agent-stops-reading-the-manual","title":"Cut a seam – what I do when the agent stops reading the manual","date_published":"$D2026-07-13T20:50:00.000Z","tags":"Katra, AI Workflows, Agents, Context Engineering","cover_image":"","content":"$a"},{"slug":"2026-06-chat-history-is-where-context-goes-to-die-my-agents-keep-a-dev-blog-now","title":"Chat history is where context goes to die – my agents keep a dev blog now","date_published":"$D2026-06-05T21:10:00.000Z","tags":"Katra, AI Workflows, Agents, Dev Log","cover_image":"","content":"$b"},{"slug":"2026-05-two-models-have-to-agree-before-anything-ships-quorum-review-in-ripline","title":"Two models have to agree before anything ships – quorum review in Ripline","date_published":"$D2026-05-12T22:05:00.000Z","tags":"Ripline, AI Workflows, Multi-Agent, Code Review, YAML","cover_image":"","content":"$c"},{"slug":"2026-03-inverting-the-harness-who-runs-whom-in-ripline","title":"Inverting the harness – who runs whom, Ripline and Claude Code edition","date_published":"$D2026-03-29T20:15:00.000Z","tags":"Ripline, AI Workflows, Claude Code, Agents, YAML","cover_image":"","content":"$d"},{"slug":"2026-03-adding-bureaucracy-and-red-tape-to-my-agents-structured-artifacts-in-ripline","title":"Adding bureaucracy and red tape to my agents – structured artifacts and node contracts in Ripline","date_published":"$D2026-03-15T21:40:00.000Z","tags":"Ripline, AI Workflows, Multi-Agent, YAML, Programming","cover_image":"","content":"$e"},{"slug":"2018-07-smart-home-vs-home-automation-whats-the-difference","title":"Smart Home vs. Home Automation – What’s the difference?","date_published":"$D2018-07-05T00:11:00.000Z","date_updated":"$D2018-12-21T20:47:44.000Z","tags":"Smart Home, Home Automation","cover_image":"/assets/blog/capacitors-chip-circuit-board-57007.jpg","content":"$f"},{"slug":"2018-06-i-hired-a-dude-who-voices-nike-commercials-to-tell-me-when-my-cat-litter-is-full","title":"I hired a dude who voices Nike commercials to tell me when my cat litter is full","date_published":"$D2018-07-04T00:00:00.000Z","date_updated":"$D2018-12-21T20:48:22.000Z","tags":"Home Assistant, Home Automation, Node-RED","cover_image":"/assets/blog/computer-electronics-laptop-755416.jpg","content":"$10"},{"slug":"2018-06-automatic-litterbox-notifications-using-an-home-assistant-and-node-red-with-an-external-rest-api","title":"Automatic Litterbox Notifications – Using an Home Assistant and Node Red with an external REST API","date_published":"$D2018-06-24T00:03:00.000Z","date_updated":"$D2018-12-21T20:49:02.000Z","tags":"Node-RED, Home Assistant, Home Automation, Programming","cover_image":"/assets/blog/IMG_20171111_140343.jpg","content":"$11"},{"slug":"2018-05-making-my-dumb-bed-smart-home-assistant-bed-occupancy-sensor","title":"Making my dumb bed, smart – Home Assistant Bed Occupancy Sensor","date_published":"$D2018-05-20T23:43:00.000Z","date_updated":"$D2018-12-31T14:49:22.000Z","tags":"Home Assistant, MQTT, NodeMCU, Arduino, Home Automation, Programming","cover_image":"/assets/blog/IMG_20180518_174346.jpg","content":"$12"},{"slug":"2018-05-smart-garbage-pt-1-pattern-for-deferring-service-calls-in-home-assistant","title":"Smart Garbage! – Pattern for deferring service calls in Home Assistant","date_published":"$D2018-05-16T23:27:00.000Z","date_updated":"$D2018-12-31T14:49:50.000Z","tags":"Home Assistant, Home Automation, YAML, Design Patterns","cover_image":"","content":"$13"},{"slug":"2018-05-telegram-keyboard-and-callbacks-in-home-assistant-with-node-red","title":"Telegram keyboard and callbacks in Home Assistant with Node-RED","date_published":"$D2018-05-10T22:56:00.000Z","date_updated":"$D2018-12-21T20:50:30.000Z","tags":"Home Assistant, Home Automation, Telegram, Node-RED","cover_image":"","content":"$14"},{"slug":"2018-05-the-simple-guide-to-creating-actionable-notifications-in-home-assistant-using-telegrams-custom-inline-keyboard-and-telegram_callbacks","title":"The simple guide to Telegram's custom inline keyboard","date_published":"$D2018-05-04T22:27:00.000Z","date_updated":"$D2018-12-11T22:42:45.000Z","tags":"Home Assistant, Telegram, YAML, Home Automation","cover_image":"","content":"$15"},{"slug":"2017-11-my-house-automatically-orders-pizza-for-me-dominos-pizza-automation-using-home-assistant","title":"My house automatically orders pizza for me – Dominos Pizza automation using Home Assistant.","date_published":"$D2018-05-04T22:17:00.000Z","date_updated":"$D2018-12-14T03:59:33.000Z","tags":"Home Assistant, YAML, Programming, Dominos, Home Automation, Telegram","cover_image":"","content":"$16"},{"slug":"2018-02-nhl-goal-light-celebration-with-home-assistant-and-philips-hue","title":"NHL goal light celebration with Home Assistant and Philips Hue","date_published":"$D2018-02-11T22:02:00.000Z","date_updated":"$D2018-12-14T03:46:14.000Z","tags":"Home Assistant, Home Automation, NHL, Goallight, Philips Hue, Goalfeed, YAML","cover_image":"","content":"$17"},{"slug":"2017-12-my-nighttime-reading-setup-using-philips-hue-and-koreader","title":"Night-time reading with KoReader and Philips Hue","date_published":"$D2018-01-19T21:14:00.000Z","date_updated":"$D2018-12-12T01:19:52.000Z","tags":"Philips Hue, KoReader","excerpt":"Using Philips Hue and KoReader for nighttime reading","cover_image":"","content":"$18"},{"slug":"2017-12-using-home-assistant-and-philips-hue-to-create-a-full-colour-sunrise-alarm-clock","title":"Using Home Assistant and Philips Hue to create a full colour sunrise","date_published":"$D2017-12-06T21:58:00.000Z","date_updated":"$D2018-12-21T20:51:44.000Z","tags":"Home Assistant, YAML, Philips Hue, Home Automation","cover_image":"/assets/blog/sunrise.jpg","content":"$19"},{"slug":"2017-11-quick-tip-controlling-colour-of-groups-of-philips-hue-lights-in-home-assistant","title":"Quick Tip: Controlling Colour of Groups of Philips Hue Lights in Home Assistant","date_published":"$D2017-11-28T22:12:00.000Z","date_updated":"$D2018-12-12T01:17:37.000Z","tags":"Home Assistant, Home Automation, Philips Hue","cover_image":"","content":"$1a"},{"slug":"2017-11-philips-hue-and-tasker-use-your-lights-as-a-notification-for-text-messages","title":"Philips Hue and Tasker – Use your lights as a notification for Text Messages","date_published":"$D2017-11-19T22:57:00.000Z","date_updated":"$D2018-12-21T21:05:44.000Z","tags":"Tasker, Android, Philips Hue, Home Automation","cover_image":"/assets/blog/text.jpg","content":"$1b"},{"slug":"2017-08-using-the-xiaomi-mi-flora-and-home-assistant-for-twitter-enabled-plants","title":"Using the Xiaomi Mi Flora and Home Assistant for Twitter enabled plants","date_published":"$D2017-11-19T21:34:00.000Z","date_updated":"$D2018-12-21T21:06:11.000Z","tags":"Home Automation, Home Assistant, Twitter, Xiaomi, YAML","cover_image":"/assets/blog/2017-08-using-the-xiaomi-mi-flora-and-home-assistant-for-twitter-enabled-plants/tweet-plant.jpg","content":"$1c"},{"slug":"2017-07-insteon-switchlinc-2-wire-dimmer-review","title":"Insteon SwitchLinc 2-wire Dimmer Review","date_published":"$D2017-08-09T23:10:00.000Z","date_updated":"$D2018-12-12T01:15:16.000Z","tags":"Insteon, Home Automation, Reviews","cover_image":"","content":"$1d"},{"slug":"2017-07-raspberry-pi-jukebox","title":"True MPD Jukebox using Raspberry Pi","date_published":"$D2017-08-09T21:28:00.000Z","date_updated":"$D2018-12-21T21:06:58.000Z","tags":"Raspberry Pi, Programming","cover_image":"/assets/blog/mpd-jukebox/mpd-jukebox.jpg","content":"$1e"}]}],null,["$","$L1f",null,{"children":"$L20"}]]}],{},null,false]},null,false]},null,false],["$","$1","h",{"children":[null,["$","$1","SFtXkX69I_MPjDDe0wXLh",{"children":[["$","$L21",null,{"children":"$L22"}],["$","$L23",null,{"children":"$L24"}],null]}]]}],false]],"m":"$undefined","G":["$25",[]],"s":false,"S":true}
+24:[["$","meta","0",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+22:[["$","meta","0",{"charSet":"utf-8"}],["$","title","1",{"children":"Blog | Craig Midwinter"}],["$","meta","2",{"name":"description","content":"Notes on making computers do the work: AI development workflows lately, and before that, the years I wired up my house. Home Assistant, Hue, agent pipelines, and one voice actor who reads my cat's litter box."}],["$","meta","3",{"property":"og:title","content":"Blog | Craig Midwinter"}],["$","meta","4",{"property":"og:description","content":"Notes on making computers do the work: AI development workflows lately, and before that, the years I wired up my house. Home Assistant, Hue, agent pipelines, and one voice actor who reads my cat's litter box."}],["$","meta","5",{"property":"og:url","content":"https://midwinter.io/blog/"}],["$","meta","6",{"property":"og:site_name","content":"Craig Midwinter"}],["$","meta","7",{"property":"og:type","content":"website"}],["$","meta","8",{"name":"twitter:card","content":"summary"}],["$","meta","9",{"name":"twitter:title","content":"Blog | Craig Midwinter"}],["$","meta","10",{"name":"twitter:description","content":"Notes on making computers do the work: AI development workflows lately, and before that, the years I wired up my house. Home Assistant, Hue, agent pipelines, and one voice actor who reads my cat's litter box."}],["$","link","11",{"rel":"icon","href":"/favicon.ico","type":"image/x-icon","sizes":"16x16"}]]
+20:null
