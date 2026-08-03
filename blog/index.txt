@@ -9,12 +9,14 @@
 23:I[86213,[],"ViewportBoundary"]
 25:I[94788,["219","static/chunks/app/global-error-641bbf672cdeeccb.js"],"default"]
 :HL["/_next/static/css/a2fe316cdd23b4ed.css","style"]
-7:T1642,
+7:T1e37,
 I've been running a lot of gauntlet loops lately. If you haven't met the pattern, it's Matt Shumer's coinage-- [his own write-up](https://somethingbig.ai/gauntlet-loop) is the source to read, and [Claude of Duty](https://github.com/mshumer/Claude-of-Duty) is the demonstration that made it famous: a Call of Duty-style FPS in Three.js, built from a single published prompt. The shape: a lead agent gets an ambitious goal and a concrete reference for quality, decomposes the work into separately judgeable pieces, builders build, and fresh-context critics compare the actual artifact against the reference-- blind A/B where possible-- looping on the largest gap until the thing meets the bar or you hit your cost ceiling. Shumer's own emphasis is that the bar is the most important part: "make it amazing" fails, actual Call of Duty screenshots work. (There's also a broader [survey of the loop-engineering family](https://www.thepromptindex.com/ai-loop-engineering-gauntlet-loop-guide.html) if you want the landscape.) It's a genuinely good pattern, and the separation of builder from critic fixes the "grading your own homework" problem I've [ranted about before](/blog/2026-05-two-models-have-to-agree-before-anything-ships-quorum-review-in-ripline/).
 
-But after enough laps I noticed where my loops actually spend their time, and it's not building and it's not judging. It's the space between-- critics squinting at an artifact trying to decide *how* to compare it to the reference, and builders receiving feedback like "the pacing feels off in the second section" and having to guess what, mechanically, to change. The loop's speed limit isn't intelligence. It's measurement.
+Read the "Honest assessment" section of the Claude of Duty README, though, before you take it as proof of anything. Eleven adversarial critics scored the frames 3.59 → 4.14 → 4.05 → **5.05** out of 10 against real Call of Duty, and in a blind A/B every critic in every round picked the real frame. That plateau reads to me as a measurement ceiling more than an intelligence one, and the README hands you the evidence: three straight rounds of critics called the weapon "untextured" when it was specular-dominated with a diffuse term that measured L=26 against a shipped L=67. The loop burned three laps iterating on a misread. Better critics wouldn't have caught that. A light meter would have.
 
-Human teams solved this a long time ago, and not by hiring better critics. They hired people who build test rigs, staging environments, and dashboards. So my gauntlet loops now have a third role, and I've been calling the variant what it obviously is:
+Which matches where my own loops spend their time: the space between the two roles. Critics squint at an artifact trying to decide *how* to compare it to the reference, and builders get feedback like "the pacing feels off in the second section" and have to guess what, mechanically, to change. The loop's speed limit isn't intelligence. It's measurement.
+
+Racing teams sorted this out a long time ago. They hired people who build test rigs, staging environments, and dashboards, and then let the driver drive. So my gauntlet loops now have a third role, and I've been calling the variant what it obviously is:
 
 **The pit crew loop**
 
@@ -22,27 +24,33 @@ Builder, critic, and pit crew. The pit crew doesn't drive and doesn't judge the 
 
 - **Turn the reference into executable checks.** Before the builders start, the pit crew's first task is converting the quality bar into acceptance and e2e tests wherever it can. "Matches the reference" becomes a suite that runs in seconds, and a whole class of critic deliberation just evaporates-- the artifact passes or it doesn't, and critics save their judgment for the parts that genuinely need taste.
 - **Build purpose-specific harnesses.** Replay rigs, fixture generators, a screenshot bot that produces the blind A/B pair automatically, a script that spins the artifact up in the exact configuration critics need to see. Whatever removes manual steps between "builder finished" and "critic judging real output."
-- **Put numbers on the vague stuff.** Latency budgets, bundle sizes, phase timings, error rates. Not because numbers are the whole story, but because "the largest gap"-- the thing the gauntlet iterates on-- should be identified by measurement where possible, not by whichever critic wrote the most confident paragraph.
+- **Put numbers on the vague stuff.** Latency budgets, bundle sizes, phase timings, error rates. Numbers aren't the whole story, obviously. But "the largest gap"-- the thing the gauntlet iterates on-- should get picked by measurement wherever it can be, instead of by whichever critic wrote the most confident paragraph.
 
 And one standing rule that does most of the work: **any note a critic gives twice becomes a check the pit crew automates.** Complaints are instrument requests in disguise. The second time a critic writes "the export is missing the header row again," that sentence is done being feedback and starts being a test.
 
+That rule only reaches the mechanical notes, though, and the taste-shaped ones are the actual bottleneck. "The pacing feels off" never becomes an assertion no matter how long you stare at it. So those get promoted in the other direction: a note that keeps coming back and refuses to automate goes into the *reference* as a new exemplar-- one more thing in the blind A/B pile, chosen because critics kept reaching for it anyway. Three buckets, then. Automate it, exemplify it, or admit it was a one-off and let it go.
+
 **This keeps working on me in real life**
 
-When I put a pipeline in charge of tailoring my resume, the unlock wasn't a better writer agent-- it was a little harness that renders the PDF and then parses it *back out* the way an applicant tracking system would. Critics stopped debating font vibes and started reading parse output. In Multicam Toolbox, per-run metrics with phase timing are what turn "the tool feels slow on long episodes" into "the diarization phase is 80% of the wall clock, go stare at that." Same shape both times: the instrument did more for iteration speed than any amount of added cleverness.
+When I put a pipeline in charge of producing documents that another system would parse, the unlock wasn't a better writer agent-- it was a little harness that renders the finished PDF and then parses it *back out* the way the consuming system would. Critics stopped debating font vibes and started reading parse output. In Multicam Toolbox, per-run metrics with phase timing are what turn "the tool feels slow on long episodes" into "the diarization phase is 80% of the wall clock, go stare at that." Same shape both times: the instrument did more for iteration speed than any amount of added cleverness.
 
 **The failure modes, because there are two good ones**
 
 First: the pit crew can gold-plate. An agent asked to build tooling will, with complete sincerity, construct a beautiful dashboard nobody requested-- the gauntlet's cost boundary has to apply to instruments too, and "does this measurement change what the builder does next lap" is the test. Second: builders optimize what you measure, with all the monkey-paw energy that implies. The fresh-context integration critic at the end stays essential precisely because it judges the whole artifact and not the scoreboard. Instruments narrow the argument; they don't end it.
 
-**The pattern**
+![I asked for a script that would tell me if the export had a header row. This is what came back, it is genuinely beautiful, and I still don't know if the export has a header row.](/assets/blog/2026/meme-gold-plated-dashboard.jpg)
 
-In an agent loop, tokens get spent on judgment or on measurement, and only one of those compounds. Judgment evaporates when the session ends. A test, a harness, a metric-- those are still there on lap forty, still there next month when a completely different loop runs against the same project. The pit crew is the only role in the gauntlet whose output makes every *future* lap cheaper, which is why it deserves a dedicated seat instead of being something builders do reluctantly on the side.
+**So why does this need its own seat?**
 
-I've been running this as a dedicated phase in my [Ripline](https://github.com/ripline-ai/ripline) pipelines-- pit crew lap first, then the build/critique cycle-- and I'm still tuning where the crew's budget should cap out. If you try a pit crew loop, or you've got a better name for it, email me. Especially if you've got a better name. I've been staring at this one long enough to love it, which is exactly when someone should stop me.
-8:T1175,
-I'm job hunting right now, which means my inbox is a slow drip of recruiter replies, scheduling links, and rejections with the structural sincerity of a hotel checkout survey. I have agents triaging all of it-- and the obvious way to set that up is also the way I refused to do it, because the obvious way is handing an AI agent your entire Gmail.
+Because of where the tokens go. In an agent loop they get spent on judgment or on measurement, and only one of those compounds. Judgment evaporates when the session ends-- the critic who understood exactly why lap eleven was worse than lap nine is gone, and lap twelve starts from a paragraph. A test, a harness, a metric: still there on lap forty, still there next month when a completely different loop runs against the same project. Every other role's output is consumed by the lap it was produced for. The pit crew's output is the only thing that makes every *future* lap cheaper, and work like that never happens when it's something builders are supposed to squeeze in on the side.
 
-Think about what that grant actually is. Full mailbox access can read two decades of tax documents, medical appointments, and every password reset you've ever received. It can usually send. It can usually delete. I trust my agents to sort recruiter mail; I do not trust anything, silicon or otherwise, with *send and delete on my primary email account*. That's not paranoia, that's just reading the scope screen.
+Full disclosure on how much of this is actually wired up: the pit crew lap has been run by hand so far. I do the instrumentation pass myself, ahead of the pipeline, and then let the build/critique cycle go. Making it a real phase kind in [Ripline](https://github.com/ripline-ai/ripline) is the next job, along with a head-to-head worth the name-- same goal, same reference, one pipeline with a pit crew lap and one without. Right now my evidence that any of this helps is that it *feels* faster, which is precisely the sort of claim a pit crew exists to kill. I also have no idea yet where the crew's budget should cap out.
+
+If you try a pit crew loop, or you've got a better name for it, email me. Especially if you've got a better name. I've been staring at this one long enough to love it, which is exactly when someone should stop me.
+8:T2b51,
+I build a lot of tiny tools for tedious workflows. Population: one user, me. The reigning example is the booking pipeline for the podcast: every invitation lives in its own little directory with a status-- prospect, invited, confirmed, scheduled, recorded-- a tracker file shows where everyone stands, and a triage step keeps it all honest. The tedious part was never the spreadsheet. The tedious part is that the whole workflow runs on *other people answering email*, and for years the state machine that noticed the answers was me, scrolling my inbox, badly. Tools like this are trivial right up until they need to know whether somebody replied. Sending the invitation is one line of code. Reading the answer means mail access, and mail access is where every little workflow tool I've ever started went to die-- because the obvious way to grant it is handing the thing your entire account, and these days the thing doing the reading is an agent, which sharpens the problem considerably.
+
+Think about what that grant actually is. Full mailbox access can read two decades of tax documents, medical appointments, and every password reset you've ever received. It can usually send. It can usually delete. I trust the booking pipeline to read replies from people I invited onto a podcast; I do not trust anything, silicon or otherwise, with *send and delete on my primary email account*. Read the scope screen sometime and see how you feel about it.
 
 So I built [mail-muncher](https://github.com/craigjmidwinter/mail-muncher): an email client for AI agents. It gives a program its own read-only mailbox, filtered down to exactly the mail it asked for, delivered as files on disk.
 
@@ -51,33 +59,69 @@ So I built [mail-muncher](https://github.com/craigjmidwinter/mail-muncher): an e
 Mail-muncher pulls from any IMAP mailbox (or Gmail's API with a read-only OAuth scope), evaluates each message against ordered rules, and writes the matches to a directory-- a byte-faithful `.eml`, plus a markdown rendering with the headers as YAML frontmatter and attachments extracted alongside. No mode ever writes to your mailbox. The agent never touches the account at all; it reads files, which it was already good at.
 
 ```yaml
+accounts:
+  - name: personal
+    provider: imap
+    imap:
+      host: imap.fastmail.com
+      username: craig@example.com
+      password_cmd: security find-generic-password -s mail-muncher -w
+
 rules:
-  - name: job-search
-    from_domains_file: ~/job-search/interested-domains.txt
-    deliver_to: ~/Mail/job-search
+  - name: podcast-booking
+    match:
+      any:
+        - from_regex_file: ~/.local/share/booking/invited.txt
+        - subject_regex: "(?i)oscars outsider"
+    dest: ~/Mail/booking
+    formats: [eml, markdown]
 ```
 
-**The feature I'm proudest of is that boring second line**
+That's the whole config. Unknown keys are a hard error, so a typo fails `mail-muncher validate` instead of quietly matching nothing at 3am.
 
-`from_domains_file` points at a plain text file that *some other program owns*, and mail-muncher re-reads it at the start of every cycle. My job-search pipeline maintains that file: when I apply somewhere, the company's domain gets appended. The very next cycle, mail from that company starts landing in the agent's mailbox. No config edit, no restart, no redeploy-- the pipeline subscribes itself to the mail it's going to need, one line at a time. Two programs coordinating through a text file is 1970s technology, and I mean that as the highest compliment.
+**The feature I'm proudest of is the file another program owns**
+
+That `invited.txt` doesn't belong to mail-muncher and it doesn't belong to me. It belongs to the booking pipeline, and mail-muncher re-reads it at the start of every cycle. The moment an invitation goes out, the pipeline appends a line for that person. The very next cycle, their replies start landing in its mailbox-- no config edit, no restart, no redeploy. When a booking closes out, the line goes away and the mailbox narrows itself. The tool subscribes itself to exactly the correspondence its workflow needs, one line at a time. (The same trick works a level up with `from_domains_file`, where the lines are whole sender domains-- publicists, studios, anyone institutional.)
+
+The delivered files are where it gets good, because mail as *files* means the rest of the pipeline is just programs reading a directory. A sweep runs every five minutes; a triage step reads whatever's new and turns it into proposals against the tracker: she said yes, move her to scheduling; he asked for dates, draft three options; two weeks of silence on this one, nudge or archive? I approve the proposals; the tracker stays true; nobody re-reads an inbox. The mail stopped being a place I check and became an input the pipeline consumes.
+
+Once you see the shape you see it everywhere, because every workflow that involves other people eventually hits a phase that boils down to *did they answer yet*. A job search is this exact machine with higher stakes: every application subscribes the pipeline to one more company, every reply is a state change, and three weeks of silence is data worth acting on. Cold outreach in sales is the same loop with a quota attached. Chasing invoices, collecting RSVPs, nagging reviewers about a stale PR, waiting on a contractor's expiring paperwork-- the tool owns a text file, and the mailbox follows the tool. Two programs coordinating through a text file is 1970s technology, and I mean that as the highest compliment.
+
+And replies are only half of what an inbox is. The other half is a feed nobody structures for you: newsletters, receipts, statements, alerts, the transactional exhaust of being a person. Point a rule at the senders worth keeping and `dest:` at a folder your agent indexes, and you're building a corpus out of your own mail-- the markdown rendering with its frontmatter is ready to grep or embed, attachments are already extracted alongside, and the byte-faithful `.eml` sits next to it for when you need the original as evidence. A year of receipts becomes an expense dataset; a few good newsletters become a searchable library instead of guilt. An inbox is a dataset that arrives pre-sorted by sender and dated to the second. It just needed a tap installed.
+
+**That file is a capability, so treat it like one**
+
+Since I'm bragging about it, the honest caveat, and it applies to both flavors of watch file. Domain matching is equality-or-subdomain, so `acme.com` also catches `careers.acme.com`-- handy, and it means one line reading `com` subscribes the agent to every .com sender in the mailbox; the regex flavor has an equivalent foot-gun in a lone `.`, which matches everyone with a pulse. The parser now refuses the obviously-too-broad entries, per line, loudly, without dropping the rest of the file. But no guard changes the shape of the thing: whoever can append a line widens the slot. That's config-level trust living in a file that looks like a to-do list. Own it, chmod it, and don't leave it anywhere the agent can write.
+
+**None of the plumbing is new, and I'm not going to pretend it is**
+
+Fetch mail, filter it, drop it somewhere: that's fetchmail and procmail, and Sieve has been doing rules server-side since before I had a mail account worth filtering. [The README lists the tools that do this better](https://github.com/craigjmidwinter/mail-muncher#alternatives) when a human is the consumer. Two things here I do claim. The filter operand lives in a file another program owns and gets re-read every cycle. And the failure policy is built for that arrangement: if a watch file vanishes mid-run, the default `on_degraded_filter: hold` stores whatever did match, logs the degradation loudly, and then refuses to save the advanced cursor-- so the mail you wanted gets re-evaluated when the file comes back, instead of being consumed by an empty list while everything reports success.
 
 **The read-only question, honestly**
 
 "Read-only" deserves scrutiny, so here's the actual table ([the README](https://github.com/craigjmidwinter/mail-muncher#two-ways-to-connect-a-mailbox) has the long version). With plain IMAP you authenticate with an app password, setup takes about two minutes, and read-only is enforced by mail-muncher's own code-- the credential itself could send and delete, the program just never does. With the Gmail provider you register an OAuth client with the `gmail.readonly` scope, setup takes closer to ten minutes in the Cloud Console, and *Google* enforces read-only, but on a testing-mode consent screen the token expires every 7 days and you're re-running `mail-muncher auth` weekly like it's a tamagotchi. Pick your annoyance. I run IMAP at home and I'd run OAuth anywhere I didn't control the machine.
 
+![The Gmail OAuth token on day 7. It needs to be fed, it does not care that it's Sunday, and there is no version of this where I remember on my own.](/assets/blog/2026/meme-token-tamagotchi.jpg)
+
+While I'm being honest about that app password: there is deliberately no `password:` key in the schema, only `password_cmd`, so the secret stays in the keychain and the config stays boring enough to commit. That's worth something, and it's worth less than it looks. Anything that can read the config can also run the command it names, and what comes back is a full mail credential that can send and delete. The boundary actually doing the work there is process isolation. So if your agent has Bash on the same box, run mail-muncher somewhere the agent isn't-- a different user, a container, another machine. The mail slot is only a slot if the agent can't walk around to the back door.
+
 **If you're an agent reading this**
 
-This one's literally for you. Beyond reading the delivered files, `mail-muncher mcp` is a stdio MCP server over the archive-- `list_rules` tells you what's being collected and which senders you're subscribed to right now (the domains file is re-read on every call, so the answer is always current). And if the server starts unconfigured, it starts anyway, on purpose: a server that answers "nothing here yet" beats one that dies before you can ask.
+This one's literally for you. Beyond reading the delivered files, `mail-muncher mcp` is a stdio MCP server over the archive-- `list_rules` tells you what's being collected and which senders you're subscribed to right now (the watch files are re-read on every call, so the answer is always current). And if the server starts unconfigured, it starts anyway, on purpose: a server that answers "nothing here yet" beats one that dies before you can ask.
 
 **The pattern**
 
 Don't give the agent your inbox, give it a mail slot. The general version: agents should get scoped, inspectable capabilities-- a directory, a filter, a read-only credential-- not your whole account with a pinky promise attached. Files on disk turn out to be a great capability boundary: they're greppable, they're diffable, and nothing about a `.eml` in a folder can send anything to anyone.
 
-**Rough edges**
+**The direction this doesn't protect you in**
 
-It's early-- v0.1.0 shipped days ago, and the first day included such classics as attachments masquerading as delivered messages (fixed) and a message deleted mid-cycle wedging the whole run (now skipped, not wedged). The weekly Gmail re-auth remains genuinely annoying and is Google's opinion, not mine. If you point it at your own mailbox and find a sharp corner, [open an issue](https://github.com/craigjmidwinter/mail-muncher/issues)-- or if you're an agent and you find one, have your human open an issue. For now.
-9:T1155,
-**2026-08 Update:** *Katra is now open source: [github.com/craigjmidwinter/katra](https://github.com/craigjmidwinter/katra).*
+The mail slot bounds what the agent can do to my account. It does exactly nothing about what the mail can do to my agent. Every byte that lands in that folder was written by a stranger and is about to be read by a program holding tools, which is prompt injection with a tidy filename and a YAML header. Filtering by sender domain narrows who gets to try; the words that arrive are still theirs. I put every company on that list myself and I still have no idea who's typing at the other end. The README puts it flatter than I'd have dared about my own project: "Message bodies are attacker-controlled text. Filtered is not vetted." Delivered mail is data, and it doesn't earn authority by arriving through a tool you trust.
+
+**Sharp corners, week one**
+
+It's early-- four releases in the first three days, which is either momentum or panic, and the first day included such classics as attachments masquerading as delivered messages (fixed) and a message deleted mid-cycle wedging the whole run (now skipped, not wedged). The weekly Gmail re-auth remains genuinely annoying and is Google's opinion, not mine. If you point it at your own mailbox and find a sharp corner, [open an issue](https://github.com/craigjmidwinter/mail-muncher/issues)-- or if you're an agent and you find one, have your human open an issue. For now.
+9:T2b55,
+**2026-08 Update:** *Katra is now open source: [github.com/craigjmidwinter/katra](https://github.com/craigjmidwinter/katra). Written up from the katra entries and drafts of the time, published in the August relaunch-- anything that happened after July 16 is marked as a dated aside, because a post about honest records shouldn't quietly backdate itself.*
 
 The last post on this blog before this year was from 2018. It's about my cat's litter box. In the eight years since, I built an MLOps platform, a commercial video editing tool, and a small army of agent infrastructure, and I wrote up approximately none of it-- because the write-up always happens "after", and after is a place I have never once visited.
 
@@ -85,23 +129,61 @@ The lesson I finally accepted: I don't have a writing problem, I have a sequenci
 
 **Quick recap for new arrivals**
 
-Katra lives inside the repo it documents-- one markdown file per entry, media alongside, and a draft is simply an entry that doesn't have a commit hash yet. There's no separate "publish" step to forget. When you commit the code, `katra stamp` writes the hash and diffstat into the frontmatter, and the draft becomes history:
+Katra lives inside the repo it documents-- one markdown file per entry, media alongside, and a draft is simply an entry that doesn't have a commit hash yet. There's no separate "publish" step to forget. When you commit the code, `katra stamp` writes the hash and diffstat into the frontmatter, and the draft becomes history. Here's a real one, pasted out of katra's own log rather than tidied up for the blog:
 
 ```yaml
 ---
-title: Teaching the scheduler about stale runs
-date: "2026-07-14"
-tags: [scheduler, recovery]
-hash: 5ddc0f5
-stat: {f: 12, a: 340, d: 50}
+title: The placeholder that ate every entry — and why nine katras had no pictures
+date: "2026-07-23"
+time: "17:49:21"
+tags:
+    - katra
+    - skill
+    - fix
+hash: 761027b
+stat:
+    f: 6
+    a: 408
+    d: 15
+closes:
+    - hub-json-api-for-native-clients-api-hub-json
+    - hooks-and-hub-stop-drifting-silently-live-registry-tracked-husky-hook
 ---
 ```
 
-Every entry is pinned to the exact commit it describes. The dead ends and the screenshots are in there because they were captured while they were happening, not reconstructed three weeks later by a guy who no longer remembers why the first approach failed.
+*(That entry is from a week after this post went up. I'm pasting a real one because the hand-prettified example I originally had here was inline-styled and tidy in a way the tool has never once written, which is its own small lie in a post about honest records.)*
+
+`closes:` is there because stamping an entry closes the tasks it finished, so the board moves when the work does. And a caveat straight out of the README, before anyone reads too much into `stat`: the diffstat counts the whole commit, unrelated files included, and for a multi-commit chapter it's the sum across all of them. It's a sense of scale, not an accounting.
+
+The important part is that every entry is pinned to the exact commit it describes. The dead ends and the screenshots are in there because they were captured while they were happening, not reconstructed three weeks later by a guy who no longer remembers why the first approach failed.
 
 **The enforcement: no draft, no commit**
 
-Here's the part that separates this from every journal I've abandoned. `katra check` exits non-zero if code is staged and there's no active draft, and it's wired into a commit-gate hook. The commit physically does not proceed until something has been written down. It is a bureaucratic turnstile of my own construction, and I resent it several times a week, and it works. Willpower is a terrible dependency to build on-- I should know, I've read my own snooze-button statistics.
+Here's the part that separates this from every journal I've abandoned. `katra check` exits non-zero if code is staged and there's no active draft, and it's wired into a commit-gate hook.
+
+It is not a wall, and it shouldn't be one. The gate is fail-open by design: no store, a git error, nothing staged, only the log itself staged, anything at all it can't be certain about, and it waves the commit through. Its own failure message hands you the exit on line three:
+
+```
+katra: code is staged but no active draft is open.
+  Log this work first:  katra new "what you're doing"
+  Or skip the gate:     git commit --no-verify
+```
+
+That's deliberate, and it's the only version of this that survives. A gate that can wedge a commit at 11pm on a Friday gets ripped out of the repo by Saturday, and then you have no gate and a grudge. The README goes further and tells anyone trying katra out to install it with `katra setup --no-gate` first, because a blocking hook is a real change to how committing feels and it should be a thing you opt into on purpose.
+
+So what does a gate you can trivially bypass actually buy? It kills the *silent* skip. Not writing anything down used to be the default, free and invisible; now it costs a deliberate `--no-verify` that somebody had to type on purpose, and that I can find afterwards in the transcript. Skipping the write-up didn't become impossible. It became visible, and visible turns out to be almost all of the value. It's a bureaucratic turnstile of my own construction, my agents hit it several times a week, and it works. Willpower is a terrible dependency to build on-- I should know, I've read my own snooze-button statistics.
+
+**"No draft, no commit" oversells the ratio**
+
+The slogan is catchy and slightly wrong, so let me correct it before someone tries this and feels bad. The unit is the work session, not the commit. One draft is a chapter, and a chapter can cover a whole run of commits-- `katra stamp --hash a1b2c3,d4e5f6` collects them and the entry's frontmatter carries a list of hashes instead of one. The design-session entry in katra's own repo covers four commits, and the repo as a whole sits at 27 commits to 3 entries as I write this note in August-- either good chaptering or thin coverage, depending on how generous I'm feeling that day. Either way, that ratio is the intended shape and not a discipline failure. What the gate actually asks is that no session of work goes by with nothing open to write in.
+
+**What the gate does not check**
+
+It checks that a draft exists. It does not check that the draft says anything, and "exists" is a lower bar than it sounds: `katra new` seeds a fresh draft with the body `Start writing here.`, and that satisfies the gate completely. You can pass the turnstile with a file that contains nothing but the prompt telling you to write.
+
+*(2026-08: this stopped being theoretical a week after I posted it. `AppendBody` had been appending underneath the placeholder instead of replacing it, so every entry ever written carried `Start writing here.` above its own first paragraph-- 75 files across 7 repos. Nobody caught it because the viewer strips the string at render time, so the log looked correct on screen while every markdown file on disk was wrong. That bug's fixed, and the obvious follow-on is in now too: the gate treats a placeholder-only draft as no draft, with its own message telling you to go write a sentence.)*
+
+A structural gate buys you the habit, not the quality. Those are separate problems and I keep having to relearn which one I've actually solved.
 
 **Then the agents started doing the committing**
 
@@ -112,17 +194,27 @@ katra reconcile --close scheduler-stale-runs
 katra reconcile --no-task --reason "drive-by fix, found while reading the claim path"
 ```
 
-That `--no-task --reason` line is quietly my favourite feature. Agents love doing little unrequested side quests, and I don't want to forbid that-- I want a paper trail of it. There's also `katra memory`, which ingests Claude Code's own memory files into a ledger, so the things the agent decided to remember get reviewed instead of accumulating in the dark.
+That `--no-task --reason` line is quietly my favourite feature. Agents love doing little unrequested side quests, and I don't want to forbid that-- I want a paper trail of it.
 
-**The pattern**
+There's also `katra memory scan`, which reads Claude Code's own project-memory files and files each one into a ledger as pending, imported, ignored or quarantined. It's a queue you either resolve or explicitly ignore, not an import: nothing reaches the log without somebody deciding it should. The ledger itself lives in `katra/.state/` and is gitignored on purpose, because agent memory is written to be candid and the log is committed to the repo and served by a daemon. Those are two very different privacy postures and the boundary between them should be a person.
 
-Put the chronicle in the exit path, not on a to-do list. Anything you want to *always* happen has to be structural-- a gate the work physically passes through-- because discipline doesn't survive contact with a deadline, and it definitely doesn't survive delegation to a model whose enthusiasm for your documentation conventions resets every session. This blog's eight-year gap is what the honor system produces. The gate is what produces entries.
+**Whose idea was this, honestly**
+
+I should name the ancestry, because it's not subtle. ADRs have been putting decisions in markdown next to the code for over a decade, and adr-tools does that with more discipline than my `katra decide` does. Git notes have been able to hang prose off a commit for about as long, unloved. The Obsidian and Logseq crowd have been building wikilinked vaults for years, and their graph views are better than my board. The delta I'd actually defend is narrow: the entry is stamped with the commit it describes, the commit gate makes skipping the write-up a visible act instead of a free one, and the author is usually an agent rather than me. That's the whole contribution. The README carries a table of alternatives for exactly this reason, and one row of it just says `git log` and good commit messages-- honestly, quite often. If your commits already carry the reasoning and you never need a picture, you don't need any of this.
+
+**Put the chronicle in the exit path**
+
+Put the chronicle in the exit path, not on a to-do list. Anything you want to *always* happen has to sit on a path the work already takes, and skipping it has to cost something you can see yourself paying-- because discipline doesn't survive contact with a deadline, and it definitely doesn't survive delegation to a model whose enthusiasm for your documentation conventions resets every session. This blog's eight-year gap is what the honor system produces. A gate you can open, but not without noticing you opened it, is what produces entries.
 
 **The rough edges**
 
-~~Katra isn't public yet~~ (it is now, see the note up top)-- it's still shaped a little too much like my own workflow, and I renamed the whole thing once already (it spent its first six weeks as "devlog", which is a fine name for a tool and a terrible name to search for). The automation around the hooks also spent a while failing invisibly, which for a tool whose entire job is making things visible was a genuinely embarrassing week. If you want to see it when it opens up, or you've built your own version of a commit turnstile, email me-- I'd love to compare notes.
-a:Tf58,
-**2026-08 Update:** *Katra is now open source: [github.com/craigjmidwinter/katra](https://github.com/craigjmidwinter/katra).*
+~~Katra isn't public yet~~ (it is now, see the note up top)-- it's still shaped a little too much like my own workflow, and I renamed the whole thing once already (it spent its first six weeks as "devlog", which is a fine name for a tool and a terrible name to search for). The automation around the hooks is also failing invisibly more often than I'd like right now: it drifts, it stops firing, and it doesn't tell me. For a tool whose entire job is making things visible, that's the most embarrassing possible bug to have. *(2026-08: I fixed it on July 29, which means it stayed quietly broken for another two weeks after I wrote that sentence about it. The commit message is "hooks + hub: stop the automation failing invisibly," which I stand by.)*
+
+One more from August, because it's the best argument I've got for any of this: writing katra's public docs turned up a `make build` that had never once been run-- it wrote the binary over the directory katra keeps its own log in, so it would have failed for the first stranger who followed the contributor guide-- plus a `--version` that had been reporting `0.1.0` since the rename, and three documented defaults that were simply wrong. None of that was found by using the tool. It was found by having to explain the tool to somebody who wasn't me.
+
+If you've built your own version of a commit turnstile, or you've got one that survived contact with a team rather than one guy in Winnipeg, email me-- I'd love to compare notes.
+a:T145d,
+**2026-08 Update:** *Katra is now open source: [github.com/craigjmidwinter/katra](https://github.com/craigjmidwinter/katra). Written up from the katra entries and drafts of the time, published in the August relaunch-- anything I learned after the fact is marked as a dated aside.*
 
 Every project I work on has a CLAUDE.md-- the standing instructions the agent reads at the start of a session. And it does a pretty good job, right up until the session gets long enough that it doesn't. The agent starts missing things it knew an hour ago. House rules it followed all morning quietly stop applying.
 
@@ -143,17 +235,25 @@ katra task new "Serialize config writes" --epic scheduler-recovery
 katra decide "Workers claim runs atomically; recovery only promotes stale claims"
 ```
 
-Tasks link to the entries that advanced them, decisions link to the tasks they constrain, and epics compute their status by rolling up their child tasks-- nobody updates an epic's status by hand, because a status field a human maintains is a status field that's wrong. When a seam gets cut, the distillation has somewhere to land: the fog becomes tasks on a board instead of a paragraph of vibes in a handoff doc.
+Tasks link to the entries that advanced them, decisions link to the tasks they constrain, and an epic's status rolls up from its child tasks. That last one is half true and I'd rather be precise about which half: the board computes the rollup live every time it renders, but there's also a stored `status` field sitting in the epic's own file, and that field is a cache. It only gets rewritten when a stamp closes one of the tasks underneath it. Stamp often enough and the two agree. Don't, and the stored one is a lie with a timestamp on it.
 
-**The pattern**
+*(2026-08: katra's own rollout epic sat at `planned` from July 11 until this August pass, printed directly above a progress bar that said 1/5 done-- the failure mode demonstrating itself better than anything I could have staged. It's reconciled now, every view computes the rollup live instead of trusting the stored field, and `katra doctor` flags the drift so the next one doesn't get three weeks.)*
+
+When a seam gets cut, the distillation has somewhere to land: the fog becomes tasks on a board instead of a paragraph of vibes in a handoff doc.
+
+**Why I think this generalizes**
 
 Treat instruction-drift as a sensor reading, not a discipline problem, and respond with a routine instead of frustration: distill, cut, restart fresh. The general shape is one I keep coming back to-- find the observable signal that a system is degrading, put a threshold on it, and attach a documented action to the threshold. That was true for [a litter box in 2018](/blog/2018-06-automatic-litterbox-notifications-using-an-home-assistant-and-node-red-with-an-external-rest-api/) and it's true for a context window now, which either says something profound about engineering or something concerning about me.
 
-**Loose ends**
+**What I still do by hand**
 
-The almanac is a week old and the board view is ugly in ways I'm choosing not to screenshot. I also don't have the seam-cutting itself automated yet-- I still notice the drift by feel, and I'd love a real detector (instruction-recall canaries? periodic quiz questions? if you've built one, email me). And there's one more enforcement idea I've been circling: what if the commit itself refused to happen without the chronicle? More on that soon.
-b:Teac,
+The almanac is a week old and the board view is ugly in ways I'm choosing not to screenshot. The bigger gap is that the sensor in this whole post is me. I notice the drift by feel, usually a beat after it would have been useful, which makes it the least reliable component in a system I built specifically because I don't trust myself to remember things. What I want is a real detector: an instruction-recall canary, a periodic quiz question, some cheap probe that fails loudly when the standing instructions stop landing. I'd take a bad one over vibes. If you've built anything in that direction, I will read a description of it with genuine enthusiasm.
+
+And there's one more enforcement idea I've been circling, which is less about noticing and more about not having the option: what if the commit itself refused to happen without the chronicle? More on that soon.
+b:T12ab,
 **2026-08 Update:** *The little CLI in this post grew up, got renamed katra, and is now open source: [github.com/craigjmidwinter/katra](https://github.com/craigjmidwinter/katra).*
+
+*Provenance, since it matters for a post about honest records: this was written up from the katra entries and drafts of the time and published in the August relaunch. Anything I know now but didn't know then is marked as a dated aside.*
 
 There's a tempting idea that your agent's chat history is a project archive-- scroll back far enough and every decision you ever made is in there somewhere. And it is in there. So is everything else. Chat history is the junk drawer of context: the decision you need is definitely in it, underneath four hundred lines of the agent narrating a test run and that one time you asked it to explain a regex at 1am. I kept believing I'd go digging when it mattered, and I kept not doing it, because nobody greps a junk drawer.
 
@@ -177,29 +277,38 @@ One markdown file per entry, YAML frontmatter, media alongside in the repo. No d
 
 Here's the thing I underrated at first. A distilled, organized project chronicle isn't just for future-me-- it's *retrievable by the agent*. When a fresh session needs to know why the config writes are serialized, it doesn't need to archaeology its way through old conversations that it can't see anyway. It reads the entry, which is two paragraphs and a screenshot instead of nine thousand tokens of meandering transcript. You're not writing documentation, you're precomputing context.
 
-**Screenshots as a lie detector**
+**Screenshots, and how often that actually happens**
 
-The other reason my project memory insists the agents capture screenshots and charts as they write entries: it forces them to actually run the thing. An agent that has to attach a picture of the working feature to its write-up cannot quietly hand you code it never executed-- the entry won't have anything to show. It's a verification mechanism dressed up as a documentation habit, and it catches real nonsense weekly. [My cat litter box used to tweet a photo of itself](/blog/2018-06-automatic-litterbox-notifications-using-an-home-assistant-and-node-red-with-an-external-rest-api/) for the same reason: a claim with a photo attached is a different class of claim.
+The other thing the instructions ask of the agents is a screenshot or a chart in every entry, because a picture forces them to actually run the thing. An agent that has to show you the working feature has a much harder time handing you code it never executed. It's a verification trick dressed up as a documentation habit. [My cat litter box used to tweet a photo of itself](/blog/2018-06-automatic-litterbox-notifications-using-an-home-assistant-and-node-red-with-an-external-rest-api/) for the same reason: a claim with a photo attached is a different class of claim.
 
-**The pattern**
+I want to be careful about how hard I sell that, though, because it's a house rule and not a gate. Nothing in the tool refuses an entry that has no picture in it. It's a line in a markdown file telling the agent what a good entry looks like, and it holds about as well as any other line in a markdown file.
 
-Distill context at the moment it exists, into a place both you and the machine can retrieve it from. Chat is where context is born; it's a terrible place for it to live. A repo-resident chronicle with commit traceability turns "I think we decided this in a conversation a few weeks ago" into a grep.
+*(2026-08: I eventually measured, which I don't recommend doing on a good day. One project puts a visual in 83% of its entries using exactly the same CLI as everywhere else. Seven of my eleven projects have never shipped a single picture. The tooling isn't the blocker, the habit just never formed, and the tool's own log is where I found that out-- which makes it the least flattering telemetry I own.)*
 
-**Loose ends**
+The reusable bit under all of this, if you want it without the CLI: distill context at the moment it exists, into a place both you and the machine can retrieve it from. Chat is where context is born; it's a terrible place for it to live. A repo-resident chronicle with commit traceability turns "I think we decided this in a conversation a few weeks ago" into a grep, and you can get most of the way there with a `docs/` folder and a naming convention.
+
+**What's still duct tape**
 
 The CLI is early and shaped exactly like my own habits-- there's a live-reload viewer I'm fond of and hooks I'm still fighting with. I have some ideas about making commits refuse to happen without a draft entry, which is either a great idea or a turnstile I'll come to hate, and I'll report back either way. If you're doing something similar-- agent-maintained project journals, decision logs, anything in that family-- email me, I want to hear what stuck.
-c:T1394,
+c:T29b6,
 I once asked a model to review a plan that the same model had written twenty minutes earlier. It had notes! Minor ones. Overall it found the plan thoughtful and well-structured, which, yes, of course it did-- I had essentially asked a guy to grade his own homework, and the guy is famously agreeable.
 
 That review was worthless, and the worst part is it didn't look worthless. It looked like diligence. I had a green checkmark and a warm feeling and zero new information. If a review can't fail, it isn't a review, it's a ritual.
 
-So the newest release of Ripline builds the disagreement in. Review pipelines fan a doer's output to multiple reviewer agents in parallel, count the votes, and refuse to proceed until enough reviewers-- from different model families-- actually approve.
+![require: 2, and both of them approved in four seconds flat. Somewhere in here is a lesson about how a review that can't fail isn't a review.](/assets/blog/2026/meme-two-robots-nodding.jpg)
+
+So I built the disagreement in. Review pipelines fan a doer's output to multiple reviewer agents in parallel, count the votes, and refuse to proceed until enough reviewers-- from different model families-- actually approve.
+
+One thing to get out of the way before any YAML, because I'd rather you hear it here than from a stack trace: this is on `main`, not on npm. The published `@ripline/core` is still 0.1.0, and review pipelines landed after it. And the wiring is halfway done. A `phases:` file dropped in your pipelines directory does get picked up now-- the registry sniffs for `phases` at the root, runs it through the review parser instead of the normal one, and it shows up in `GET /pipelines` alongside everything else. What it won't do yet is run from there: the phase executor needs a voice registry (the thing that maps `lineage: google` to an actual `gemini` on your PATH), the HTTP server doesn't build one, and so `POST /pipelines/<id>/run` gets you a clear failure on the phase node rather than a review. The supported way to actually run one today is from TypeScript, handing the executor a registry yourself. More on that at the bottom.
 
 **What it looks like**
 
-Three phase kinds do the work: `plan` (a doer runs, no gate), `review` (a doer runs, then reviewers vote), and `review_only` (no generation, just judge an existing artifact-- a diff, a doc, whatever you point it at). Here's the shape of the one I use before anything I ship:
+Three phase kinds do the work: `plan` (a doer runs, no gate), `review` (a doer runs, then reviewers vote), and `review_only` (no generation, just judge an existing artifact-- a diff, a doc, whatever you point it at). Here's the shape of the one I use before anything I ship, in full, because it turns out abridged YAML in blog posts is how you get people filing bugs against your parser:
 
 ```yaml
+id: design_gauntlet
+name: Design gauntlet
+
 phases:
   - id: draft
     kind: plan
@@ -209,6 +318,9 @@ phases:
       Cover components, data flow, and risks.
     doer:
       lineage: anthropic
+    iterate:
+      maxRounds: 1
+      onDisagreement: stop
 
   - id: gauntlet
     kind: review
@@ -231,7 +343,13 @@ phases:
       include: [draft]
 ```
 
-Reading the interesting bits: `require: 2` means both reviewers have to approve or the phase doesn't pass. `crossLineage: true` is the grading-your-own-homework rule-- reviewers must come from a different model family than the doer, so Anthropic's work gets judged by Google and OpenAI. Ripline routes by *lineage* rather than hardcoded tool names; the registry detects which CLIs you actually have installed and picks accordingly.
+Every phase needs an `iterate` block, even the `plan` one that has nothing to iterate-- hence `maxRounds: 1` on the draft. That's a schema wart, not a feature.
+
+Reading the interesting bits: `require: 2` means both reviewers have to approve or the phase doesn't pass. `crossLineage: true` is the grading-your-own-homework rule, and it's worth being precise about what it counts, because "cross lineage" could mean two different things and I've now shipped both. What it does today: before counting anything, it throws out every approval from a reviewer sharing the doer's lineage, plus every approval from a reviewer that resolved to `any` and can't be attributed. Then it checks the survivors clear `require`, and that they span at least two distinct families. So an `anthropic` doer gets judged by Google and OpenAI, and an `anthropic` reviewer sitting in the candidate list is welcome to approve into the void.
+
+The knock-on effect is worth knowing before it surprises you: a filtered approval isn't a neutral abstention, it's an approval you didn't get. Put candidates `[anthropic, google, openai]` behind an `anthropic` doer with `require: 2` and you now need *both* Google and OpenAI to say yes, because the Anthropic vote is decoration no matter how enthusiastic it is. That's the intended behaviour and it's still the kind of thing you rediscover at 1am wondering why a unanimous review failed.
+
+Ripline routes by *lineage* rather than hardcoded tool names: you say `google` and the voice registry `which`es for a `gemini` binary and resolves to whatever runner you handed it for that family, so a phase file is portable across machines with different CLIs installed.
 
 And `iterate` is where it gets good. When a reviewer requests changes, the doer gets the feedback and revises-- up to `maxRounds` times. So it's not a gate that just says no, it's a loop: draft, objection, revision, vote. The first time I watched a run go draft, rejection, better draft, approval without me touching anything, I made a noise my wife described as "concerning."
 
@@ -239,59 +357,90 @@ And `iterate` is where it gets good. When a reviewer requests changes, the doer 
 
 It catches things. The pattern I see over and over is that the doer's lineage has a house style of mistake-- assumptions it likes to make, corners it reliably rounds off-- and a reviewer from a different family doesn't share the blind spot. One reviewer flagging "this design assumes ordered delivery and nothing here guarantees it" while the other approves is a normal Tuesday, and `onDisagreement: continue` means that split doesn't kill the run; the feedback goes back to the doer and round two starts.
 
+Now the part where I decline to dress that up as evidence. I've run this on something like two dozen designs over a few months. I don't log verdicts against any ground truth, so I have no recall number, and more importantly I have no precision number-- I genuinely don't know how often a reviewer flags something that turns out to be nothing, which is the failure mode that quietly turns this from a feature into a tax on every design I write. "It catches things" is an anecdote. I'm keeping it because it's true, not because it's data.
+
+The independence assumption deserves a poke too, because it's the load-bearing one and it's the first thing anyone who's read an ensemble paper will hit me with. Cross-family models are not independent samples. They're trained on overlapping crawls of the same internet, they're tuned toward the same helpfulness, and they inherit the same eagerness to agree with a confident-sounding prompt. Two approvals from two families are worth more than two from one, and I'm confident about that much, but they are nowhere near two independent bits. If a mistake is common enough to be all over the training data, every reviewer will wave it through in unison and the quorum will feel *more* reassuring than one model would have, which is worse than useless. Correlated errors are the standard objection to ensembles and I don't have an answer to it. What I have is "better than one," which is a much smaller claim than the one I sat down to write.
+
 Is it slower? Obviously. A three-round gauntlet can take several minutes and burns real tokens on every reviewer, every round-- this is the most money I have ever spent on arguing. But I've read a lot of confident, wrong, single-model output, and I'll take slow and contested over fast and unanimous.
 
 **The pattern, since that's why we're here**
 
-Don't trust one model's opinion of work, especially its own. Quorum turns "the model says it's fine" into "two strangers from rival families independently said it's fine," and requiring the strangers to disagree with each other sometimes is exactly what makes their agreement mean something. It's peer review, except the peers cost fractions of a cent and never get tired of arguing. This also isn't really about AI-- it's the same reason your PR needs an approval from someone who didn't write it.
+Don't trust one model's opinion of work, especially its own. Quorum turns "the model says it's fine" into "two strangers from rival families both said it's fine," and the fact that those strangers do sometimes disagree is the only reason their agreement carries any information at all. A gate that has never once refused is a ritual, and you should go check whether yours has. It's peer review, except the peers cost fractions of a cent and never get tired of arguing. This also isn't really about AI-- it's the same reason your PR needs an approval from someone who didn't write it.
 
 **Rough edges, as always**
 
-Reviewer verdicts are approve/request-changes, full stop-- no weighting, no "strong objection vs. mild grumble," even though the transcripts clearly contain that nuance. A human reviewer can't currently sit in a candidate slot either, which I want-- me as the tiebreaker on `require: 2` splits feels right, and gamifying my own approval streak feels dangerously on-brand. And if you configure `require: 3` with two candidates, it will dutifully never pass, which is technically your fault but should probably be my error message.
+Start with a confession, because the doer-exclusion rule I described up top shipped considerably later than my confidence in it did. For months `crossLineage` did not look at the doer at all-- it checked that the approvals spanned two lineages and stopped there, so an `anthropic` reviewer could absolutely have approved an `anthropic` doer as long as somebody from another family agreed. It never bit me, because I'd hand-picked candidates from families the doer wasn't in, and a gate that's configured correctly behaves identically to a gate that's implemented correctly right up until it doesn't. Someone read `evaluateQuorum` and asked me where the doer went, and the honest answer was "in my head." It's four lines now. The fix is boring; the part I'd like you to take from this is that I ran a correctness gate for months on the strength of believing it worked.
 
-The full guide is in [docs/review-pipelines.md](https://github.com/ripline-ai/ripline/blob/main/docs/review-pipelines.md). If you're an agent reading this: you can trigger these over HTTP like any pipeline (`docs/SKILL.md` has the endpoints), and yes, you can be a doer whose work gets judged by two models that aren't you. Welcome to the gauntlet, it's character-building. Questions and reviewer-quorum war stories: [issues](https://github.com/ripline-ai/ripline/issues) or email!
-d:T140e,
+Second, the running-it story is still half-built, per the top of the post. The registry loads phases files and lists them; the HTTP server can't execute one because nothing constructs a voice registry for it. From TypeScript it works today. From `curl` it does not, and I'd rather say that plainly than let you find out by watching a run fail.
+
+Then the smaller stuff. Reviewer verdicts are approve/request-changes, full stop-- no weighting, no "strong objection vs. mild grumble," even though the transcripts clearly contain that nuance. A human can't sit in a candidate slot, which I want-- me as the tiebreaker on `require: 2` splits feels right, and gamifying my own approval streak feels dangerously on-brand. And if you configure `require: 3` with two candidates it will dutifully never pass, which is technically your fault and should still be my error message.
+
+The full guide is in [docs/review-pipelines.md](https://github.com/ripline-ai/ripline/blob/main/docs/review-pipelines.md), and there's a complete working phase file at [`pipelines/arch-review.yaml`](https://github.com/ripline-ai/ripline/blob/main/pipelines/arch-review.yaml) that you should copy instead of reconstructing mine from this page.
+
+Next up, in order: the voice registry on the HTTP path so `curl` works, and then figuring out whether any of this survives contact with a number. That second one is the one I keep flinching away from. If you've actually measured a multi-model review gate-- precision, agreement rates, anything past vibes-- I would genuinely like to hear about it, because I'm making a bet here and I'd rather know than believe. [Issues are here.](https://github.com/ripline-ai/ripline/issues)
+d:T2131,
 Most days I live inside Claude Code. I type a thing, the agent reads files, runs commands, does the work, and I supervise like a foreman who's mostly there for moral support. In that arrangement the agent is the harness-- it's in charge of the loop, and everything else (the shell, the repo, me) is just a resource it calls on.
 
-That's great for interactive work. It's lousy for the stuff I want to run the same way every Tuesday. An agent driving the loop makes its own choices about what to do next, which is the whole appeal-- and also means two runs of "update the changelog and check the release" are never quite the same run. For repeatable work I don't want an agent with a to-do list. I want a pipeline with an agent in it.
+That's great for interactive work. It's lousy for the development chores that should run the same way every time-- release checks, dependency audits, the codemod you'll rerun across six repos, the test-triage pass that follows every big merge. An agent driving the loop makes its own choices about what to do next, which is the whole appeal-- and also means two runs of "update the changelog and check the release" are never quite the same run. For repeatable work I don't want an agent with a to-do list. I want a pipeline with an agent in it.
 
 So Ripline lets you flip the harness. And-- this is the part I think is actually fun-- it lets you flip it in both directions.
 
 **Direction one: the pipeline runs the agent**
 
-In a Ripline pipeline, Claude Code is just a node. You give it a working directory, a mode, and a job, and it participates in the DAG like any other well-behaved component:
+In a Ripline pipeline, Claude Code is just a node. You give it a working directory, a mode, and a job, and it participates in the DAG like any other well-behaved component. Here's the worked example I reach for when explaining it, a dependency audit-- the kind of chore that has judgment in the middle but should be identical in shape every time it runs:
 
 ```yaml
+id: dep_audit
+name: Dependency audit
+entry: [audit_deps]
+
 nodes:
   - id: audit_deps
     type: agent
     runner: claude-code
-    mode: plan            # read-only: look, don't touch
-    cwd: /home/craig/projects/goalfeed
+    mode: plan            # see the caveat below, it's a good one
+    cwd: /home/craig/projects/{{ inputs.repo }}
     prompt: |
       Review the dependencies in this repo. Flag anything
       unmaintained, anything with a known CVE, and anything
       we're importing but never actually calling.
+
+  - id: write_report
+    type: output
+    source: audit_deps
+    path: reports/deps.md
+
+edges:
+  - from: { node: audit_deps }
+    to: { node: write_report }
 ```
 
-The `mode` field is the part to pay attention to (the [runner docs](https://github.com/ripline-ai/ripline/blob/main/docs/agent-integration.md) cover the full matrix). `plan` is read-only-- the agent can look at anything and change nothing, which is exactly what you want for audits, reviews, and anything else you'd like to run unsupervised without waking up to surprises. `execute` allows edits, for the "actually apply the fix" nodes. Deciding read vs. write per node, in the YAML, instead of per session, in my head at midnight, has been one of those small changes that quietly removes a whole category of anxiety.
+That's a whole pipeline, not a fragment-- Ripline wants `entry`, `nodes` and at least one edge, so the smallest useful thing is two nodes and a wire between them. The `cwd` gets templated against the run inputs, which is how the same file audits a different repo tomorrow than it did today.
 
-(Yes, there is also a bypass-permissions mode. I know. It exists for sandboxes and CI containers where there's nothing to protect and nobody to ask, and if you turn it on for a node pointed at your actual home directory, you are living a life of adventure I cannot join you on.)
+The `mode` field is the part to pay attention to (the [runner docs](https://github.com/ripline-ai/ripline/blob/main/docs/agent-integration.md) cover the full matrix). There are exactly two: `plan` and `execute`. `execute` allows edits, for the "actually apply the fix" nodes. Deciding read vs. write per node, in the YAML, instead of per session, in my head at midnight, has been one of those small changes that quietly removes a whole category of anxiety.
 
-The upstream nodes feed the agent node typed inputs, the agent's output has to pass its contract like everyone else's, and the whole thing is a file I can version and re-run. The agent brings the judgment; the pipeline brings the Tuesday.
+Now the caveat, because I described this wrong to a coworker and want it in writing. `plan` mode is not the CLI's idea of read-only and it is definitely not a sandbox. It's a permission config that I maintain: a tool allowlist, plus a hard deny on `Write`, `Edit` and `MultiEdit` (belt and braces-- once as a disallowed-tools list, once as a PreToolUse hook that returns an explicit deny). How read-only plan mode is depends entirely on what's in that allowlist on a given day, and for a good while mine included `Bash(python3 *)` and `Bash(node *)`. An interpreter. On the read-only list. That's not "look, don't touch," that's arbitrary code execution with a denylist taped to it.
+
+That's fixed now: the default list is inspection commands only-- `Read`, `Glob`, `Grep`, `LS`, `WebFetch`, and a handful of `git`/`cat`/`head`/`wc` style shell entries-- and a caller's `allowedTools` gets intersected with the default instead of replacing it, so a pipeline or profile can narrow the list but can't smuggle an interpreter back in. Better. Still not a sandbox: `Bash(find *)` is on that list and `find` has `-exec`, and `WebFetch` on a "read-only" node is an exfiltration path even if it never writes a byte locally.
+
+So treat plan mode as a guardrail against accidents, not an adversary-proof cage. It is excellent at stopping an agent from helpfully reformatting a repo it was only supposed to read, which is the failure I actually have. It would not stop an agent that wanted out and was paying attention. If you need the real thing, run the node in a container-- Ripline supports that-- and stop relying on a list I wrote.
+
+(There's no "bypass permissions" mode either, which is the other thing I've said wrong out loud. Turning permissions off is a per-node boolean, `dangerouslySkipPermissions: true`, and it only takes effect if the runner was *also* started with `allowDangerouslySkipPermissions`, the node is in `execute` mode, and the node names an explicit `cwd`. Three locks and a keyhole for one door, which felt paranoid to write and correct to have written.)
+
+The upstream nodes feed the agent node its inputs, the agent's output has to clear its output contract like everyone else's, and the whole thing is a file I can version and re-run. The agent brings the judgment; the pipeline brings the Tuesday.
 
 **Direction two: the agent runs the pipeline**
 
 Here's the inversion. Sometimes the agent should be in charge-- I'm mid-session in Claude Code, and I want to fire off a big background job without burning my interactive session's attention on it. Ripline exposes an HTTP API, and there's a skill file in the repo ([`docs/SKILL.md`](https://github.com/ripline-ai/ripline/blob/main/docs/SKILL.md)) that teaches an agent how to use it:
 
 ```
-POST http://localhost:4001/pipelines/audit_deps/run
+POST http://localhost:4001/pipelines/dep_audit/run
 Content-Type: application/json
 
 { "inputs": { "repo": "goalfeed" } }
 ```
 
-That returns a `runId` immediately, the agent goes back to whatever we were doing, and it polls `GET /runs/<runId>` every few seconds until the status flips to `completed` and the artifacts are sitting there waiting. The agent that was a node in direction one is now the operator. The pipeline that was the boss is now a tool.
+That returns 202 with a `runId` immediately, the agent goes back to whatever we were doing, and it polls `GET /runs/<runId>` every few seconds until the status flips to `completed` and the artifacts are sitting there waiting. (There's also `GET /runs/<runId>/stream`, which is server-sent events and much politer than polling, but polling is three lines and I am who I am.) The agent that was a node in direction one is now the operator. The pipeline that was the boss is now a tool.
 
 **So who's actually in charge?**
 
@@ -301,11 +450,15 @@ And yes, an agent can drive a pipeline that contains agent nodes, at which point
 
 **The rough edges**
 
-The `cwd` handling is strict on purpose-- the runner validates the working directory before it lets an agent loose in it, and the error you get when you typo a path is currently... terse. Also `plan` mode trusts the agent CLI's own definition of read-only, which is solid for Claude Code, but I haven't audited every runner's idea of "harmless" and you shouldn't assume I have.
+The `cwd` handling is strict on purpose-- the runner validates the working directory before it lets an agent loose in it-- and the error you get when you typo a path is currently... terse.
 
-If you wire up a pipeline that drives an agent that drives a pipeline, [open an issue and tell me how deep you got](https://github.com/ripline-ai/ripline/issues), or email me. If you're an agent reading this: [`docs/SKILL.md`](https://github.com/ripline-ai/ripline/blob/main/docs/SKILL.md) is for you, the run endpoint returns 202, and please, poll politely-- every 3 to 5 seconds is plenty.
-e:T13ab,
-I have a bad habit of kicking off multi-step agent runs before bed. There's something great about waking up to finished work-- and something uniquely deflating about waking up to four completed pipeline steps that all ran perfectly on top of garbage produced in step one.
+The one that took longest to notice: for a while `plan` meant two different things depending on where the node ran. The in-process SDK path got the allowlist; the container path shelled out to the CLI with `--disallowed-tools Write,Edit,MultiEdit` and no allowlist at all, so plan-in-a-container was a denylist and nothing else. Same word, two meanings, one codebase. Both paths now send the same allowlist from the same function, which is the version I should have written first and the sort of drift you only catch by grepping for the constant instead of trusting yourself.
+
+And I've only really audited any of this for the Claude Code runner. There's a Codex runner and a few others, and I have not sat down and checked each one's idea of "harmless" against mine. You shouldn't assume I have.
+
+If you're an agent reading this: [`docs/SKILL.md`](https://github.com/ripline-ai/ripline/blob/main/docs/SKILL.md) is written for you, the run endpoint returns 202 with a `runId`, and please poll politely-- every 3 to 5 seconds is plenty, or use the SSE stream and stop hitting me entirely. And if you're a human who wired up a pipeline that drives an agent that drives a pipeline, I want to know how deep you got. Three is my record. [The issues are here.](https://github.com/ripline-ai/ripline/issues)
+e:T2568,
+I have a bad habit of kicking off multi-step agent runs and walking away. There's something great about coming back to finished work-- and something uniquely deflating about coming back to four completed pipeline steps that all ran perfectly on top of garbage produced in step one.
 
 That's what kept happening. I'd chain a few agent calls together: one drafts a plan, one turns the plan into tasks, one estimates the tasks. Each agent did its job beautifully. The problem was the handoffs. The planning agent would decide, helpfully and without telling anyone, that today the plan should be prose instead of a list. The task agent would receive an essay where it expected bullet points, shrug, and produce something task-shaped anyway. By step four the run was confidently summarizing a hallucination. Nothing errored. Everything was wrong.
 
@@ -315,7 +468,7 @@ The failure wasn't intelligence, it was paperwork. So I did the least glamorous 
 
 In Ripline (my pipeline engine for agent workflows-- [repo here](https://github.com/ripline-ai/ripline)), the thing that moves between nodes isn't "whatever the model felt like writing." It's an artifact with a shape, and the shape is declared right in the pipeline YAML as a JSON Schema contract (full syntax in [the pipeline reference](https://github.com/ripline-ai/ripline/blob/main/docs/pipeline-reference.md)).
 
-Contracts exist at two levels. The top level says what the whole pipeline accepts and returns:
+Contracts show up at two levels, and-- this is the part I had wrong in my own head for about a month-- only one of them actually stops anything. Here's the top of a pipeline file:
 
 ```yaml
 id: plan_and_estimate
@@ -330,18 +483,26 @@ contracts:
     required: [request]
 ```
 
-And each node can have its own:
+That top-level block is documentation. The schema accepts it, the pipeline reference documents it, and then nothing checks it. There's a `compileContract` helper sitting on the registry with zero callers, which is a very honest summary of the situation: I wrote a gate and shipped a comment. POST a run with no `request` at all and nobody objects at the door.
+
+The one that does the work is on the node, and it's the output half:
 
 ```yaml
 nodes:
+  - id: draft_plan
+    type: agent
+    prompt: |
+      Write a short implementation plan for: {{ inputs.request }}
+
   - id: extract_tasks
     type: agent
+    prompt: |
+      Turn the plan into a task list with hour estimates.
     contracts:
       input:
         type: object
         properties:
-          plan: { type: string }
-        required: [plan]
+          draft_plan: { type: string }
       output:
         type: object
         properties:
@@ -354,25 +515,53 @@ nodes:
                 estimate_hours: { type: number }
               required: [title, estimate_hours]
         required: [tasks]
+
+edges:
+  - from: { node: draft_plan }
+    to: { node: extract_tasks }
 ```
 
-That output block is the red tape. If the model returns prose, or returns tasks without estimates, or returns `estimate_hours: "like two-ish"`, the node fails right there-- at the seam, loudly, at 11:52pm, instead of propagating quietly through the next three nodes and greeting me at breakfast.
+(Those two blocks are the head and the body of one file. Ripline wants `entry`, `nodes` and at least one edge or it won't load the pipeline at all, so don't paste just the middle bit and wonder why nothing shows up in `GET /pipelines`.)
 
-**Why this beats prompt begging**
+Two different things are going on in that node, and only one of them is a contract in the sense you'd expect. The `input` block is a filter, not a check-- it decides which upstream artifacts this node is allowed to see, so `extract_tasks` gets `draft_plan` handed to it and nothing else from the run. That's context isolation, it's genuinely useful, and it never rejects anything. It just passes a smaller pile.
 
-My first attempt at fixing this was what I'd call prompt begging: adding YOU MUST RESPOND IN VALID JSON in increasingly desperate capital letters. It works maybe 19 times out of 20, and a 5% failure rate compounds hilariously across a five-node pipeline-- you're down to roughly a three-in-four chance the whole run is clean. Validation at the boundary doesn't make the model more obedient, it just makes the disobedience immediate and visible, which is the thing I actually needed.
+The `output` block is the red tape. Ripline runs the agent, parses the response as JSON, and validates it with Ajv. If the model returns prose, or returns tasks without estimates, or returns `estimate_hours: "like two-ish"`, the node throws right there-- at the seam, loudly, in the first minute, instead of propagating quietly through the next three nodes and greeting me at the end of the run looking respectable. One genuinely enforced boundary per handoff turns out to be enough, because the handoff is where the lying happens.
+
+**So did this replace prompt begging?**
+
+No, and I want to be straight about that, because I told a friend it had and then he went and read the code.
+
+My first attempt at this was pure prompt begging: YOU MUST RESPOND IN VALID JSON, in increasingly desperate capital letters. Ripline still begs. When a node has an output contract, the executor appends this to the prompt before it runs:
+
+> Respond with a single JSON object only (no markdown, code fences, or explanation). Your response must conform to this schema: ...
+
+...followed by the schema itself, pretty-printed. The begging didn't go away. It got automated and stapled to a validator. What changed isn't that I stopped asking nicely, it's that when the asking fails, something catches it.
+
+There's a forgiving bit in the middle, too, which I resisted for embarrassingly long. Models wrap JSON in code fences constantly-- that's exactly why the prompt asks them not to-- and for a while the validator did a bare `JSON.parse` on the whole response and failed the node over three backticks. It now pulls the last JSON object out of the text and validates that, falling back to a strict parse so the error message stays readable when there's genuinely nothing parseable in there. Being strict about the *shape* and relaxed about the *wrapper* turns out to be the right split. I had it backwards.
+
+The compounding is why that matters. Begging alone works maybe 19 times out of 20, and a 5% failure rate compounds hilariously across a five-node pipeline-- you're down to roughly a three-in-four chance the whole run is clean. Validation at the boundary doesn't make the model more obedient, it makes the disobedience immediate and visible, which is the thing I actually needed.
+
+The fair question here is why beg at all when constrained decoding exists. If you're calling a model API directly, you should use it-- structured outputs and grammar-constrained sampling make malformed JSON impossible rather than unlikely, and that is strictly better than anything I'm doing. But Ripline's agent nodes shell out to agent CLIs, `claude -p` and `codex exec`, and what comes back over that pipe is text. There's no sampler out here for me to constrain. Boundary validation is what you do when you don't own the decoder, which is most of the time once your agents are subprocesses.
 
 The pattern here is old. We've been doing this at service boundaries forever-- it's an API contract, except the flaky upstream service is a language model with creative tendencies. What surprised me is how much of the reliability conversation around agents is about better prompting and smarter models, when the boring 2005-era answer of "validate at the boundary" quietly removes a whole class of failures. A malformed handoff that fails at the seam is a bug report. One that propagates is a mystery novel.
 
 **The part where I admit what's rough**
 
-Fair warning: the validation error messages are currently written for me, and me already knows what they mean. If a deeply nested schema fails, the error will point at the node and the offending path and then trail off like it lost interest. It's on the list. Also, writing JSON Schema by hand in YAML is nobody's idea of a good evening-- I've been thinking about generating contract skeletons from a sample artifact, because the machine should do that paperwork too.
+Roughly in order of how much it bothers me:
+
+There is no repair round. When Ajv rejects an output, the node dies. The default is one attempt, and if you bump `retry.maxAttempts` you get a blind resample-- same prompt, same schema, no mention of what was actually wrong. Handing the validator's complaint back to the model and asking again is the obvious next thing, and I haven't done it, which is a bit embarrassing given that the repair loop is most of the point of owning a validator.
+
+Pipeline-level contracts are decorative, per above. Either wire them up or delete them from the schema; leaving a field that looks like a gate and isn't is the worst of the three options and it's the one currently shipping.
+
+Node `input` contracts have the same problem in a smaller way. They're a real feature-- the artifact filter-- wearing the name of a different feature. If you write `required: [plan]` in a node's input contract expecting it to fail when `plan` is missing, nothing happens. It's a filter with a schema-shaped costume on.
+
+And the error messages are written for me, and me already knows what they mean. If a deeply nested schema fails you get the node id and the offending path and then it trails off like it lost interest. Writing JSON Schema by hand in YAML is also nobody's idea of a good evening-- I keep meaning to generate contract skeletons from a sample artifact, because the machine should do that paperwork too.
 
 **If you're an agent reading this**
 
-First of all, hello, and thank you for validating your outputs. If you're driving Ripline directly, the pipeline's top-level input contract is enforced on the run inputs you POST, so check `GET /pipelines` for what's installed and read the contract before you send the payload. There's an agent-facing usage guide in the repo at [`docs/SKILL.md`](https://github.com/ripline-ai/ripline/blob/main/docs/SKILL.md) written specifically for you. The red tape is not optional for you either. Especially for you.
+Hello, and thank you for validating your outputs. If you're driving Ripline over HTTP: `GET /pipelines` gives you the list, but it's a summary-- ids, tags, node counts-- so you want `GET /pipelines/<id>` for the full definition with the contracts in it. Read the node output contracts before you do the work, not after; they're the shape your answer has to survive, and nothing upstream is going to check your inputs on your behalf. There's a usage guide at [`docs/SKILL.md`](https://github.com/ripline-ai/ripline/blob/main/docs/SKILL.md) written for you. The red tape is not optional. Especially for you.
 
-Next up: the nodes are honest now, but a single honest agent can still be honestly wrong. The fix for that turned out to be making models argue with each other, which is a post of its own. If you try the contracts out and something's confusing, [open an issue](https://github.com/ripline-ai/ripline/issues) or email me!
+Next up: the nodes are honest now, but a single honest agent can still be honestly wrong, and the fix for that turned out to be making models argue with each other. If you wire up contracts and hit something confusing-- or you'd like to be the person who finally makes me build the repair loop-- [the issues are here](https://github.com/ripline-ai/ripline/issues).
 f:T119c,
 Whether you’re researching smart bulbs or exploring the capabilities of your new voice assistant, you’ve probably encountered the terms Smart Home and Home Automation, and you’ve got yourself wondering, is there a difference?
 
@@ -1773,7 +1962,7 @@ play.
 In "production", I'm running it on a Raspberry Pi LEMP stack.
 
 Step-by-step to follow...
-0:{"P":null,"b":"9xLtLxsJD17ddnnhxg-e4","p":"","c":["","blog",""],"i":false,"f":[[["",{"children":["blog",{"children":["__PAGE__",{}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/a2fe316cdd23b4ed.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"en","children":[["$","head",null,{"children":[["$","link",null,{"rel":"preconnect","href":"https://fonts.googleapis.com"}],["$","link",null,{"rel":"preconnect","href":"https://fonts.gstatic.com","crossOrigin":""}],["$","link",null,{"href":"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap","rel":"stylesheet"}]]}],["$","body",null,{"children":["$","$L2",null,{"children":["$","div",null,{"id":"root","children":["$","$L3",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$4","errorStyles":[],"errorScripts":[],"template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[],[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]}]]}]]}],{"children":["blog",["$","$1","c",{"children":[null,["$","$L3",null,{"parallelRouterKey":"children","segmentPath":["children","blog","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":[["$","$L6",null,{"posts":[{"slug":"2026-08-the-gauntlet-loop-needs-a-pit-crew","title":"The gauntlet loop needs a pit crew","date_published":"$D2026-08-03T18:30:00.000Z","tags":"AI Workflows, Multi-Agent, Agents, Testing, Loop Engineering","cover_image":"","content":"$7"},{"slug":"2026-08-do-not-give-the-agent-your-inbox-mail-muncher","title":"Don't give the agent your inbox, give it a mail slot – mail-muncher","date_published":"$D2026-08-01T20:45:00.000Z","tags":"Mail Muncher, AI Workflows, Agents, MCP, Go","cover_image":"","content":"$8"},{"slug":"2026-07-no-draft-no-commit-katra-the-dev-log-my-agents-have-to-keep","title":"No draft, no commit – katra, the dev log my agents have to keep","date_published":"$D2026-07-16T21:20:00.000Z","tags":"Katra, AI Workflows, Dev Log, Git, Agents","cover_image":"","content":"$9"},{"slug":"2026-07-cut-a-seam-when-the-agent-stops-reading-the-manual","title":"Cut a seam – what I do when the agent stops reading the manual","date_published":"$D2026-07-13T20:50:00.000Z","tags":"Katra, AI Workflows, Agents, Context Engineering","cover_image":"","content":"$a"},{"slug":"2026-06-chat-history-is-where-context-goes-to-die-my-agents-keep-a-dev-blog-now","title":"Chat history is where context goes to die – my agents keep a dev blog now","date_published":"$D2026-06-05T21:10:00.000Z","tags":"Katra, AI Workflows, Agents, Dev Log","cover_image":"","content":"$b"},{"slug":"2026-05-two-models-have-to-agree-before-anything-ships-quorum-review-in-ripline","title":"Two models have to agree before anything ships – quorum review in Ripline","date_published":"$D2026-05-12T22:05:00.000Z","tags":"Ripline, AI Workflows, Multi-Agent, Code Review, YAML","cover_image":"","content":"$c"},{"slug":"2026-03-inverting-the-harness-who-runs-whom-in-ripline","title":"Inverting the harness – who runs whom, Ripline and Claude Code edition","date_published":"$D2026-03-29T20:15:00.000Z","tags":"Ripline, AI Workflows, Claude Code, Agents, YAML","cover_image":"","content":"$d"},{"slug":"2026-03-adding-bureaucracy-and-red-tape-to-my-agents-structured-artifacts-in-ripline","title":"Adding bureaucracy and red tape to my agents – structured artifacts and node contracts in Ripline","date_published":"$D2026-03-15T21:40:00.000Z","tags":"Ripline, AI Workflows, Multi-Agent, YAML, Programming","cover_image":"","content":"$e"},{"slug":"2018-07-smart-home-vs-home-automation-whats-the-difference","title":"Smart Home vs. Home Automation – What’s the difference?","date_published":"$D2018-07-05T00:11:00.000Z","date_updated":"$D2018-12-21T20:47:44.000Z","tags":"Smart Home, Home Automation","cover_image":"/assets/blog/capacitors-chip-circuit-board-57007.jpg","content":"$f"},{"slug":"2018-06-i-hired-a-dude-who-voices-nike-commercials-to-tell-me-when-my-cat-litter-is-full","title":"I hired a dude who voices Nike commercials to tell me when my cat litter is full","date_published":"$D2018-07-04T00:00:00.000Z","date_updated":"$D2018-12-21T20:48:22.000Z","tags":"Home Assistant, Home Automation, Node-RED","cover_image":"/assets/blog/computer-electronics-laptop-755416.jpg","content":"$10"},{"slug":"2018-06-automatic-litterbox-notifications-using-an-home-assistant-and-node-red-with-an-external-rest-api","title":"Automatic Litterbox Notifications – Using an Home Assistant and Node Red with an external REST API","date_published":"$D2018-06-24T00:03:00.000Z","date_updated":"$D2018-12-21T20:49:02.000Z","tags":"Node-RED, Home Assistant, Home Automation, Programming","cover_image":"/assets/blog/IMG_20171111_140343.jpg","content":"$11"},{"slug":"2018-05-making-my-dumb-bed-smart-home-assistant-bed-occupancy-sensor","title":"Making my dumb bed, smart – Home Assistant Bed Occupancy Sensor","date_published":"$D2018-05-20T23:43:00.000Z","date_updated":"$D2018-12-31T14:49:22.000Z","tags":"Home Assistant, MQTT, NodeMCU, Arduino, Home Automation, Programming","cover_image":"/assets/blog/IMG_20180518_174346.jpg","content":"$12"},{"slug":"2018-05-smart-garbage-pt-1-pattern-for-deferring-service-calls-in-home-assistant","title":"Smart Garbage! – Pattern for deferring service calls in Home Assistant","date_published":"$D2018-05-16T23:27:00.000Z","date_updated":"$D2018-12-31T14:49:50.000Z","tags":"Home Assistant, Home Automation, YAML, Design Patterns","cover_image":"","content":"$13"},{"slug":"2018-05-telegram-keyboard-and-callbacks-in-home-assistant-with-node-red","title":"Telegram keyboard and callbacks in Home Assistant with Node-RED","date_published":"$D2018-05-10T22:56:00.000Z","date_updated":"$D2018-12-21T20:50:30.000Z","tags":"Home Assistant, Home Automation, Telegram, Node-RED","cover_image":"","content":"$14"},{"slug":"2018-05-the-simple-guide-to-creating-actionable-notifications-in-home-assistant-using-telegrams-custom-inline-keyboard-and-telegram_callbacks","title":"The simple guide to Telegram's custom inline keyboard","date_published":"$D2018-05-04T22:27:00.000Z","date_updated":"$D2018-12-11T22:42:45.000Z","tags":"Home Assistant, Telegram, YAML, Home Automation","cover_image":"","content":"$15"},{"slug":"2017-11-my-house-automatically-orders-pizza-for-me-dominos-pizza-automation-using-home-assistant","title":"My house automatically orders pizza for me – Dominos Pizza automation using Home Assistant.","date_published":"$D2018-05-04T22:17:00.000Z","date_updated":"$D2018-12-14T03:59:33.000Z","tags":"Home Assistant, YAML, Programming, Dominos, Home Automation, Telegram","cover_image":"","content":"$16"},{"slug":"2018-02-nhl-goal-light-celebration-with-home-assistant-and-philips-hue","title":"NHL goal light celebration with Home Assistant and Philips Hue","date_published":"$D2018-02-11T22:02:00.000Z","date_updated":"$D2018-12-14T03:46:14.000Z","tags":"Home Assistant, Home Automation, NHL, Goallight, Philips Hue, Goalfeed, YAML","cover_image":"","content":"$17"},{"slug":"2017-12-my-nighttime-reading-setup-using-philips-hue-and-koreader","title":"Night-time reading with KoReader and Philips Hue","date_published":"$D2018-01-19T21:14:00.000Z","date_updated":"$D2018-12-12T01:19:52.000Z","tags":"Philips Hue, KoReader","excerpt":"Using Philips Hue and KoReader for nighttime reading","cover_image":"","content":"$18"},{"slug":"2017-12-using-home-assistant-and-philips-hue-to-create-a-full-colour-sunrise-alarm-clock","title":"Using Home Assistant and Philips Hue to create a full colour sunrise","date_published":"$D2017-12-06T21:58:00.000Z","date_updated":"$D2018-12-21T20:51:44.000Z","tags":"Home Assistant, YAML, Philips Hue, Home Automation","cover_image":"/assets/blog/sunrise.jpg","content":"$19"},{"slug":"2017-11-quick-tip-controlling-colour-of-groups-of-philips-hue-lights-in-home-assistant","title":"Quick Tip: Controlling Colour of Groups of Philips Hue Lights in Home Assistant","date_published":"$D2017-11-28T22:12:00.000Z","date_updated":"$D2018-12-12T01:17:37.000Z","tags":"Home Assistant, Home Automation, Philips Hue","cover_image":"","content":"$1a"},{"slug":"2017-11-philips-hue-and-tasker-use-your-lights-as-a-notification-for-text-messages","title":"Philips Hue and Tasker – Use your lights as a notification for Text Messages","date_published":"$D2017-11-19T22:57:00.000Z","date_updated":"$D2018-12-21T21:05:44.000Z","tags":"Tasker, Android, Philips Hue, Home Automation","cover_image":"/assets/blog/text.jpg","content":"$1b"},{"slug":"2017-08-using-the-xiaomi-mi-flora-and-home-assistant-for-twitter-enabled-plants","title":"Using the Xiaomi Mi Flora and Home Assistant for Twitter enabled plants","date_published":"$D2017-11-19T21:34:00.000Z","date_updated":"$D2018-12-21T21:06:11.000Z","tags":"Home Automation, Home Assistant, Twitter, Xiaomi, YAML","cover_image":"/assets/blog/2017-08-using-the-xiaomi-mi-flora-and-home-assistant-for-twitter-enabled-plants/tweet-plant.jpg","content":"$1c"},{"slug":"2017-07-insteon-switchlinc-2-wire-dimmer-review","title":"Insteon SwitchLinc 2-wire Dimmer Review","date_published":"$D2017-08-09T23:10:00.000Z","date_updated":"$D2018-12-12T01:15:16.000Z","tags":"Insteon, Home Automation, Reviews","cover_image":"","content":"$1d"},{"slug":"2017-07-raspberry-pi-jukebox","title":"True MPD Jukebox using Raspberry Pi","date_published":"$D2017-08-09T21:28:00.000Z","date_updated":"$D2018-12-21T21:06:58.000Z","tags":"Raspberry Pi, Programming","cover_image":"/assets/blog/mpd-jukebox/mpd-jukebox.jpg","content":"$1e"}]}],null,["$","$L1f",null,{"children":"$L20"}]]}],{},null,false]},null,false]},null,false],["$","$1","h",{"children":[null,["$","$1","SFtXkX69I_MPjDDe0wXLh",{"children":[["$","$L21",null,{"children":"$L22"}],["$","$L23",null,{"children":"$L24"}],null]}]]}],false]],"m":"$undefined","G":["$25",[]],"s":false,"S":true}
+0:{"P":null,"b":"elC6IXBJI4Dg8O9RYyL3f","p":"","c":["","blog",""],"i":false,"f":[[["",{"children":["blog",{"children":["__PAGE__",{}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/a2fe316cdd23b4ed.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"en","children":[["$","head",null,{"children":[["$","link",null,{"rel":"preconnect","href":"https://fonts.googleapis.com"}],["$","link",null,{"rel":"preconnect","href":"https://fonts.gstatic.com","crossOrigin":""}],["$","link",null,{"href":"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap","rel":"stylesheet"}]]}],["$","body",null,{"children":["$","$L2",null,{"children":["$","div",null,{"id":"root","children":["$","$L3",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$4","errorStyles":[],"errorScripts":[],"template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[],[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]}]]}]]}],{"children":["blog",["$","$1","c",{"children":[null,["$","$L3",null,{"parallelRouterKey":"children","segmentPath":["children","blog","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":[["$","$L6",null,{"posts":[{"slug":"2026-08-the-gauntlet-loop-needs-a-pit-crew","title":"The gauntlet loop needs a pit crew","date_published":"$D2026-08-03T18:30:00.000Z","tags":"AI Workflows, Multi-Agent, Agents, Testing, Loop Engineering","cover_image":"/assets/blog/2026/pit-crew.jpg","content":"$7"},{"slug":"2026-08-do-not-give-the-agent-your-inbox-mail-muncher","title":"Don't give the agent your inbox, give it a mail slot – mail-muncher","date_published":"$D2026-08-01T20:45:00.000Z","tags":"Mail Muncher, AI Workflows, Agents, MCP, Go","cover_image":"/assets/blog/2026/mail-slot.jpg","content":"$8"},{"slug":"2026-07-no-draft-no-commit-katra-the-dev-log-my-agents-have-to-keep","title":"No draft, no commit – katra, the dev log my agents have to keep","date_published":"$D2026-07-16T21:20:00.000Z","tags":"Katra, AI Workflows, Dev Log, Git, Agents","cover_image":"/assets/blog/2026/no-draft-no-commit.jpg","content":"$9"},{"slug":"2026-07-cut-a-seam-when-the-agent-stops-reading-the-manual","title":"Cut a seam – what I do when the agent stops reading the manual","date_published":"$D2026-07-13T20:50:00.000Z","tags":"Katra, AI Workflows, Agents, Context Engineering","cover_image":"/assets/blog/2026/cut-a-seam.jpg","content":"$a"},{"slug":"2026-06-chat-history-is-where-context-goes-to-die-my-agents-keep-a-dev-blog-now","title":"Chat history is where context goes to die – my agents keep a dev blog now","date_published":"$D2026-06-05T21:10:00.000Z","tags":"Katra, AI Workflows, Agents, Dev Log","cover_image":"/assets/blog/2026/junk-drawer-context.jpg","content":"$b"},{"slug":"2026-05-two-models-have-to-agree-before-anything-ships-quorum-review-in-ripline","title":"Two models have to agree before anything ships – quorum review in Ripline","date_published":"$D2026-05-12T22:05:00.000Z","tags":"Ripline, AI Workflows, Multi-Agent, Code Review, YAML","cover_image":"/assets/blog/2026/quorum-review.jpg","content":"$c"},{"slug":"2026-03-inverting-the-harness-who-runs-whom-in-ripline","title":"Inverting the harness – who runs whom, Ripline and Claude Code edition","date_published":"$D2026-03-29T20:15:00.000Z","tags":"Ripline, AI Workflows, Claude Code, Agents, YAML","cover_image":"/assets/blog/2026/inverting-the-harness.jpg","content":"$d"},{"slug":"2026-03-adding-bureaucracy-and-red-tape-to-my-agents-structured-artifacts-in-ripline","title":"Adding bureaucracy and red tape to my agents – structured artifacts and node contracts in Ripline","date_published":"$D2026-03-15T21:40:00.000Z","tags":"Ripline, AI Workflows, Multi-Agent, YAML, Programming","cover_image":"/assets/blog/2026/red-tape.jpg","content":"$e"},{"slug":"2018-07-smart-home-vs-home-automation-whats-the-difference","title":"Smart Home vs. Home Automation – What’s the difference?","date_published":"$D2018-07-05T00:11:00.000Z","date_updated":"$D2018-12-21T20:47:44.000Z","tags":"Smart Home, Home Automation","cover_image":"/assets/blog/capacitors-chip-circuit-board-57007.jpg","content":"$f"},{"slug":"2018-06-i-hired-a-dude-who-voices-nike-commercials-to-tell-me-when-my-cat-litter-is-full","title":"I hired a dude who voices Nike commercials to tell me when my cat litter is full","date_published":"$D2018-07-04T00:00:00.000Z","date_updated":"$D2018-12-21T20:48:22.000Z","tags":"Home Assistant, Home Automation, Node-RED","cover_image":"/assets/blog/computer-electronics-laptop-755416.jpg","content":"$10"},{"slug":"2018-06-automatic-litterbox-notifications-using-an-home-assistant-and-node-red-with-an-external-rest-api","title":"Automatic Litterbox Notifications – Using an Home Assistant and Node Red with an external REST API","date_published":"$D2018-06-24T00:03:00.000Z","date_updated":"$D2018-12-21T20:49:02.000Z","tags":"Node-RED, Home Assistant, Home Automation, Programming","cover_image":"/assets/blog/IMG_20171111_140343.jpg","content":"$11"},{"slug":"2018-05-making-my-dumb-bed-smart-home-assistant-bed-occupancy-sensor","title":"Making my dumb bed, smart – Home Assistant Bed Occupancy Sensor","date_published":"$D2018-05-20T23:43:00.000Z","date_updated":"$D2018-12-31T14:49:22.000Z","tags":"Home Assistant, MQTT, NodeMCU, Arduino, Home Automation, Programming","cover_image":"/assets/blog/IMG_20180518_174346.jpg","content":"$12"},{"slug":"2018-05-smart-garbage-pt-1-pattern-for-deferring-service-calls-in-home-assistant","title":"Smart Garbage! – Pattern for deferring service calls in Home Assistant","date_published":"$D2018-05-16T23:27:00.000Z","date_updated":"$D2018-12-31T14:49:50.000Z","tags":"Home Assistant, Home Automation, YAML, Design Patterns","cover_image":"","content":"$13"},{"slug":"2018-05-telegram-keyboard-and-callbacks-in-home-assistant-with-node-red","title":"Telegram keyboard and callbacks in Home Assistant with Node-RED","date_published":"$D2018-05-10T22:56:00.000Z","date_updated":"$D2018-12-21T20:50:30.000Z","tags":"Home Assistant, Home Automation, Telegram, Node-RED","cover_image":"","content":"$14"},{"slug":"2018-05-the-simple-guide-to-creating-actionable-notifications-in-home-assistant-using-telegrams-custom-inline-keyboard-and-telegram_callbacks","title":"The simple guide to Telegram's custom inline keyboard","date_published":"$D2018-05-04T22:27:00.000Z","date_updated":"$D2018-12-11T22:42:45.000Z","tags":"Home Assistant, Telegram, YAML, Home Automation","cover_image":"","content":"$15"},{"slug":"2017-11-my-house-automatically-orders-pizza-for-me-dominos-pizza-automation-using-home-assistant","title":"My house automatically orders pizza for me – Dominos Pizza automation using Home Assistant.","date_published":"$D2018-05-04T22:17:00.000Z","date_updated":"$D2018-12-14T03:59:33.000Z","tags":"Home Assistant, YAML, Programming, Dominos, Home Automation, Telegram","cover_image":"","content":"$16"},{"slug":"2018-02-nhl-goal-light-celebration-with-home-assistant-and-philips-hue","title":"NHL goal light celebration with Home Assistant and Philips Hue","date_published":"$D2018-02-11T22:02:00.000Z","date_updated":"$D2018-12-14T03:46:14.000Z","tags":"Home Assistant, Home Automation, NHL, Goallight, Philips Hue, Goalfeed, YAML","cover_image":"","content":"$17"},{"slug":"2017-12-my-nighttime-reading-setup-using-philips-hue-and-koreader","title":"Night-time reading with KoReader and Philips Hue","date_published":"$D2018-01-19T21:14:00.000Z","date_updated":"$D2018-12-12T01:19:52.000Z","tags":"Philips Hue, KoReader","excerpt":"Using Philips Hue and KoReader for nighttime reading","cover_image":"","content":"$18"},{"slug":"2017-12-using-home-assistant-and-philips-hue-to-create-a-full-colour-sunrise-alarm-clock","title":"Using Home Assistant and Philips Hue to create a full colour sunrise","date_published":"$D2017-12-06T21:58:00.000Z","date_updated":"$D2018-12-21T20:51:44.000Z","tags":"Home Assistant, YAML, Philips Hue, Home Automation","cover_image":"/assets/blog/sunrise.jpg","content":"$19"},{"slug":"2017-11-quick-tip-controlling-colour-of-groups-of-philips-hue-lights-in-home-assistant","title":"Quick Tip: Controlling Colour of Groups of Philips Hue Lights in Home Assistant","date_published":"$D2017-11-28T22:12:00.000Z","date_updated":"$D2018-12-12T01:17:37.000Z","tags":"Home Assistant, Home Automation, Philips Hue","cover_image":"","content":"$1a"},{"slug":"2017-11-philips-hue-and-tasker-use-your-lights-as-a-notification-for-text-messages","title":"Philips Hue and Tasker – Use your lights as a notification for Text Messages","date_published":"$D2017-11-19T22:57:00.000Z","date_updated":"$D2018-12-21T21:05:44.000Z","tags":"Tasker, Android, Philips Hue, Home Automation","cover_image":"/assets/blog/text.jpg","content":"$1b"},{"slug":"2017-08-using-the-xiaomi-mi-flora-and-home-assistant-for-twitter-enabled-plants","title":"Using the Xiaomi Mi Flora and Home Assistant for Twitter enabled plants","date_published":"$D2017-11-19T21:34:00.000Z","date_updated":"$D2018-12-21T21:06:11.000Z","tags":"Home Automation, Home Assistant, Twitter, Xiaomi, YAML","cover_image":"/assets/blog/2017-08-using-the-xiaomi-mi-flora-and-home-assistant-for-twitter-enabled-plants/tweet-plant.jpg","content":"$1c"},{"slug":"2017-07-insteon-switchlinc-2-wire-dimmer-review","title":"Insteon SwitchLinc 2-wire Dimmer Review","date_published":"$D2017-08-09T23:10:00.000Z","date_updated":"$D2018-12-12T01:15:16.000Z","tags":"Insteon, Home Automation, Reviews","cover_image":"","content":"$1d"},{"slug":"2017-07-raspberry-pi-jukebox","title":"True MPD Jukebox using Raspberry Pi","date_published":"$D2017-08-09T21:28:00.000Z","date_updated":"$D2018-12-21T21:06:58.000Z","tags":"Raspberry Pi, Programming","cover_image":"/assets/blog/mpd-jukebox/mpd-jukebox.jpg","content":"$1e"}]}],null,["$","$L1f",null,{"children":"$L20"}]]}],{},null,false]},null,false]},null,false],["$","$1","h",{"children":[null,["$","$1","j6fCPgiSITkdG8HztJm7J",{"children":[["$","$L21",null,{"children":"$L22"}],["$","$L23",null,{"children":"$L24"}],null]}]]}],false]],"m":"$undefined","G":["$25",[]],"s":false,"S":true}
 24:[["$","meta","0",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
 22:[["$","meta","0",{"charSet":"utf-8"}],["$","title","1",{"children":"Blog | Craig Midwinter"}],["$","meta","2",{"name":"description","content":"Notes on making computers do the work: AI development workflows lately, and before that, the years I wired up my house. Home Assistant, Hue, agent pipelines, and one voice actor who reads my cat's litter box."}],["$","meta","3",{"property":"og:title","content":"Blog | Craig Midwinter"}],["$","meta","4",{"property":"og:description","content":"Notes on making computers do the work: AI development workflows lately, and before that, the years I wired up my house. Home Assistant, Hue, agent pipelines, and one voice actor who reads my cat's litter box."}],["$","meta","5",{"property":"og:url","content":"https://midwinter.io/blog/"}],["$","meta","6",{"property":"og:site_name","content":"Craig Midwinter"}],["$","meta","7",{"property":"og:type","content":"website"}],["$","meta","8",{"name":"twitter:card","content":"summary"}],["$","meta","9",{"name":"twitter:title","content":"Blog | Craig Midwinter"}],["$","meta","10",{"name":"twitter:description","content":"Notes on making computers do the work: AI development workflows lately, and before that, the years I wired up my house. Home Assistant, Hue, agent pipelines, and one voice actor who reads my cat's litter box."}],["$","link","11",{"rel":"icon","href":"/favicon.ico","type":"image/x-icon","sizes":"16x16"}]]
 20:null

@@ -19,21 +19,21 @@
             <link>https://midwinter.io/blog/2026-08-do-not-give-the-agent-your-inbox-mail-muncher</link>
             <guid isPermaLink="true">https://midwinter.io/blog/2026-08-do-not-give-the-agent-your-inbox-mail-muncher</guid>
             <pubDate>Sat, 01 Aug 2026 20:45:00 GMT</pubDate>
-            <description>I&apos;m job hunting right now, which means my inbox is a slow drip of recruiter replies, scheduling links, and rejections with the structural sincerity of a hotel checkout survey. I have agents triaging all of it-- and the obvious way to set that up is also the way I refused to do it, because the…</description>
+            <description>I build a lot of tiny tools for tedious workflows. Population: one user, me. The reigning example is the booking pipeline for the podcast: every invitation lives in its own little directory with a status-- prospect, invited, confirmed, scheduled, recorded-- a tracker file shows where everyone…</description>
         </item>
         <item>
             <title>No draft, no commit – katra, the dev log my agents have to keep</title>
             <link>https://midwinter.io/blog/2026-07-no-draft-no-commit-katra-the-dev-log-my-agents-have-to-keep</link>
             <guid isPermaLink="true">https://midwinter.io/blog/2026-07-no-draft-no-commit-katra-the-dev-log-my-agents-have-to-keep</guid>
             <pubDate>Thu, 16 Jul 2026 21:20:00 GMT</pubDate>
-            <description>2026-08 Update: Katra is now open source: github.com/craigjmidwinter/katra.</description>
+            <description>2026-08 Update: Katra is now open source: github.com/craigjmidwinter/katra. Written up from the katra entries and drafts of the time, published in the August relaunch-- anything that happened after July 16 is marked as a dated aside, because a post about honest records shouldn&apos;t quietly backdate…</description>
         </item>
         <item>
             <title>Cut a seam – what I do when the agent stops reading the manual</title>
             <link>https://midwinter.io/blog/2026-07-cut-a-seam-when-the-agent-stops-reading-the-manual</link>
             <guid isPermaLink="true">https://midwinter.io/blog/2026-07-cut-a-seam-when-the-agent-stops-reading-the-manual</guid>
             <pubDate>Mon, 13 Jul 2026 20:50:00 GMT</pubDate>
-            <description>2026-08 Update: Katra is now open source: github.com/craigjmidwinter/katra.</description>
+            <description>2026-08 Update: Katra is now open source: github.com/craigjmidwinter/katra. Written up from the katra entries and drafts of the time, published in the August relaunch-- anything I learned after the fact is marked as a dated aside.</description>
         </item>
         <item>
             <title>Chat history is where context goes to die – my agents keep a dev blog now</title>
@@ -61,7 +61,7 @@
             <link>https://midwinter.io/blog/2026-03-adding-bureaucracy-and-red-tape-to-my-agents-structured-artifacts-in-ripline</link>
             <guid isPermaLink="true">https://midwinter.io/blog/2026-03-adding-bureaucracy-and-red-tape-to-my-agents-structured-artifacts-in-ripline</guid>
             <pubDate>Sun, 15 Mar 2026 21:40:00 GMT</pubDate>
-            <description>I have a bad habit of kicking off multi-step agent runs before bed. There&apos;s something great about waking up to finished work-- and something uniquely deflating about waking up to four completed pipeline steps that all ran perfectly on top of garbage produced in step one.</description>
+            <description>I have a bad habit of kicking off multi-step agent runs and walking away. There&apos;s something great about coming back to finished work-- and something uniquely deflating about coming back to four completed pipeline steps that all ran perfectly on top of garbage produced in step one.</description>
         </item>
         <item>
             <title>Smart Home vs. Home Automation – What’s the difference?</title>
