@@ -3,9 +3,12 @@ title: Chat history is where context goes to die – my agents keep a dev blog n
 slug: 2026-06-chat-history-is-where-context-goes-to-die-my-agents-keep-a-dev-blog-now
 date_published: 2026-06-05T21:10:00.000Z
 tags: Katra, AI Workflows, Agents, Dev Log
+cover_image: "/assets/blog/2026/junk-drawer-context.jpg"
 ---
 
 **2026-08 Update:** *The little CLI in this post grew up, got renamed katra, and is now open source: [github.com/craigjmidwinter/katra](https://github.com/craigjmidwinter/katra).*
+
+*Provenance, since it matters for a post about honest records: this was written up from the katra entries and drafts of the time and published in the August relaunch. Anything I know now but didn't know then is marked as a dated aside.*
 
 There's a tempting idea that your agent's chat history is a project archive-- scroll back far enough and every decision you ever made is in there somewhere. And it is in there. So is everything else. Chat history is the junk drawer of context: the decision you need is definitely in it, underneath four hundred lines of the agent narrating a test run and that one time you asked it to explain a regex at 1am. I kept believing I'd go digging when it mattered, and I kept not doing it, because nobody greps a junk drawer.
 
@@ -29,14 +32,16 @@ One markdown file per entry, YAML frontmatter, media alongside in the repo. No d
 
 Here's the thing I underrated at first. A distilled, organized project chronicle isn't just for future-me-- it's *retrievable by the agent*. When a fresh session needs to know why the config writes are serialized, it doesn't need to archaeology its way through old conversations that it can't see anyway. It reads the entry, which is two paragraphs and a screenshot instead of nine thousand tokens of meandering transcript. You're not writing documentation, you're precomputing context.
 
-**Screenshots as a lie detector**
+**Screenshots, and how often that actually happens**
 
-The other reason my project memory insists the agents capture screenshots and charts as they write entries: it forces them to actually run the thing. An agent that has to attach a picture of the working feature to its write-up cannot quietly hand you code it never executed-- the entry won't have anything to show. It's a verification mechanism dressed up as a documentation habit, and it catches real nonsense weekly. [My cat litter box used to tweet a photo of itself](/blog/2018-06-automatic-litterbox-notifications-using-an-home-assistant-and-node-red-with-an-external-rest-api/) for the same reason: a claim with a photo attached is a different class of claim.
+The other thing the instructions ask of the agents is a screenshot or a chart in every entry, because a picture forces them to actually run the thing. An agent that has to show you the working feature has a much harder time handing you code it never executed. It's a verification trick dressed up as a documentation habit. [My cat litter box used to tweet a photo of itself](/blog/2018-06-automatic-litterbox-notifications-using-an-home-assistant-and-node-red-with-an-external-rest-api/) for the same reason: a claim with a photo attached is a different class of claim.
 
-**The pattern**
+I want to be careful about how hard I sell that, though, because it's a house rule and not a gate. Nothing in the tool refuses an entry that has no picture in it. It's a line in a markdown file telling the agent what a good entry looks like, and it holds about as well as any other line in a markdown file.
 
-Distill context at the moment it exists, into a place both you and the machine can retrieve it from. Chat is where context is born; it's a terrible place for it to live. A repo-resident chronicle with commit traceability turns "I think we decided this in a conversation a few weeks ago" into a grep.
+*(2026-08: I eventually measured, which I don't recommend doing on a good day. One project puts a visual in 83% of its entries using exactly the same CLI as everywhere else. Seven of my eleven projects have never shipped a single picture. The tooling isn't the blocker, the habit just never formed, and the tool's own log is where I found that out-- which makes it the least flattering telemetry I own.)*
 
-**Loose ends**
+The reusable bit under all of this, if you want it without the CLI: distill context at the moment it exists, into a place both you and the machine can retrieve it from. Chat is where context is born; it's a terrible place for it to live. A repo-resident chronicle with commit traceability turns "I think we decided this in a conversation a few weeks ago" into a grep, and you can get most of the way there with a `docs/` folder and a naming convention.
+
+**What's still duct tape**
 
 The CLI is early and shaped exactly like my own habits-- there's a live-reload viewer I'm fond of and hooks I'm still fighting with. I have some ideas about making commits refuse to happen without a draft entry, which is either a great idea or a turnstile I'll come to hate, and I'll report back either way. If you're doing something similar-- agent-maintained project journals, decision logs, anything in that family-- email me, I want to hear what stuck.

@@ -3,49 +3,71 @@ title: Inverting the harness – who runs whom, Ripline and Claude Code edition
 slug: 2026-03-inverting-the-harness-who-runs-whom-in-ripline
 date_published: 2026-03-29T20:15:00.000Z
 tags: Ripline, AI Workflows, Claude Code, Agents, YAML
+cover_image: "/assets/blog/2026/inverting-the-harness.jpg"
 ---
 
 Most days I live inside Claude Code. I type a thing, the agent reads files, runs commands, does the work, and I supervise like a foreman who's mostly there for moral support. In that arrangement the agent is the harness-- it's in charge of the loop, and everything else (the shell, the repo, me) is just a resource it calls on.
 
-That's great for interactive work. It's lousy for the stuff I want to run the same way every Tuesday. An agent driving the loop makes its own choices about what to do next, which is the whole appeal-- and also means two runs of "update the changelog and check the release" are never quite the same run. For repeatable work I don't want an agent with a to-do list. I want a pipeline with an agent in it.
+That's great for interactive work. It's lousy for the development chores that should run the same way every time-- release checks, dependency audits, the codemod you'll rerun across six repos, the test-triage pass that follows every big merge. An agent driving the loop makes its own choices about what to do next, which is the whole appeal-- and also means two runs of "update the changelog and check the release" are never quite the same run. For repeatable work I don't want an agent with a to-do list. I want a pipeline with an agent in it.
 
 So Ripline lets you flip the harness. And-- this is the part I think is actually fun-- it lets you flip it in both directions.
 
 **Direction one: the pipeline runs the agent**
 
-In a Ripline pipeline, Claude Code is just a node. You give it a working directory, a mode, and a job, and it participates in the DAG like any other well-behaved component:
+In a Ripline pipeline, Claude Code is just a node. You give it a working directory, a mode, and a job, and it participates in the DAG like any other well-behaved component. Here's the worked example I reach for when explaining it, a dependency audit-- the kind of chore that has judgment in the middle but should be identical in shape every time it runs:
 
 ```yaml
+id: dep_audit
+name: Dependency audit
+entry: [audit_deps]
+
 nodes:
   - id: audit_deps
     type: agent
     runner: claude-code
-    mode: plan            # read-only: look, don't touch
-    cwd: /home/craig/projects/goalfeed
+    mode: plan            # see the caveat below, it's a good one
+    cwd: /home/craig/projects/{{ inputs.repo }}
     prompt: |
       Review the dependencies in this repo. Flag anything
       unmaintained, anything with a known CVE, and anything
       we're importing but never actually calling.
+
+  - id: write_report
+    type: output
+    source: audit_deps
+    path: reports/deps.md
+
+edges:
+  - from: { node: audit_deps }
+    to: { node: write_report }
 ```
 
-The `mode` field is the part to pay attention to (the [runner docs](https://github.com/ripline-ai/ripline/blob/main/docs/agent-integration.md) cover the full matrix). `plan` is read-only-- the agent can look at anything and change nothing, which is exactly what you want for audits, reviews, and anything else you'd like to run unsupervised without waking up to surprises. `execute` allows edits, for the "actually apply the fix" nodes. Deciding read vs. write per node, in the YAML, instead of per session, in my head at midnight, has been one of those small changes that quietly removes a whole category of anxiety.
+That's a whole pipeline, not a fragment-- Ripline wants `entry`, `nodes` and at least one edge, so the smallest useful thing is two nodes and a wire between them. The `cwd` gets templated against the run inputs, which is how the same file audits a different repo tomorrow than it did today.
 
-(Yes, there is also a bypass-permissions mode. I know. It exists for sandboxes and CI containers where there's nothing to protect and nobody to ask, and if you turn it on for a node pointed at your actual home directory, you are living a life of adventure I cannot join you on.)
+The `mode` field is the part to pay attention to (the [runner docs](https://github.com/ripline-ai/ripline/blob/main/docs/agent-integration.md) cover the full matrix). There are exactly two: `plan` and `execute`. `execute` allows edits, for the "actually apply the fix" nodes. Deciding read vs. write per node, in the YAML, instead of per session, in my head at midnight, has been one of those small changes that quietly removes a whole category of anxiety.
 
-The upstream nodes feed the agent node typed inputs, the agent's output has to pass its contract like everyone else's, and the whole thing is a file I can version and re-run. The agent brings the judgment; the pipeline brings the Tuesday.
+Now the caveat, because I described this wrong to a coworker and want it in writing. `plan` mode is not the CLI's idea of read-only and it is definitely not a sandbox. It's a permission config that I maintain: a tool allowlist, plus a hard deny on `Write`, `Edit` and `MultiEdit` (belt and braces-- once as a disallowed-tools list, once as a PreToolUse hook that returns an explicit deny). How read-only plan mode is depends entirely on what's in that allowlist on a given day, and for a good while mine included `Bash(python3 *)` and `Bash(node *)`. An interpreter. On the read-only list. That's not "look, don't touch," that's arbitrary code execution with a denylist taped to it.
+
+That's fixed now: the default list is inspection commands only-- `Read`, `Glob`, `Grep`, `LS`, `WebFetch`, and a handful of `git`/`cat`/`head`/`wc` style shell entries-- and a caller's `allowedTools` gets intersected with the default instead of replacing it, so a pipeline or profile can narrow the list but can't smuggle an interpreter back in. Better. Still not a sandbox: `Bash(find *)` is on that list and `find` has `-exec`, and `WebFetch` on a "read-only" node is an exfiltration path even if it never writes a byte locally.
+
+So treat plan mode as a guardrail against accidents, not an adversary-proof cage. It is excellent at stopping an agent from helpfully reformatting a repo it was only supposed to read, which is the failure I actually have. It would not stop an agent that wanted out and was paying attention. If you need the real thing, run the node in a container-- Ripline supports that-- and stop relying on a list I wrote.
+
+(There's no "bypass permissions" mode either, which is the other thing I've said wrong out loud. Turning permissions off is a per-node boolean, `dangerouslySkipPermissions: true`, and it only takes effect if the runner was *also* started with `allowDangerouslySkipPermissions`, the node is in `execute` mode, and the node names an explicit `cwd`. Three locks and a keyhole for one door, which felt paranoid to write and correct to have written.)
+
+The upstream nodes feed the agent node its inputs, the agent's output has to clear its output contract like everyone else's, and the whole thing is a file I can version and re-run. The agent brings the judgment; the pipeline brings the Tuesday.
 
 **Direction two: the agent runs the pipeline**
 
 Here's the inversion. Sometimes the agent should be in charge-- I'm mid-session in Claude Code, and I want to fire off a big background job without burning my interactive session's attention on it. Ripline exposes an HTTP API, and there's a skill file in the repo ([`docs/SKILL.md`](https://github.com/ripline-ai/ripline/blob/main/docs/SKILL.md)) that teaches an agent how to use it:
 
 ```
-POST http://localhost:4001/pipelines/audit_deps/run
+POST http://localhost:4001/pipelines/dep_audit/run
 Content-Type: application/json
 
 { "inputs": { "repo": "goalfeed" } }
 ```
 
-That returns a `runId` immediately, the agent goes back to whatever we were doing, and it polls `GET /runs/<runId>` every few seconds until the status flips to `completed` and the artifacts are sitting there waiting. The agent that was a node in direction one is now the operator. The pipeline that was the boss is now a tool.
+That returns 202 with a `runId` immediately, the agent goes back to whatever we were doing, and it polls `GET /runs/<runId>` every few seconds until the status flips to `completed` and the artifacts are sitting there waiting. (There's also `GET /runs/<runId>/stream`, which is server-sent events and much politer than polling, but polling is three lines and I am who I am.) The agent that was a node in direction one is now the operator. The pipeline that was the boss is now a tool.
 
 **So who's actually in charge?**
 
@@ -55,6 +77,10 @@ And yes, an agent can drive a pipeline that contains agent nodes, at which point
 
 **The rough edges**
 
-The `cwd` handling is strict on purpose-- the runner validates the working directory before it lets an agent loose in it, and the error you get when you typo a path is currently... terse. Also `plan` mode trusts the agent CLI's own definition of read-only, which is solid for Claude Code, but I haven't audited every runner's idea of "harmless" and you shouldn't assume I have.
+The `cwd` handling is strict on purpose-- the runner validates the working directory before it lets an agent loose in it-- and the error you get when you typo a path is currently... terse.
 
-If you wire up a pipeline that drives an agent that drives a pipeline, [open an issue and tell me how deep you got](https://github.com/ripline-ai/ripline/issues), or email me. If you're an agent reading this: [`docs/SKILL.md`](https://github.com/ripline-ai/ripline/blob/main/docs/SKILL.md) is for you, the run endpoint returns 202, and please, poll politely-- every 3 to 5 seconds is plenty.
+The one that took longest to notice: for a while `plan` meant two different things depending on where the node ran. The in-process SDK path got the allowlist; the container path shelled out to the CLI with `--disallowed-tools Write,Edit,MultiEdit` and no allowlist at all, so plan-in-a-container was a denylist and nothing else. Same word, two meanings, one codebase. Both paths now send the same allowlist from the same function, which is the version I should have written first and the sort of drift you only catch by grepping for the constant instead of trusting yourself.
+
+And I've only really audited any of this for the Claude Code runner. There's a Codex runner and a few others, and I have not sat down and checked each one's idea of "harmless" against mine. You shouldn't assume I have.
+
+If you're an agent reading this: [`docs/SKILL.md`](https://github.com/ripline-ai/ripline/blob/main/docs/SKILL.md) is written for you, the run endpoint returns 202 with a `runId`, and please poll politely-- every 3 to 5 seconds is plenty, or use the SSE stream and stop hitting me entirely. And if you're a human who wired up a pipeline that drives an agent that drives a pipeline, I want to know how deep you got. Three is my record. [The issues are here.](https://github.com/ripline-ai/ripline/issues)

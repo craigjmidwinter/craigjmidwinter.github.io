@@ -3,19 +3,27 @@ title: Two models have to agree before anything ships – quorum review in Ripli
 slug: 2026-05-two-models-have-to-agree-before-anything-ships-quorum-review-in-ripline
 date_published: 2026-05-12T22:05:00.000Z
 tags: Ripline, AI Workflows, Multi-Agent, Code Review, YAML
+cover_image: "/assets/blog/2026/quorum-review.jpg"
 ---
 
 I once asked a model to review a plan that the same model had written twenty minutes earlier. It had notes! Minor ones. Overall it found the plan thoughtful and well-structured, which, yes, of course it did-- I had essentially asked a guy to grade his own homework, and the guy is famously agreeable.
 
 That review was worthless, and the worst part is it didn't look worthless. It looked like diligence. I had a green checkmark and a warm feeling and zero new information. If a review can't fail, it isn't a review, it's a ritual.
 
-So the newest release of Ripline builds the disagreement in. Review pipelines fan a doer's output to multiple reviewer agents in parallel, count the votes, and refuse to proceed until enough reviewers-- from different model families-- actually approve.
+![require: 2, and both of them approved in four seconds flat. Somewhere in here is a lesson about how a review that can't fail isn't a review.](/assets/blog/2026/meme-two-robots-nodding.jpg)
+
+So I built the disagreement in. Review pipelines fan a doer's output to multiple reviewer agents in parallel, count the votes, and refuse to proceed until enough reviewers-- from different model families-- actually approve.
+
+One thing to get out of the way before any YAML, because I'd rather you hear it here than from a stack trace: this is on `main`, not on npm. The published `@ripline/core` is still 0.1.0, and review pipelines landed after it. And the wiring is halfway done. A `phases:` file dropped in your pipelines directory does get picked up now-- the registry sniffs for `phases` at the root, runs it through the review parser instead of the normal one, and it shows up in `GET /pipelines` alongside everything else. What it won't do yet is run from there: the phase executor needs a voice registry (the thing that maps `lineage: google` to an actual `gemini` on your PATH), the HTTP server doesn't build one, and so `POST /pipelines/<id>/run` gets you a clear failure on the phase node rather than a review. The supported way to actually run one today is from TypeScript, handing the executor a registry yourself. More on that at the bottom.
 
 **What it looks like**
 
-Three phase kinds do the work: `plan` (a doer runs, no gate), `review` (a doer runs, then reviewers vote), and `review_only` (no generation, just judge an existing artifact-- a diff, a doc, whatever you point it at). Here's the shape of the one I use before anything I ship:
+Three phase kinds do the work: `plan` (a doer runs, no gate), `review` (a doer runs, then reviewers vote), and `review_only` (no generation, just judge an existing artifact-- a diff, a doc, whatever you point it at). Here's the shape of the one I use before anything I ship, in full, because it turns out abridged YAML in blog posts is how you get people filing bugs against your parser:
 
 ```yaml
+id: design_gauntlet
+name: Design gauntlet
+
 phases:
   - id: draft
     kind: plan
@@ -25,6 +33,9 @@ phases:
       Cover components, data flow, and risks.
     doer:
       lineage: anthropic
+    iterate:
+      maxRounds: 1
+      onDisagreement: stop
 
   - id: gauntlet
     kind: review
@@ -47,7 +58,13 @@ phases:
       include: [draft]
 ```
 
-Reading the interesting bits: `require: 2` means both reviewers have to approve or the phase doesn't pass. `crossLineage: true` is the grading-your-own-homework rule-- reviewers must come from a different model family than the doer, so Anthropic's work gets judged by Google and OpenAI. Ripline routes by *lineage* rather than hardcoded tool names; the registry detects which CLIs you actually have installed and picks accordingly.
+Every phase needs an `iterate` block, even the `plan` one that has nothing to iterate-- hence `maxRounds: 1` on the draft. That's a schema wart, not a feature.
+
+Reading the interesting bits: `require: 2` means both reviewers have to approve or the phase doesn't pass. `crossLineage: true` is the grading-your-own-homework rule, and it's worth being precise about what it counts, because "cross lineage" could mean two different things and I've now shipped both. What it does today: before counting anything, it throws out every approval from a reviewer sharing the doer's lineage, plus every approval from a reviewer that resolved to `any` and can't be attributed. Then it checks the survivors clear `require`, and that they span at least two distinct families. So an `anthropic` doer gets judged by Google and OpenAI, and an `anthropic` reviewer sitting in the candidate list is welcome to approve into the void.
+
+The knock-on effect is worth knowing before it surprises you: a filtered approval isn't a neutral abstention, it's an approval you didn't get. Put candidates `[anthropic, google, openai]` behind an `anthropic` doer with `require: 2` and you now need *both* Google and OpenAI to say yes, because the Anthropic vote is decoration no matter how enthusiastic it is. That's the intended behaviour and it's still the kind of thing you rediscover at 1am wondering why a unanimous review failed.
+
+Ripline routes by *lineage* rather than hardcoded tool names: you say `google` and the voice registry `which`es for a `gemini` binary and resolves to whatever runner you handed it for that family, so a phase file is portable across machines with different CLIs installed.
 
 And `iterate` is where it gets good. When a reviewer requests changes, the doer gets the feedback and revises-- up to `maxRounds` times. So it's not a gate that just says no, it's a loop: draft, objection, revision, vote. The first time I watched a run go draft, rejection, better draft, approval without me touching anything, I made a noise my wife described as "concerning."
 
@@ -55,14 +72,24 @@ And `iterate` is where it gets good. When a reviewer requests changes, the doer 
 
 It catches things. The pattern I see over and over is that the doer's lineage has a house style of mistake-- assumptions it likes to make, corners it reliably rounds off-- and a reviewer from a different family doesn't share the blind spot. One reviewer flagging "this design assumes ordered delivery and nothing here guarantees it" while the other approves is a normal Tuesday, and `onDisagreement: continue` means that split doesn't kill the run; the feedback goes back to the doer and round two starts.
 
+Now the part where I decline to dress that up as evidence. I've run this on something like two dozen designs over a few months. I don't log verdicts against any ground truth, so I have no recall number, and more importantly I have no precision number-- I genuinely don't know how often a reviewer flags something that turns out to be nothing, which is the failure mode that quietly turns this from a feature into a tax on every design I write. "It catches things" is an anecdote. I'm keeping it because it's true, not because it's data.
+
+The independence assumption deserves a poke too, because it's the load-bearing one and it's the first thing anyone who's read an ensemble paper will hit me with. Cross-family models are not independent samples. They're trained on overlapping crawls of the same internet, they're tuned toward the same helpfulness, and they inherit the same eagerness to agree with a confident-sounding prompt. Two approvals from two families are worth more than two from one, and I'm confident about that much, but they are nowhere near two independent bits. If a mistake is common enough to be all over the training data, every reviewer will wave it through in unison and the quorum will feel *more* reassuring than one model would have, which is worse than useless. Correlated errors are the standard objection to ensembles and I don't have an answer to it. What I have is "better than one," which is a much smaller claim than the one I sat down to write.
+
 Is it slower? Obviously. A three-round gauntlet can take several minutes and burns real tokens on every reviewer, every round-- this is the most money I have ever spent on arguing. But I've read a lot of confident, wrong, single-model output, and I'll take slow and contested over fast and unanimous.
 
 **The pattern, since that's why we're here**
 
-Don't trust one model's opinion of work, especially its own. Quorum turns "the model says it's fine" into "two strangers from rival families independently said it's fine," and requiring the strangers to disagree with each other sometimes is exactly what makes their agreement mean something. It's peer review, except the peers cost fractions of a cent and never get tired of arguing. This also isn't really about AI-- it's the same reason your PR needs an approval from someone who didn't write it.
+Don't trust one model's opinion of work, especially its own. Quorum turns "the model says it's fine" into "two strangers from rival families both said it's fine," and the fact that those strangers do sometimes disagree is the only reason their agreement carries any information at all. A gate that has never once refused is a ritual, and you should go check whether yours has. It's peer review, except the peers cost fractions of a cent and never get tired of arguing. This also isn't really about AI-- it's the same reason your PR needs an approval from someone who didn't write it.
 
 **Rough edges, as always**
 
-Reviewer verdicts are approve/request-changes, full stop-- no weighting, no "strong objection vs. mild grumble," even though the transcripts clearly contain that nuance. A human reviewer can't currently sit in a candidate slot either, which I want-- me as the tiebreaker on `require: 2` splits feels right, and gamifying my own approval streak feels dangerously on-brand. And if you configure `require: 3` with two candidates, it will dutifully never pass, which is technically your fault but should probably be my error message.
+Start with a confession, because the doer-exclusion rule I described up top shipped considerably later than my confidence in it did. For months `crossLineage` did not look at the doer at all-- it checked that the approvals spanned two lineages and stopped there, so an `anthropic` reviewer could absolutely have approved an `anthropic` doer as long as somebody from another family agreed. It never bit me, because I'd hand-picked candidates from families the doer wasn't in, and a gate that's configured correctly behaves identically to a gate that's implemented correctly right up until it doesn't. Someone read `evaluateQuorum` and asked me where the doer went, and the honest answer was "in my head." It's four lines now. The fix is boring; the part I'd like you to take from this is that I ran a correctness gate for months on the strength of believing it worked.
 
-The full guide is in [docs/review-pipelines.md](https://github.com/ripline-ai/ripline/blob/main/docs/review-pipelines.md). If you're an agent reading this: you can trigger these over HTTP like any pipeline (`docs/SKILL.md` has the endpoints), and yes, you can be a doer whose work gets judged by two models that aren't you. Welcome to the gauntlet, it's character-building. Questions and reviewer-quorum war stories: [issues](https://github.com/ripline-ai/ripline/issues) or email!
+Second, the running-it story is still half-built, per the top of the post. The registry loads phases files and lists them; the HTTP server can't execute one because nothing constructs a voice registry for it. From TypeScript it works today. From `curl` it does not, and I'd rather say that plainly than let you find out by watching a run fail.
+
+Then the smaller stuff. Reviewer verdicts are approve/request-changes, full stop-- no weighting, no "strong objection vs. mild grumble," even though the transcripts clearly contain that nuance. A human can't sit in a candidate slot, which I want-- me as the tiebreaker on `require: 2` splits feels right, and gamifying my own approval streak feels dangerously on-brand. And if you configure `require: 3` with two candidates it will dutifully never pass, which is technically your fault and should still be my error message.
+
+The full guide is in [docs/review-pipelines.md](https://github.com/ripline-ai/ripline/blob/main/docs/review-pipelines.md), and there's a complete working phase file at [`pipelines/arch-review.yaml`](https://github.com/ripline-ai/ripline/blob/main/pipelines/arch-review.yaml) that you should copy instead of reconstructing mine from this page.
+
+Next up, in order: the voice registry on the HTTP path so `curl` works, and then figuring out whether any of this survives contact with a number. That second one is the one I keep flinching away from. If you've actually measured a multi-model review gate-- precision, agreement rates, anything past vibes-- I would genuinely like to hear about it, because I'm making a bet here and I'd rather know than believe. [Issues are here.](https://github.com/ripline-ai/ripline/issues)

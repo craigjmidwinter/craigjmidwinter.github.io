@@ -3,9 +3,10 @@ title: Cut a seam – what I do when the agent stops reading the manual
 slug: 2026-07-cut-a-seam-when-the-agent-stops-reading-the-manual
 date_published: 2026-07-13T20:50:00.000Z
 tags: Katra, AI Workflows, Agents, Context Engineering
+cover_image: "/assets/blog/2026/cut-a-seam.jpg"
 ---
 
-**2026-08 Update:** *Katra is now open source: [github.com/craigjmidwinter/katra](https://github.com/craigjmidwinter/katra).*
+**2026-08 Update:** *Katra is now open source: [github.com/craigjmidwinter/katra](https://github.com/craigjmidwinter/katra). Written up from the katra entries and drafts of the time, published in the August relaunch-- anything I learned after the fact is marked as a dated aside.*
 
 Every project I work on has a CLAUDE.md-- the standing instructions the agent reads at the start of a session. And it does a pretty good job, right up until the session gets long enough that it doesn't. The agent starts missing things it knew an hour ago. House rules it followed all morning quietly stop applying.
 
@@ -26,12 +27,18 @@ katra task new "Serialize config writes" --epic scheduler-recovery
 katra decide "Workers claim runs atomically; recovery only promotes stale claims"
 ```
 
-Tasks link to the entries that advanced them, decisions link to the tasks they constrain, and epics compute their status by rolling up their child tasks-- nobody updates an epic's status by hand, because a status field a human maintains is a status field that's wrong. When a seam gets cut, the distillation has somewhere to land: the fog becomes tasks on a board instead of a paragraph of vibes in a handoff doc.
+Tasks link to the entries that advanced them, decisions link to the tasks they constrain, and an epic's status rolls up from its child tasks. That last one is half true and I'd rather be precise about which half: the board computes the rollup live every time it renders, but there's also a stored `status` field sitting in the epic's own file, and that field is a cache. It only gets rewritten when a stamp closes one of the tasks underneath it. Stamp often enough and the two agree. Don't, and the stored one is a lie with a timestamp on it.
 
-**The pattern**
+*(2026-08: katra's own rollout epic sat at `planned` from July 11 until this August pass, printed directly above a progress bar that said 1/5 done-- the failure mode demonstrating itself better than anything I could have staged. It's reconciled now, every view computes the rollup live instead of trusting the stored field, and `katra doctor` flags the drift so the next one doesn't get three weeks.)*
+
+When a seam gets cut, the distillation has somewhere to land: the fog becomes tasks on a board instead of a paragraph of vibes in a handoff doc.
+
+**Why I think this generalizes**
 
 Treat instruction-drift as a sensor reading, not a discipline problem, and respond with a routine instead of frustration: distill, cut, restart fresh. The general shape is one I keep coming back to-- find the observable signal that a system is degrading, put a threshold on it, and attach a documented action to the threshold. That was true for [a litter box in 2018](/blog/2018-06-automatic-litterbox-notifications-using-an-home-assistant-and-node-red-with-an-external-rest-api/) and it's true for a context window now, which either says something profound about engineering or something concerning about me.
 
-**Loose ends**
+**What I still do by hand**
 
-The almanac is a week old and the board view is ugly in ways I'm choosing not to screenshot. I also don't have the seam-cutting itself automated yet-- I still notice the drift by feel, and I'd love a real detector (instruction-recall canaries? periodic quiz questions? if you've built one, email me). And there's one more enforcement idea I've been circling: what if the commit itself refused to happen without the chronicle? More on that soon.
+The almanac is a week old and the board view is ugly in ways I'm choosing not to screenshot. The bigger gap is that the sensor in this whole post is me. I notice the drift by feel, usually a beat after it would have been useful, which makes it the least reliable component in a system I built specifically because I don't trust myself to remember things. What I want is a real detector: an instruction-recall canary, a periodic quiz question, some cheap probe that fails loudly when the standing instructions stop landing. I'd take a bad one over vibes. If you've built anything in that direction, I will read a description of it with genuine enthusiasm.
+
+And there's one more enforcement idea I've been circling, which is less about noticing and more about not having the option: what if the commit itself refused to happen without the chronicle? More on that soon.
