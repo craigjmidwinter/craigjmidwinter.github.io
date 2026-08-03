@@ -35,6 +35,7 @@ const ITEMS = [
     "MULTICAM TOOLBOX",
     "RIPLINE",
     "MAIL MUNCHER",
+    "KATRA",
     "GOALFEED",
     "OSCARS OUTSIDER",
     "HOME ASSISTANT",

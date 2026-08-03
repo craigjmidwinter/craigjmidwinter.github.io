@@ -63,7 +63,7 @@ const SECTIONS: NavItem[] = [
     {href: "#work", label: "WORK"},
     {href: "#about", label: "ABOUT"},
     {href: "#pod", label: "POD"},
-    {href: "#archive", label: "ARCHIVE"},
+    {href: "#archive", label: "NOTES"},
     {href: "#contact", label: "CONTACT"},
 ];
 

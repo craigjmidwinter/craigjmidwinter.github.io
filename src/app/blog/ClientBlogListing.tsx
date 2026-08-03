@@ -459,9 +459,9 @@ const FEATURED_SLUG_MATCH = "i-hired-a-dude-who-voices-nike-commercials";
 const ALL = "ALL";
 
 const INTRO_COPY =
-    "Sixteen posts from the years I wired up my house and then wrote about it. " +
-    "Home Assistant, Hue, a Raspberry Pi that plays records, and one voice actor " +
-    "who reads my cat's litter box.";
+    "Notes on making computers do the work: AI development workflows lately, and " +
+    "before that, the years I wired up my house. Home Assistant, Hue, agent " +
+    "pipelines, and one voice actor who reads my cat's litter box.";
 
 /** Tags that show up on at least two posts, uppercased, in first-seen order. */
 function filterTags(posts: Post[]): string[] {
@@ -530,11 +530,11 @@ export default function ClientBlogListing({posts}: { posts: Post[] }) {
 
                     <HeadlineWrap>
                         <Headline>
-                            Notes from
+                            Making
                             <br />
-                            a house that
+                            computers
                             <br />
-                            talks back
+                            do the work
                         </Headline>
                     </HeadlineWrap>
 

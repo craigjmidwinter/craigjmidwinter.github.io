@@ -6,9 +6,9 @@ import ClientBlogListing from "./ClientBlogListing";
 import {getAllPosts, Post} from "@/service/blog";
 
 const DESCRIPTION =
-    "Sixteen posts from the years I wired up my house and then wrote about it. " +
-    "Home Assistant, Hue, a Raspberry Pi that plays records, and one voice actor " +
-    "who reads my cat's litter box.";
+    "Notes on making computers do the work: AI development workflows lately, and " +
+    "before that, the years I wired up my house. Home Assistant, Hue, agent " +
+    "pipelines, and one voice actor who reads my cat's litter box.";
 
 export const metadata: Metadata = {
     title: "Blog | Craig Midwinter",

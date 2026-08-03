@@ -120,10 +120,10 @@ export function Archive({posts}: { posts: Post[] }) {
     return (
         <Section id="archive">
             <Header>
-                <Heading>The archive</Heading>
+                <Heading>Field notes</Heading>
                 <SideNote>
-                    I used to run a home automation blog. {count} {count === 1 ? "post" : "posts"},
-                    kept exactly as they were.
+                    Chronicling what works in my AI development flow. Before that, a home
+                    automation blog, kept exactly as it was. {count} {count === 1 ? "post" : "posts"} in all.
                 </SideNote>
             </Header>
 

@@ -56,6 +56,15 @@ const ITEMS: WorkItem[] = [
         shadow: TEAL,
     },
     {
+        title: "Katra",
+        href: "https://github.com/craigjmidwinter/katra",
+        description:
+            "A committed dev log your agents write as they build. Entries stamp themselves with the commit they describe, and a gate refuses any commit that has no entry.",
+        tags: "GO · GIT · DEV LOG",
+        motif: "tealCircle",
+        shadow: INK,
+    },
+    {
         title: "total-connect-client",
         href: "https://github.com/craigjmidwinter/total-connect-client",
         description:
@@ -182,7 +191,7 @@ export function Work() {
         <Section id="work">
             <Header>
                 <Heading>Selected work</Heading>
-                <Count>05 THINGS I&apos;VE BUILT</Count>
+                <Count>06 THINGS I&apos;VE BUILT</Count>
             </Header>
             <Grid>
                 {ITEMS.map((item) => (

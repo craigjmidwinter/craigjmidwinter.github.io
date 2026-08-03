@@ -143,6 +143,15 @@ const GlobalStyle = createGlobalStyle`
 
 const HERO_MARKS = marks(19, 10, [70, 46]);
 
+/* The frozen home-automation era gets the archive banner; later posts don't.
+   date_published may arrive as a string or a Date depending on YAML quoting. */
+const ARCHIVE_CUTOFF_MS = Date.UTC(2019, 0, 1);
+
+function isArchivePost(post: Post): boolean {
+    const time = new Date(post.date_published).getTime();
+    return Number.isFinite(time) && time < ARCHIVE_CUTOFF_MS;
+}
+
 const Hero = styled.section`
     position: relative;
     overflow: hidden;
@@ -738,11 +747,13 @@ export default function ClientBlogPost({post, nextPost}: ClientBlogPostProps) {
                         {post.content}
                     </ReactMarkdown>
 
-                    <ArchiveNote>
-                        <b>ARCHIVE</b> — this post is kept as it was written. Some of it is out of
-                        date and a few images have gone missing. Questions or corrections:{" "}
-                        <a href="mailto:craig.j.midwinter@gmail.com">craig.j.midwinter@gmail.com</a>
-                    </ArchiveNote>
+                    {isArchivePost(post) && (
+                        <ArchiveNote>
+                            <b>ARCHIVE</b> — this post is kept as it was written. Some of it is out of
+                            date and a few images have gone missing. Questions or corrections:{" "}
+                            <a href="mailto:craig.j.midwinter@gmail.com">craig.j.midwinter@gmail.com</a>
+                        </ArchiveNote>
+                    )}
                 </Article>
 
                 {tags.length > 0 && (
