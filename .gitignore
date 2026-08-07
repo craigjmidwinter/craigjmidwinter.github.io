@@ -42,3 +42,6 @@ next-env.d.ts
 .idea/
 dist/
 .cache/
+
+# scheduled-release log
+scripts/release-due-posts.log

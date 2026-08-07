@@ -1,0 +1,5 @@
+# Scheduled post queue
+
+To queue a post, drop a finished markdown file in this directory named `<slug>.md` (the filename becomes the post's slug) with a frontmatter key `publishOn: "YYYY-MM-DD"` alongside the usual keys (`title`, `date_published`, `tags`, `cover_image`, ...). Every day at 10:30 local time, `scripts/release-due-posts.mjs` (driven by the launchd job `io.midwinter.blog-release`) releases anything whose `publishOn` is today or earlier: it rewrites the frontmatter date to the `publishOn` date, drops the `publishOn` key, moves the file to `_posts/<date>-<YYYY-MM>-<slug>.md`, commits only those paths, and pushes to `origin/main`. Run it by hand anytime with `node scripts/release-due-posts.mjs`.
+
+To unqueue a post, just delete (or move) its file from this directory before 10:30 on its `publishOn` date — nothing else references it; `_drafts/` is never read by the site build. Each run appends a line to `scripts/release-due-posts.log` (gitignored), including "nothing due" runs and any push/auth failures. To uninstall the scheduler: `launchctl bootout gui/$(id -u)/io.midwinter.blog-release && rm ~/Library/LaunchAgents/io.midwinter.blog-release.plist`.

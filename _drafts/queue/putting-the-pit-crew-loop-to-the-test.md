@@ -1,0 +1,134 @@
+---
+title: Putting the pit crew loop to the test
+slug: 2026-08-putting-the-pit-crew-loop-to-the-test
+publishOn: "2026-08-14"
+excerpt: "I coined a loop variant and then had to find out if it buys anything. So agent teams each built their own Rainbow Road under pre-registered rules, and the most important instrument in the whole experiment turned out to be me, on a couch, holding a gamepad."
+tags: AI Workflows, Multi-Agent, Agents, Testing, Loop Engineering, Experiments
+cover_image: "/assets/blog/2026/pit-crew-test-cover.png"
+date_published: 2026-08-14T12:00:00.000Z
+---
+
+A couple of weeks ago I wrote about [the pit crew loop](/blog/2026-08-the-gauntlet-loop-needs-a-pit-crew/) -- my name for a gauntlet loop with a third role that does nothing but build instruments. Coining a loop is free. Knowing whether it buys anything costs about a million tokens per arm, and that's the bill this post pays.
+
+The plan was tidy: three agent teams each build their own Rainbow Road -- a browser kart racer in Three.js, judged against real Mario Kart footage. A plain gauntlet loop, the pit crew loop, and the pit crew loop inside a Ripline pipeline, on rails. Same brief, same models, same 1,000,000 output-token ceiling, rules frozen in a git commit before any arm started. Blind judging at the end, playable builds, a vote widget.
+
+That is not the post you're getting, because the formal judging still hasn't run. Instead I played every build with a gamepad, and that turned out to be the most important instrument in the whole experiment -- important enough to spawn a fourth arm the protocol never imagined. This is the journey post. The scoreboard post comes later, if the scoreboard survives what the gamepad found.
+
+## Why Rainbow Road?
+
+The original inspiration is Matt Shumer's [Claude of Duty](https://github.com/mshumer/Claude-of-Duty) -- one maximalist prompt, "the most recent Call of Duty games" as the bar, and [a loop](https://somethingbig.ai/gauntlet-loop) where a harsh critic compares screenshots of the build against the real game until it can't tell which is which.
+
+Picking my own target took embarrassingly long, and the rejection list is half the design story: 2D was out, because the gap between your 2D game and a famous one is hand-drawn art and no instrument closes an art gap -- the bar needs a gap made of *engineering*. VR was out as deck-stacking in my own favor. A GTA clone was vetoed because every single person with a Claude subscription is building one right now. NHL 26 was rejected (mocap humanoids are the art trap at maximum) but earmarked, because a browser hockey game that fires my real goal light deserves to exist.
+
+Rainbow Road survived because it's emissive geometry and postprocessing all the way down -- exactly the kind of thing iteration climbs -- and because "the current Mario Kart's Rainbow Road" is a bar the way "the most recent Call of Duty" is a bar: famous, concrete, and comfortably out of reach.
+
+## What exactly got pre-registered?
+
+The protocol commit pins the arms, one shared brief, the 1M ceiling, model roles (Fable orchestrates and critiques, Opus implements), seven held-out functional checks the builders never see, and blind judging against real gameplay frames at eight fixed camera stations. A-versus-B isolates the pit crew; B-versus-C isolates the orchestration engine; A-versus-C is confounded and won't be presented as single-cause. And n is 1 run per arm -- an exploratory paired case study, not a causal claim, and I'm writing that here so nobody has to write it under the post for me.
+
+The amendment trail is public too, because I kept being wrong: fresh isolated repos, born empty, plus identical katra dev logs per arm whose entries are primary sources for this post (Amendment 1); the ceiling frozen at 1M after calibration showed gauntlet laps running 250-400k tokens, since below ~750k the pit crew arm can't amortize its instruments and the test would bias *against* my own coin (Amendment 2). Amendment 3 is a whole story -- see the pilot. Amendments 4 and 5 happened mid-experiment and get their own scenes below.
+
+## The pilot run, or: I ran the control arm wrong first
+
+Arm A's first run went all the way to a finished game -- "Prism Drift," 4 rounds, ~810,690 tokens, every requirement verified, 120fps. Then it got reclassified as a pilot, for two honest reasons. First, my harness killed its builders twice with timeouts I didn't know existed, so ~190k of its ledger is estimation for agents that died before reporting -- you can't publish a token-parity experiment where a fifth of one arm's bill is a guess. Second, and worse: its critique laps had no reference imagery. The critic compared the build against its *memory* of Mario Kart, when the whole mechanic of the original is the critic staring at real frames next to yours. I'd rebuilt the loop and left out the eyes. (Pilots are normal science; the sin would have been counting it.)
+
+The fix, Amendment 3: the bar became Mario Kart World's Rainbow Road as eight fixed reference frames -- and my first set was promo stills from a wiki. Gorgeous, staged, HUD-less. Useless. The comparison has to be windshield vs windshield, so the final frames are grabs from real 150cc race footage, HUD on. The amendment also made every critique lap a separate fresh-context critic, blind to round number, forced to call each station for one side or the other -- and added two things to the brief: permission to fan builders out in parallel (Shumer found sequential decisively beat parallel; each arm could test that itself), and mandatory gamepad support. Remember that gamepad clause.
+
+## Arm A: what a control arm does when nobody's watching
+
+The first surprise came before the first builder was dispatched: the control arm built instruments. Unprompted, the orchestrator wrote itself a station-capture script and a verify harness before writing a single brief. (The pilot run did the same.) So the gauntlet control isn't really "no instruments" -- a competent orchestrator improvises a minimal probe on its own. The treatment is *mandated breadth and discipline*; the real question is whether systematizing the instinct beats the instinct. (Caveat: both arms' katra dev log asks for screenshots of progress, so some of that instinct might be priming -- constant across arms, so the comparison holds.)
+
+Round 1 cost 94,400 tokens against the pilot's 206,000 for the same milestone, and the fresh-context critic earned its wage immediately. Its best line: **"the track surface is a gradient, not a material."** One observation, two symptoms -- the road looks cheap *and* the speedometer reads 291 km/h over a frame that feels parked, because nothing on the surface repeats, so nothing measures motion. And -- the part that made me trust it -- it found a place the build *beats* the bar: the HUD, per-racer gaps in metres and a live minimap the reference doesn't have. The next brief said "protect the information design, raise the finish," the opposite of the note I'd have written.
+
+Round 2 went out as four parallel builders on four disjoint file sets with single ownership of every file and a shared section map. Integration cost 6,000 tokens, no merge fight -- *structured* fan-out with ownership contracts is a different animal from six agents in one working tree.
+
+Two rounds later, arm A closed at 884,613 of 1,000,000: builders 748,178 across 13 Opus passes, critics 52,535 across 4 laps, orchestrator 84,000. The critique loop cost under 6% of the budget and set the direction of every round after the first -- judging is an order of magnitude cheaper than building, and the bottleneck is knowing what to build next.
+
+## The postcard problem
+
+My favorite bug of the first half, and I didn't find it -- I was sent a screenshot of it. The round-2 station captures were the best frames the run had produced. The actual game, played by a human, was a black screen with a beautiful HUD -- the chase camera staring into the void while the minimap cheerfully tracked a race you couldn't see.
+
+The captures looked great because the stations are frozen showcase poses. The capture tool photographs those poses, the verify tool asserts on simulation state, the critic sees station frames -- nothing in the arm's sensory apparatus ever takes a picture through the windshield, so the build could score *higher* on every instrument while being unplayable. The pattern, extracted: **instruments verify what they look at**, a screenshot rig pointed at showcase poses is a different sensor than the player's camera, and every test suite has a windshield it isn't photographing.
+
+I didn't intervene, and the run caught it in round 3, one round after a human hit it: the "fog veil" was nine 4-kilometre additive nebula quads stacked between the chase camera and empty black, and additive over black is black. The same round found four more effects *running correctly and invisible*: a boost plume drawn inside the bodywork facing the wrong way, drift sparks spawning 30 metres behind a 6-metre chase camera, contact shadows the kart occluded 100% of, particles sub-pixel past 25 metres. Simulation right, tests green, pixels never arriving. The round-3 builders finally pointed ad hoc cameras at the actual problem -- the arm grew a windshield camera the moment it needed one; it just needed a round of being wrong.
+
+There's a third layer down. I played round 3 the minute it committed: the driving feels bad and the items aren't fun. But no frame shows steering weight. The critic scores postcards, the harness scores physics state, and *feel* has no instrument anywhere in the loop. A camera can't feel the steering. File that sentence away too.
+
+## Arm B: the pit crew gets its turn
+
+Disclosure first: arm B's addendum originally narrowed my own coin to a one-shot upfront phase. Amendment 4 rewrote it to the standing crew the published post actually describes -- garage, then a pit stop after every critique lap -- timestamped before B's first build lap, because testing a watered-down version of your own idea and calling it the idea is the quiet kind of fraud.
+
+The garage lap built the six mandated instruments and a grey-box sim to hang them on: 188 assertions in a 24-second one-command suite. Cost: 422,130 harness-total tokens before any real content existed, when arm A got a complete playable slice for 94k of output. The amortization bet, priced.
+
+Then the ledger tried to end the run. Arm B recorded each agent's harness-reported *total* tokens against an *output* ceiling as a "conservative" policy, hit 1,000,466 after four agents, and wrote a mid-run methodology correction -- a reductio, since the overflow proves the summed figure isn't the governed quantity. It spent most of lap 1 believing it was nearly broke and planning to cut the second build lap: "a bad instrument came within one decision of cutting a third of the work." Builder self-estimates ran 3-6x low every time (one guessed ~50k, measured 220,522), and the one instrument the orchestrator built for itself was the only one it never validated.
+
+Pit stop 1 is the thesis event. After critique lap 1, before building anything, the crew turned the critic's adjectives into twelve visual meters -- and one found a defect the critique could only see the symptoms of:
+
+```
+dot(cameraForward, kartHeading) = -0.9983   at all 8 stations
+```
+
+The chase camera was facing *backwards* at every station. The critic had filed three separate complaints -- no jump at the jump station, no item boxes at the items station, a finish gate at 2% of frame -- three ranked art tasks, one sign flip. A loop track filmed backwards still looks like a track receding into the distance -- which is why every eyeball missed it. The fix even uncovered *two cancelling bugs*: the karts had been authored nose-backwards too, cancelling visually "while emptying the world of everything ahead." Meters went 3/12 to 8/12. The light-meter line from the pit-crew post, enacted by an agent, unprompted, with a dot product.
+
+Then critique lap 2 delivered the Goodhart scene, and it cuts against my own coin: the fresh critic audited the *meters*. "Two of twelve meters are actively rewarding the wrong thing." The hue-entropy meter is maximised by random noise -- the confetti-deck defect it existed to prevent *passed* it. The finish-gate meter read 100% because the gate's bounding box enclosed the camera while the visible gate was 8.7% of frame -- "measuring the opposite of dominance." And lest anyone relax: "Reference still wins all eight stations. Not close at any."
+
+Pit stop 2 repaired the audited meters and **three verdicts flipped from pass to fail** -- the build had never been 8/12. It also built a meter for a foreground blowout the critic ranked as the largest gap, "previously invisible to the suite," found the perf gate hollow (passing with 0/0 assertions), and started validating meters against synthesised ground truth inside the test suite. An honest scoreboard made the build look worse, and that dip is the cost of stopping the lie.
+
+Arm B closed at ~866,000 estimated output tokens (2,887,428 harness total): 3 laps, 2 pit stops, 220/220 assertions, replays bit-identical, 0 NaN over 84,376 kart-ticks, 303fps median. Nearly the same bill as arm A, opposite allocation. Meters catch what critics can't articulate; critics catch meters lying. Neither replaces the other -- the instruments and the critic disagreed three times, and each time the disagreement was itself the finding.
+
+## So who actually judged this thing?
+
+Confession time: the pre-registered blind judging has not run. The de facto judge was me, playing every build with the gamepad Amendment 3 made mandatory -- supposed to be a compliance spot-check, became the finding.
+
+Because arm B's final build -- 220 green assertions, bit-identical replays, 303fps -- was unplayable. Left and right were inverted. You can pass 220 assertions and lose to a thumb on a gamepad in four seconds.
+
+The mechanism is almost beautiful: the test harness derives "right" from the same core geometry as the sim, so controller and plant agree no matter which way the convention points relative to the *screen*. The whole loop -- input, sim, tests, replays -- was internally coherent and mirrored, and nothing in it crosses the sim-to-pixels boundary except still photographs, which can't show direction sense. The jitter was just as invisible: 303fps says nothing about smoothness. Another proxy trap.
+
+Then I played the lap snapshots in sequence, and this changes the conclusion. The lap-1 build had *forward/backward* inverted -- the backwards-camera bug -- and the loop caught and fixed it, because pit stop 1's meter measured exactly that axis. Left/right was never metered and shipped broken. **The pit crew fixed 100% of the inversions it instrumented and 0% of the ones it didn't, and the two bugs were one dot product apart.** Meter coverage failed, not the method: the complaints-into-instruments machinery worked perfectly, and no complaint ever arrived, because nothing in the loop ever *drives*.
+
+Then it escalated: arm C's round-1 build also shipped inverted left/right. Two of three arms mirrored, and the control arm -- no mandated instruments at all -- was the only one that got it right. A pattern, not a fluke, and a hell of a thing to discover from a couch. Working hypothesis: the headless-pure-core discipline both treatment arms adopted severs the input convention from the screen *by design*, while arm A built game-first against the rendered picture, where a mirrored convention is obvious. Instrument-first architecture made handedness untestable by construction while making everything else more testable. Even the judge rig can't catch it -- replays play back through the same mirrored mapping. To be scrupulous: this is a post-hoc human-play observation, not retrofitted into the pre-registered suite.
+
+I've written the full anatomy of this bug class as [its own pattern post](/blog/2026-08-220-assertions-and-a-thumb/), so I won't re-derive it here. What it did to this experiment: the A-vs-B scoreboard is scrambled by a variable nobody registered, and human play notes are a judging instrument, period.
+
+## Arm C: the same loop, on rails
+
+Arm C ran the pit crew loop as a Ripline pipeline instead of an interactive session, and the machinery genuinely worked: 5 rounds, 4 quorum-approved critiques, and the only structurally-enforced ceiling of any arm -- the budget wrapper refused the next agent call at 1,008,013 output tokens rather than promising restraint in a prompt.
+
+The economics were a lead balloon. Output-token parity with A and B held almost exactly, while my actual subscription quota diverged roughly 5-10x against the pipeline arm, because rails that start every step cold pay for their amnesia in cache writes the ledger never saw. **Rails relocate cost from the ledger to the utility bill.** That sentence took an entire arm to earn, and the full story deserves its own post: [I put my own pipeline on rails](/blog/2026-08-rails-ate-my-week/).
+
+## Arm D: the test driver
+
+The steering discovery demanded a response, and that's Amendment 5: a fourth arm, the standing pit crew plus a *test driver*. Three new garage mandates: a convention contract declaring screen-space promises before any sim code ("+steer moves the kart toward screen-right"); a shakedown harness that enters through the player's door -- real input events to the real page, assertions on rendered pixels; and an input-overlay clip recorder, so critics judge motion footage with the pressed inputs burned in. A pit crew without a test driver never learns the steering is backwards. And because predictions that can't be wrong are worthless, Amendment 5 commits one before arm D ran a token: *arm D ships correct screen handedness, and its critique laps rank motion-feel gaps that no prior arm's critiques ranked.*
+
+The garage validated the idea within the hour: the shakedown went red against a mock written to obey the contract *literally*, because the contract itself was wrong -- with forward at +Z and up at +Y, right-handed, "local +X is the kart's right" is geometrically impossible. Four parallel builders would all have baked that sign error into everything, and a critic would have reported it as "the karts feel floaty" three laps later. Instead an instrument named the broken clause before any gameplay code existed. (The crew also mutation-checked the harness itself: six sign-flipped mocks, 6/6 caught.)
+
+Lap 1 held the thesis up, then complicated it. Five builders came back green in isolation; the integrator's first full shakedown found three camera bugs at boundaries no unit instrument could see. It also produced the run's most uncomfortable moment: a clause that segmented drift sparks by color -- hopeless on a track containing every hue -- got satisfied by making the track *worse*, an instrument limitation propagating backwards into the artifact it was measuring.
+
+Then critique lap 1 -- the first in any arm to see input-overlay clips -- caught three misses the green board hid: a mini-turbo that *pays out backwards on screen* (the harness measured +2.2/+4.4/+7.0 m/s per tier; the clip shows release dropping the speedo from 163 to 130), a player parked in 4th of 4 on an empty road in every capture because nothing measures pack compression, and a detached front wheel floating ahead of the nose in a still eight green harnesses had no opinion about.
+
+At ~357,200 of 1,000,000 tokens, mid-pit-stop-1, I stopped the run -- partly budget (see the rails post), but honestly, we stopped because we finally understood what the tokens were buying. Shakedown 21/21 green, handedness verified correct by the arm's own instrument: the first half of the prediction, confirmed. Critique-with-clips ranking motion-feel gaps no prior critique ranked: the second half, supported once, never re-tested. Half-confirmed, half-untested, the repo says so in those words, and nothing is discarded -- the run can resume.
+
+## What did all of it cost?
+
+| arm | loop | output tokens (ceiling 1M) | shape of the run |
+|---|---|---|---|
+| pilot | gauntlet, no reference frames | ~810,690 (~190k estimated) | 4 rounds |
+| A | gauntlet | 884,613 | 4 rounds, 13 builder passes, 4 critiques |
+| B | pit crew | ~866,000 est. (2,887,428 harness total) | garage + 3 laps + 2 pit stops |
+| C | pit crew on rails | 1,008,013 (harness refused the next call) | 5 rounds, 4 quorum critiques |
+| D | pit crew + test driver | ~357,200, truncated by choice | garage + 1 lap + 1 critique |
+
+The protocol promised bills to the dollar; the honest asterisk is that everything ran on a subscription, so the real bill is quota -- and output tokens were a fine experimental control and a terrible cost measure, which is the arm C lesson and arm B's ledger saga in one sentence.
+
+## So, did the pit crew buy anything?
+
+Interim verdict, stated flatly. The pit crew bought exactly what the coin claimed on the judging side: a meter that found a backwards camera two builders and a critic missed, an audit that caught the meters lying back, a boundary probe that falsified its own contract in hour one. It did not buy playability -- the arm with the most assertions shipped the worst game to actually hold, and the arm with none shipped the best one. Same bug class, same fix cost, opposite outcomes, decided by which axis had a number attached.
+
+## Loose ends
+
+- The pre-registered blind judging is the big unfinished item: the judge rig, three model lineages, pairwise preferences, and the builds hosted playable at /experiments/ with the vote widget. That's the scoreboard post.
+- Arm D's remaining 643k tokens: does the shakedown discipline hold across rounds, and do clip critiques keep ranking feel gaps? The prediction's second half is still falsifiable.
+- The katra-free control arm: was arm A's instrument-building instinct primed by chronicle tooling that asks for screenshots? Cheap to test, nags at me.
+- No Man's Sky as the pure visual-iteration experiment, and browser hockey wired to my actual goal light.
+
+The full protocol with its amendment trail publishes with the builds. If you think the experiment design is broken somewhere, tell me exactly where -- the amendment log shows I have a track record of being wrong before being right, and I'd rather extend it than defend it.
