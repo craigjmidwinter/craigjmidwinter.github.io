@@ -1,0 +1,79 @@
+---
+title: "220 assertions and a thumb"
+excerpt: "An agent team shipped a kart racer that passed 220 automated assertions, held bit-identical replays, and ran at 303fps. I plugged in a gamepad and found the steering was backwards in four seconds. Every test suite has a windshield it isn't photographing."
+cover_image: "/assets/blog/2026/220-assertions-cover.png"
+tags: AI Workflows, Multi-Agent, Testing, Loop Engineering
+date_published: 2026-08-07T12:00:00.000Z
+slug: 2026-08-220-assertions-and-a-thumb
+---
+
+I trust a green test suite the way I trust a firm handshake, and this week that finally embarrassed me in a way I can time with a stopwatch.
+
+One of my agent teams handed in a finished browser kart racer-- part of a controlled experiment I'm running where multiple teams each build their own Rainbow Road, judged against real Mario Kart World footage; that whole story is its own post-- and the report card was immaculate. 220 of 220 assertions green. A 15,566-tick replay reproducing 88 of 88 floats bit-identical. Zero NaN across 84,376 kart-ticks. 303fps median at 1080p. I reran the suite myself; every one of those numbers is real.
+
+Then I plugged in a gamepad, pressed right, and the kart went left.
+
+Four seconds. That's how long a human thumb needed to find the bug that 220 assertions, a bit-exact determinism rig, and two fresh-context critique laps never saw. The steering wasn't subtly off-- it was mirrored, left for right, the kind of wrong a five-year-old catches before the countdown finishes.
+
+In [the pit crew post](/blog/2026-08-the-gauntlet-loop-needs-a-pit-crew/) I wrote that better critics wouldn't have caught a certain texture bug, but "a light meter would have." This post is that line's sequel, because I just watched the most-instrumented build in the whole experiment-- the one with the light meters-- ship with its steering backwards. Figuring out how both of those are true at once is the most useful thing this experiment has produced so far.
+
+**How does a game pass 220 assertions with the steering mirrored?**
+
+Because of who was driving during the tests. I went looking in `tools/test-physics.mjs` expecting something subtle and found it in about ten minutes: every physics scenario-- acceleration curve, drift tiers, mini-turbo delta, the jump gap-- drives the kart with `laneSteer()`, a closed-loop controller that holds a lane. And the controller's entire sense of left and right comes from one line:
+
+```js
+const sinA = V.dot(V.cross(kart.heading, to), up);
+return Math.atan2(sinA, cosA);
+```
+
+That cross product derives "which way is right" from the same core geometry the sim itself integrates. Controller and plant agree with each other by construction. If the sim's idea of right is mirrored relative to the screen, the test controller inherits the mirror: it steers "right," the kart moves screen-left, the lane gets held, the assertion goes green. The tests never press an arrow key. They ask the sim which way to steer, and the sim, naturally, agrees with itself.
+
+And the coherence runs the full height of the stack. The input layer normalizes right to +1. The sim turns +1 into a yaw. The tests hold their lanes. The replay format records the normalized struct and plays it back through the same mapping, bit-identical, 88 of 88 floats. Every layer perfectly consistent with its neighbours-- and the entire assembly mirrored relative to the rendered view. Nothing in the loop ever crossed the sim-to-pixels boundary except still screenshots, and a still can't show direction sense. A track photographed through a mirror is still a track.
+
+**Didn't anything catch an inversion? Anything?**
+
+Here's the part that actually keeps me up. Yes-- one. Earlier in the same run, one of the team's meters measured `dot(cameraForward, kartHeading)` and read **-0.9983 at all eight camera stations**. The chase camera was sitting about seven metres in front of the kart, filming backwards, and the frames looked... fine? A loop track receding behind you looks exactly like a loop track ahead of you. Two builders and a critic missed it by eye. The dot product didn't.
+
+It gets better. When a builder went to fix it, it found **two cancelling sign bugs**: `camera.js` had forward as (0,0,-1) while the core mapped the kart's heading to +Z, and `karts.js` had also modeled the kart nose-at-minus-Z. The two mistakes cancelled visually while quietly emptying the world of everything ahead of the kart. Fixing either one alone would have made the game look worse-- which is precisely the trap that teaches a loop to stop fixing things.
+
+So: forward/backward inversion was metered, caught, and fixed, and the fix corrected the camera dot to +0.997 at all eight stations. Left/right inversion was never metered, and shipped. The loop fixed 100% of the inversions it instrumented and 0% of the ones it didn't, and the two bugs were one goddamn dot product apart.
+
+**Fine, but was that one team's bad luck?**
+
+That was my first theory, and here's the fact that killed it: a second team, built completely independently-- fresh repo, never read a line of its sibling's code-- *also* shipped mirrored left/right. Two of three arms. The arm that got the handedness correct was the control, the one running the plainest loop of the three.
+
+My mechanism hypothesis-- flagged as exactly that, a post-hoc read on one run per arm, discovered by my thumbs after the fact-- is that the discipline is the cause. Both mirrored arms followed the headless-pure-core rule: simulation code with zero DOM, zero three.js, zero `window`. That boundary is genuinely great. It's why the correctness suite runs in about 2.1 seconds and got run on every change instead of twice and then abandoned. But it also severs the sim's conventions from the screen *by design*. Every test enters through the sim API; nothing with eyes or hands ever asks whether +1 means the same thing to the pixels that it means to the physics. The control arm built game-first, staring at the rendered picture the whole time, where a mirrored convention is self-evident to whoever's building. The architecture that made everything else more testable made handedness untestable by construction. Nobody dropped this ball. The blueprint placed it outside the court.
+
+Even the held-out judge rig can't see it, by the way-- it watches replays, and replays route through the same mirrored mapping, so they look perfect. Across all three arms, the only sensor that ever caught this bug was a human holding a controller.
+
+**What's the actual pattern?**
+
+Instruments verify what they look at. That sentence sounds too obvious to write down, and it's doing all the work here: a unit test lives inside one layer and verifies that the layer is consistent with itself. A sign convention is an agreement *between* layers, and no within-layer test can check an agreement it never crosses. You can stack up individually green layers forever and still have adjacent pairs mirrored against each other.
+
+The version I'd put on a sticky note: **every test suite has a windshield it isn't photographing.** Layer tests tell you the parts are self-consistent. Only a probe that crosses every boundary at once-- physical input device on one end, rendered pixels on the other-- can tell you the parts agree with each other. That's where this entire bug class lived-- input/sim, sim/camera, sim/renderer. Every one of these bugs sat at a boundary, and every instrument sat inside a layer.
+
+**So what does the fix look like when you actually build it?**
+
+Not more assertions-- a different door. For the next arm I mandated two things before any sim code existed:
+
+**A convention contract, signed first.** A `CONTRACT.md` phrased in terms of what the player sees, never internal geometry: "+steer moves the kart toward screen-right," asserted in pixels, with an explicit note that "the yaw angle decreases" does not satisfy the clause. Internal conventions stay free to be whatever's convenient; observable behaviour is fixed. And the tiebreaker is written into the contract: if the shakedown disagrees with a unit test, the shakedown wins.
+
+**A shakedown harness that enters through the player's door.** `tools/shakedown.mjs` sends real keyboard events to the real page-- it never calls a game API to make anything happen-- and asserts on rendered frames. Hold right: the kart's rendered X must increase. Hold throttle: the speedometer climbs *and* the scenery must flow toward the camera, because a kart driving backwards can still have a climbing speedometer. Drift left: the spark pixels sit on the left of the kart.
+
+The punchline that sold me on the whole approach: the shakedown's first catch was the contract itself. My original draft declared local +X as the kart's right, which turns out to be geometrically impossible next to the screen-right clause under a right-handed, +Z-forward basis. The harness went red against a mock written to obey the contract, and the recorded amendment derives the correction: the kart's right is local -X, `STEER_YAW_SIGN = -1`. The instrument fixed the spec before any builder could bake the wrong sign into four modules at once.
+
+Honesty section, because pixel probes are jankier than any unit test. The first version of the steering probe was green for the wrong reason: when the camera yaws, the whole track's magenta slides across the frame, so the ungated pixel centroid moved the "right" way because it was measuring the camera-- on one frame the kart-colour mask matched 141,215 pixels of which roughly 4,500 were actually kart. The fix was a spatial gate around the kart, and the probe's comments now read like a lab notebook of ways it almost lied. Also honest: that arm's run got stopped mid-flight at about 357,200 of its 1,000,000 output-token budget, for boring reasons that belong to another post. But at stop time the shakedown stood 21 for 21, handedness verified correct on screen, and the harness carries a mutation mode (`--query mutate=NAME`) that injects a deliberate sign bug and requires its own probes to go red. A probe you've never seen fail is just a more elaborate green checkmark.
+
+**What's the Monday-morning version?**
+
+You don't need my harness. You need one probe, ten-ish lines, three properties:
+
+1. **It enters through the user's door.** A real keydown, a real click, a real HTTP request-- whatever your users actually send. Never the internal API-- it shares conventions with the code under test, and shared conventions are exactly what you're trying to check.
+2. **It asserts on the far side of every boundary.** The rendered table row, the pixels, the served bytes. Not the store, not the state object, not the sim global. If your stack has four layers, the probe's assertion should be four layers away from its input.
+3. **You've mutation-tested it.** Flip a sign on purpose. Watch the probe go red. Put the sign back. Thirty seconds, and now you know your windshield camera has film in it.
+
+Keep your layer tests-- all 220 of them were telling the truth about what they measured. Add the one probe that crosses everything at once, because the bugs that survive good layer tests are, almost by elimination, boundary bugs.
+
+Loose ends, of which there are plenty. The full experiment write-up is coming-- three arms, blind judging across three model lineages, the bills published to the dollar, and at least one more finding that embarrassed me personally. The truncated arm is resumable and I want its remaining laps, because its prediction about critique quality is only half-tested. And there's an open question I keep circling: if you burn the input state into the corner of a three-second clip, can a fresh-context critic *see* handedness, or is a thumb on a stick forever the only instrument for this? I genuinely don't know yet.
+
+If you've got your own four-second bug-- the thing a human found instantly that your whole green suite never once looked at-- email me. I've started a collection, and I suspect every domain has a mirrored-layers story wearing different clothes.
