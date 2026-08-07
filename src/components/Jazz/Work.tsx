@@ -29,6 +29,15 @@ const ITEMS: WorkItem[] = [
         shadow: TEAL,
     },
     {
+        title: "GetVect",
+        href: "https://getvect.midwinter.io",
+        description:
+            "A local desktop vectorizer for macOS. Drop in a PNG, JPEG or BMP; get back SVG, EPS, DXF, PDF or PNG from an offline tracing engine. No account, no credits, offline by default.",
+        tags: "ELECTRON · TYPESCRIPT · SVG",
+        motif: "purpleTriangle",
+        shadow: INK,
+    },
+    {
         title: "Ripline",
         href: "https://github.com/ripline-ai/ripline",
         description:
@@ -191,7 +200,7 @@ export function Work() {
         <Section id="work">
             <Header>
                 <Heading>Selected work</Heading>
-                <Count>06 THINGS I&apos;VE BUILT</Count>
+                <Count>07 THINGS I&apos;VE BUILT</Count>
             </Header>
             <Grid>
                 {ITEMS.map((item) => (
