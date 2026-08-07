@@ -16,13 +16,15 @@ Racing teams sorted this out a long time ago. They hired people who build test r
 
 **The pit crew loop**
 
-Builder, critic, and pit crew. The pit crew doesn't drive and doesn't judge the driving. Its entire job is instrumentation and tooling-- making the next lap faster and the judging more accurate:
+Builder, critic, and pit crew. The pit crew doesn't drive and doesn't judge the driving. Its entire job is instrumentation and tooling-- making the next lap faster and the judging more accurate. And it works the whole race, not just the garage: setup before lap one, then a pit stop after every critique lap, scoped by whatever that lap just surfaced:
 
 - **Turn the reference into executable checks.** Before the builders start, the pit crew's first task is converting the quality bar into acceptance and e2e tests wherever it can. "Matches the reference" becomes a suite that runs in seconds, and a whole class of critic deliberation just evaporates-- the artifact passes or it doesn't, and critics save their judgment for the parts that genuinely need taste.
 - **Build purpose-specific harnesses.** Replay rigs, fixture generators, a screenshot bot that produces the blind A/B pair automatically, a script that spins the artifact up in the exact configuration critics need to see. Whatever removes manual steps between "builder finished" and "critic judging real output."
 - **Put numbers on the vague stuff.** Latency budgets, bundle sizes, phase timings, error rates. Numbers aren't the whole story, obviously. But "the largest gap"-- the thing the gauntlet iterates on-- should get picked by measurement wherever it can be, instead of by whichever critic wrote the most confident paragraph.
 
-And one standing rule that does most of the work: **any note a critic gives twice becomes a check the pit crew automates.** Complaints are instrument requests in disguise. The second time a critic writes "the export is missing the header row again," that sentence is done being feedback and starts being a test.
+- **Give the critics instruments too.** The judging half of "faster laps, better judging" is the half people skip. A measured report delivered next to the frames, a comparison plate that puts this lap beside the last one, a capture mode the critique keeps wishing it had-- tooling the critic is pit crew work of the first rank, because a critic with a light meter stops writing three rounds of "the weapon looks untextured" at a specular problem.
+
+And one standing rule that does most of the work: **any note a critic gives twice becomes a check the pit crew automates.** Complaints are instrument requests in disguise. The second time a critic writes "the export is missing the header row again," that sentence is done being feedback and starts being a test. That's what the pit stops are for-- each one takes the lap's complaints and fumbles and turns them into the next lap's instruments.
 
 That rule only reaches the mechanical notes, though, and the taste-shaped ones are the actual bottleneck. "The pacing feels off" never becomes an assertion no matter how long you stare at it. So those get promoted in the other direction: a note that keeps coming back and refuses to automate goes into the *reference* as a new exemplar-- one more thing in the blind A/B pile, chosen because critics kept reaching for it anyway. Three buckets, then. Automate it, exemplify it, or admit it was a one-off and let it go.
 
