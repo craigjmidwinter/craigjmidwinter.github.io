@@ -1,7 +1,6 @@
 ---
 title: Putting the pit crew loop to the test
 slug: 2026-08-putting-the-pit-crew-loop-to-the-test
-publishOn: "2026-08-14"
 excerpt: "I coined a loop variant and then had to find out if it buys anything. So agent teams each built their own Rainbow Road under pre-registered rules, and the most important instrument in the whole experiment turned out to be me, on a couch, holding a gamepad."
 tags: AI Workflows, Multi-Agent, Agents, Testing, Loop Engineering, Experiments
 cover_image: "/assets/blog/2026/pit-crew-test-cover.png"
