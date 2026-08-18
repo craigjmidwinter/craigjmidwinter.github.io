@@ -1,7 +1,6 @@
 ---
 title: "My agents built me a vectorizer, and my cat is the mascot"
 slug: 2026-08-my-agents-built-me-a-vectorizer
-publishOn: "2026-08-18"
 excerpt: "I pointed the pit crew loop at a product with a real bar: a free, local clone of an online vectorizer's whole workflow. 119 commits later there's a dmg on GitHub, the engine beats the reference on every number we can compute, and the last half point is taste."
 cover_image: "/assets/blog/2026/getvect-cover.png"
 tags: GetVect, AI Workflows, Multi-Agent, Agents, Loop Engineering
