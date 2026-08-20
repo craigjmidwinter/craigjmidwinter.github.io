@@ -65,11 +65,14 @@ const ITEMS: WorkItem[] = [
         shadow: TEAL,
     },
     {
+        // TODO(2026-08-20): Katra's branding/docs overhaul is in flight in its
+        // own session — refresh this copy (and card visuals) once the new
+        // identity lands.
         title: "Katra",
         href: "https://github.com/craigjmidwinter/katra",
         description:
-            "A committed dev log your agents write as they build. Entries stamp themselves with the commit they describe, and a gate refuses any commit that has no entry.",
-        tags: "GO · GIT · DEV LOG",
+            "A committed, markdown-native dev log, project wiki, and cross-project hub for spec-driven agentic development. Agents build from tasks, epics, and decisions checked into git — and leave a durable record instead of vanished context.",
+        tags: "GO · GIT · AGENTS",
         motif: "tealCircle",
         shadow: INK,
     },
