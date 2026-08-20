@@ -6,7 +6,35 @@
         <description>Notes from a house that talks back. Home automation writing from Craig Midwinter.</description>
         <language>en</language>
         <atom:link href="https://midwinter.io/feed.xml" rel="self" type="application/rss+xml"/>
-        <lastBuildDate>Mon, 03 Aug 2026 18:30:00 GMT</lastBuildDate>
+        <lastBuildDate>Tue, 18 Aug 2026 12:00:00 GMT</lastBuildDate>
+        <item>
+            <title>My agents built me a vectorizer, and my cat is the mascot</title>
+            <link>https://midwinter.io/blog/2026-08-my-agents-built-me-a-vectorizer</link>
+            <guid isPermaLink="true">https://midwinter.io/blog/2026-08-my-agents-built-me-a-vectorizer</guid>
+            <pubDate>Tue, 18 Aug 2026 12:00:00 GMT</pubDate>
+            <description>Every time I want a crisp SVG out of a picture-- a sticker, a logo, a file for a cutter-- I end up on some website that wants the image on their server and my card on file. A credit per conversion, a watermark until you pay, a queue when they&apos;re busy. And the actual job is math. It&apos;s edge detection…</description>
+        </item>
+        <item>
+            <title>Putting the pit crew loop to the test</title>
+            <link>https://midwinter.io/blog/2026-08-putting-the-pit-crew-loop-to-the-test</link>
+            <guid isPermaLink="true">https://midwinter.io/blog/2026-08-putting-the-pit-crew-loop-to-the-test</guid>
+            <pubDate>Fri, 14 Aug 2026 12:00:00 GMT</pubDate>
+            <description>A couple of weeks ago I wrote about the pit crew loop -- my name for a gauntlet loop with a third role that does nothing but build instruments. Coining a loop is free. Knowing whether it buys anything costs about a million tokens per arm, and that&apos;s the bill this post pays.</description>
+        </item>
+        <item>
+            <title>I put my own pipeline on rails and it ate my week</title>
+            <link>https://midwinter.io/blog/2026-08-rails-ate-my-week</link>
+            <guid isPermaLink="true">https://midwinter.io/blog/2026-08-rails-ate-my-week</guid>
+            <pubDate>Tue, 11 Aug 2026 12:00:00 GMT</pubDate>
+            <description>My Claude subscription has a weekly usage meter, and I&apos;d stopped checking it, because two full days of heavy agent experiments had barely moved it. Two arms of my Rainbow Road head-to-head, roughly 1.75 million output tokens of kart racer between them, and the meter sat in single digits. Then I ran…</description>
+        </item>
+        <item>
+            <title>220 assertions and a thumb</title>
+            <link>https://midwinter.io/blog/2026-08-220-assertions-and-a-thumb</link>
+            <guid isPermaLink="true">https://midwinter.io/blog/2026-08-220-assertions-and-a-thumb</guid>
+            <pubDate>Fri, 07 Aug 2026 12:00:00 GMT</pubDate>
+            <description>I trust a green test suite the way I trust a firm handshake, and this week that finally embarrassed me in a way I can time with a stopwatch.</description>
+        </item>
         <item>
             <title>The gauntlet loop needs a pit crew</title>
             <link>https://midwinter.io/blog/2026-08-the-gauntlet-loop-needs-a-pit-crew</link>
