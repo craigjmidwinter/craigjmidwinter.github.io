@@ -3,7 +3,7 @@
     <channel>
         <title>Craig Midwinter — Blog</title>
         <link>https://midwinter.io/blog</link>
-        <description>Notes from a house that talks back. Home automation writing from Craig Midwinter.</description>
+        <description>Notes on making computers do the work: AI development workflows lately, and before that, the years I wired up my house. Home Assistant, Hue, agent pipelines, and one voice actor who reads my cat&apos;s litter box.</description>
         <language>en</language>
         <atom:link href="https://midwinter.io/feed.xml" rel="self" type="application/rss+xml"/>
         <lastBuildDate>Tue, 18 Aug 2026 12:00:00 GMT</lastBuildDate>
