@@ -1,33 +1,40 @@
 // app/page.tsx
 import ClientLandingPage from "./ClientLandingPage";
-import {fetchPlaylistFeedItems} from "@/service/youtube/feed";
 import {getAllPosts} from "@/service/blog";
+import {EPISODES, EPISODES_FETCHED_AT} from "@/data/episodes";
+
+/** Days after which the committed episode snapshot is worth refreshing. */
+const STALE_AFTER_DAYS = 21;
 
 export default async function Page() {
-    // Oscars Outsider episodes (same playlist oscarsoutsider.com builds from).
-    // Read from the public RSS feed rather than the Data API — see the note at the
-    // top of service/youtube/feed.ts for why the API path was blanking this section
-    // on every deploy.
-    const playlistId = 'PLDYT8ZhjQbnwIrSVrbcav3rGZvojw22Ml';
-    let episodes: Awaited<ReturnType<typeof fetchPlaylistFeedItems>> = [];
-    try {
-        episodes = await fetchPlaylistFeedItems(playlistId, 2);
-    } catch (error) {
-        // Still non-fatal: a YouTube outage should not take down the whole build.
-        // But log loudly and specifically — the previous version printed an axios
-        // object whose response body rendered as "[Object]", which is why a section
-        // that had been empty for months read as a design choice rather than a bug.
-        console.error(
-            `[podcast] Episodes unavailable at build time for playlist ${playlistId}. ` +
-            `The podcast section will render without episode tiles. Reason:`,
-            error instanceof Error ? error.message : error,
+    // Oscars Outsider episodes come from a committed snapshot, not a build-time
+    // fetch. YouTube 404s this playlist from GitHub Actions runners while serving it
+    // fine elsewhere — true of both the Data API and the public RSS feed, so it is
+    // where the request originates, not the key or the playlist. Refresh with
+    // `node scripts/refresh-episodes.mjs` and commit the result.
+    const episodes = EPISODES.slice(0, 2);
+    const posts = getAllPosts();
+
+    // The failure mode this section had for months was silence: an empty tile grid
+    // that looked deliberate. A snapshot cannot break that way, but it can go quietly
+    // out of date, so say so at build time rather than letting it drift unnoticed.
+    const ageDays = Math.floor(
+        (Date.parse(new Date().toISOString()) - Date.parse(EPISODES_FETCHED_AT)) / 86_400_000,
+    );
+    if (episodes.length === 0) {
+        console.warn(
+            "[podcast] src/data/episodes.ts is empty — the section will render without " +
+            "tiles. Run `node scripts/refresh-episodes.mjs` and commit the result.",
+        );
+    } else if (ageDays > STALE_AFTER_DAYS) {
+        console.warn(
+            `[podcast] Episode snapshot is ${ageDays} days old (taken ${EPISODES_FETCHED_AT}). ` +
+            "Run `node scripts/refresh-episodes.mjs` and commit the result.",
         );
     }
-    const posts = getAllPosts();
 
     return <ClientLandingPage episodes={episodes} posts={posts}/>;
 }
 
 // Force static generation
 export const dynamic = 'force-static';
-
