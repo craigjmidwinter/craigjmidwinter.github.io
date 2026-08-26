@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!--
+  Redirect stub for a removed post.
+
+  The post that lived at this URL was withdrawn at the author's request. The URL is
+  kept rather than left to 404 because the link was published and may be held
+  elsewhere; a removed post that an existing link still points at is worse than
+  either keeping it or redirecting it.
+
+  This is a static file under public/ because the site is `output: "export"` on
+  GitHub Pages: there is no server to issue a 301, and Next's redirects() does not
+  run for a static export. The trailing-slash URL resolves to this index.html.
+
+  noindex keeps the stub itself out of search results, and the canonical points at
+  the blog index so any accumulated link equity consolidates there.
+-->
+<meta name="robots" content="noindex">
+<meta http-equiv="refresh" content="0; url=/blog/">
+<link rel="canonical" href="https://midwinter.io/blog/">
+<title>Post removed — Craig Midwinter</title>
+<style>
+  :root { color-scheme: light; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 18px;
+    padding: clamp(40px, 8vh, 96px) clamp(20px, 4vw, 56px);
+    background: #fbfaf7;
+    color: #111;
+    font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  }
+  .eyebrow {
+    font: 500 10px/1 ui-monospace, 'JetBrains Mono', monospace;
+    letter-spacing: 0.16em;
+    /* Purple on paper is 6.20:1 — see README, "Colour pairings". */
+    color: #8e3d94;
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(30px, 6vw, 64px);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    max-width: 16ch;
+  }
+  p { margin: 0; max-width: 46ch; font-size: 15px; line-height: 1.6; }
+  a {
+    display: inline-block;
+    font: 500 10px/1 ui-monospace, 'JetBrains Mono', monospace;
+    letter-spacing: 0.12em;
+    padding: 13px 17px;
+    border: 2px solid #111;
+    color: #111;
+    text-decoration: none;
+  }
+  a:hover, a:focus-visible { background: #e9e64a; }
+  a:focus-visible { outline: 2px solid #111; outline-offset: 2px; }
+</style>
+</head>
+<body>
+  <div class="eyebrow">THIS POST HAS BEEN REMOVED</div>
+  <h1>Taking you to the blog</h1>
+  <p>This post is no longer published. You should be redirected to the blog index automatically.</p>
+  <a href="/blog/">← ALL POSTS</a>
+</body>
+</html>

@@ -34,13 +34,13 @@ Posts are markdown with gray-matter frontmatter in `_posts/`, read at build time
 
 ```yaml
 ---
-title: "My agents built me a vectorizer, and my cat is the mascot"
-slug: 2026-08-my-agents-built-me-a-vectorizer     # optional; defaults to the filename
-excerpt: "One or two sentences..."                 # optional
-cover_image: "/assets/blog/2026/getvect-cover.png" # optional; doubles as the og:image
-tags: GetVect, AI Workflows, Agents
-date_published: 2026-08-18T12:00:00.000Z
-date_updated: 2026-08-20T12:00:00.000Z             # optional
+title: "Putting the pit crew loop to the test"
+slug: 2026-08-putting-the-pit-crew-loop-to-the-test  # optional; defaults to the filename
+excerpt: "One or two sentences..."                   # optional
+cover_image: "/assets/blog/2026/pit-crew-test-cover.png"  # optional; doubles as the og:image
+tags: AI Workflows, Multi-Agent, Agents
+date_published: 2026-08-14T12:00:00.000Z
+date_updated: 2026-08-20T12:00:00.000Z               # optional
 ---
 ```
 
