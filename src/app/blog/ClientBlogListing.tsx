@@ -11,6 +11,9 @@ import {excerpt, formatPostDate, postMeta, postTags} from "@/components/Jazz/pos
 import {Post} from "@/service/blog";
 
 const TEAL = "#00a7a0";
+/* Teal text on paper: the fill teal above is only 2.86:1 there, so links use this
+   darkened same-hue variant (5.32:1). See README, "Colour pairings". */
+const TEAL_ON_PAPER = "#007570";
 const PURPLE = "#8e3d94";
 const YELLOW = "#e9e64a";
 const INK = "#111";
@@ -44,7 +47,7 @@ const GlobalStyle = createGlobalStyle`
     }
 
     a:hover {
-        color: ${TEAL};
+        color: ${TEAL_ON_PAPER};
     }
 
     ::selection {
@@ -305,8 +308,9 @@ const FeaturedFlag = styled.span`
     padding: 6px 8px;
 `;
 
+/* 0.65, not 0.5/0.55: dimmed ink on paper drops under 4.5:1 below about 0.60. */
 const FeaturedDate = styled.span`
-    opacity: 0.5;
+    opacity: 0.65;
 `;
 
 const FeaturedTitle = styled.h2`
@@ -327,7 +331,7 @@ const FeaturedExcerpt = styled.p`
 const FeaturedFoot = styled.span`
     font: 500 9.5px/1 'JetBrains Mono', monospace;
     letter-spacing: 0.1em;
-    opacity: 0.55;
+    opacity: 0.65;
 `;
 
 /* ---------------------------------------------------------------- grid -- */
@@ -399,7 +403,7 @@ const Shape = styled.div<{ $accent: string; $clip: string }>`
 const CardDate = styled.div`
     font: 500 10px/1 'JetBrains Mono', monospace;
     letter-spacing: 0.14em;
-    opacity: 0.5;
+    opacity: 0.65;
     margin-bottom: 9px;
 `;
 
@@ -420,14 +424,14 @@ const CardExcerpt = styled.p`
 const CardFoot = styled.span`
     font: 500 9.5px/1 'JetBrains Mono', monospace;
     letter-spacing: 0.1em;
-    opacity: 0.55;
+    opacity: 0.65;
 `;
 
 const EmptyNote = styled.p`
     margin: 0;
     font: 500 11px/1.6 'JetBrains Mono', monospace;
     letter-spacing: 0.14em;
-    opacity: 0.55;
+    opacity: 0.65;
 `;
 
 /* --------------------------------------------------------------- data --- */
@@ -505,7 +509,7 @@ export default function ClientBlogListing({posts}: { posts: Post[] }) {
             <GlobalStyle />
             <Nav page="blog" />
 
-            <main>
+            <main id="main-content" tabIndex={-1}>
                 <HeroSection>
                     <Slab aria-hidden="true" />
 

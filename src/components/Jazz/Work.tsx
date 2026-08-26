@@ -192,10 +192,11 @@ const CardText = styled.p`
     text-wrap: pretty;
 `;
 
+/* 0.65, not 0.55: dimmed ink on paper drops under 4.5:1 below about 0.60. */
 const Tags = styled.span`
     font: 500 9.5px / 1 "JetBrains Mono", monospace;
     letter-spacing: 0.1em;
-    opacity: 0.55;
+    opacity: 0.65;
 `;
 
 export function Work() {

@@ -1,5 +1,6 @@
 import {getAllPosts, Post} from "@/service/blog";
 import {excerpt} from "@/components/Jazz/postMeta";
+import {BLOG_DESCRIPTION, SITE_NAME, SITE_URL} from "../siteMeta";
 
 /**
  * Static RSS 2.0 feed.
@@ -12,10 +13,12 @@ import {excerpt} from "@/components/Jazz/postMeta";
  */
 export const dynamic = "force-static";
 
-const SITE = "https://midwinter.io";
-const FEED_TITLE = "Craig Midwinter — Blog";
-const FEED_DESCRIPTION =
-    "Notes from a house that talks back. Home automation writing from Craig Midwinter.";
+const SITE = SITE_URL;
+const FEED_TITLE = `${SITE_NAME} — Blog`;
+/* Shared with the listing page so the two cannot drift again. This previously read
+   "Notes from a house that talks back. Home automation writing from Craig Midwinter.",
+   which described the blog as it was several years and a genre ago. */
+const FEED_DESCRIPTION = BLOG_DESCRIPTION;
 
 /** Escape the five XML predefined entities. */
 function esc(value: string): string {

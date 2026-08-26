@@ -37,7 +37,11 @@ const ITEMS = [
     "MAIL MUNCHER",
     "KATRA",
     "GOALFEED",
+    // Kept adjacent so the two shows read as a pair. The marquee is a degree of
+    // prominence rather than a change of category, which is why Bravo Outsider
+    // belongs here but not in the nav.
     "OSCARS OUTSIDER",
+    "BRAVO OUTSIDER",
     "HOME ASSISTANT",
     "TOTALCONNECT",
 ];

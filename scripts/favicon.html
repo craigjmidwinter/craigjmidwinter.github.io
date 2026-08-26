@@ -1,0 +1,44 @@
+<!doctype html>
+<!--
+  Source for the site icons: src/app/favicon.ico, src/app/icon.png and
+  src/app/apple-icon.png. Next's App Router picks those filenames up automatically
+  and emits the <link> tags, so there is no markup to maintain.
+
+  REUSABLE. To make an icon for another site in the fleet, change the three custom
+  properties below and re-render — nothing else in this file is site-specific.
+  bravooutsider.com wants the same treatment with its own letter and palette.
+
+  Regenerate: screenshot this file in headless Chrome at 512x512, device scale
+  factor 1, with a virtual-time budget of a few seconds so Google Fonts resolves,
+  then downscale into the .ico and .png sizes. scripts/make-favicon.sh does both.
+
+  The ink-on-teal pairing is not arbitrary: it is the same rule the rest of the site
+  follows (6.33:1). White on this teal would be 2.99:1 — see README, "Colour pairings".
+-->
+<html><head><meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ground: #00a7a0;   /* tile fill   */
+    --mark:   #111111;   /* letterform  */
+    --accent: #8e3d94;   /* corner chip */
+    --letter-size: 450px;
+    --letter-shift: 0.045em; /* optical centring nudge for this glyph */
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{width:512px;height:512px;overflow:hidden;background:var(--ground);
+       display:flex;align-items:center;justify-content:center;position:relative}
+  /* A confetti corner, cropped by the tile. Reads as brand at 180px+ and as a
+     slight weight in the corner at 16px, which is all it needs to do. */
+  .chip{position:absolute;right:-34px;top:-34px;width:150px;height:150px;
+        background:var(--accent);transform:rotate(34deg)}
+  .m{position:relative;font-family:'Space Grotesk',sans-serif;font-weight:700;
+     font-size:var(--letter-size);line-height:1;color:var(--mark);
+     letter-spacing:-0.06em;margin-left:calc(var(--letter-shift) * -1);
+     transform:translateY(-0.055em)}
+</style></head><body>
+  <div class="chip"></div>
+  <div class="m">M</div>
+</body></html>

@@ -62,10 +62,12 @@ const CODE_THEME: { [key: string]: React.CSSProperties } = {
         fontSize: "12.5px",
         lineHeight: 1.75,
     },
-    comment: {color: "rgba(251, 250, 247, 0.42)", fontStyle: "italic"},
-    prolog: {color: "rgba(251, 250, 247, 0.42)"},
-    doctype: {color: "rgba(251, 250, 247, 0.42)"},
-    cdata: {color: "rgba(251, 250, 247, 0.42)"},
+    /* 0.50, not 0.42: at 0.42 these composite to #737372 on the ink slab, which is
+       3.97:1 — under AA. 0.50 is 5.15:1 and still reads as a dimmed comment. */
+    comment: {color: "rgba(251, 250, 247, 0.5)", fontStyle: "italic"},
+    prolog: {color: "rgba(251, 250, 247, 0.5)"},
+    doctype: {color: "rgba(251, 250, 247, 0.5)"},
+    cdata: {color: "rgba(251, 250, 247, 0.5)"},
     punctuation: {color: "rgba(251, 250, 247, 0.55)"},
     property: {color: "#00a7a0"},
     tag: {color: "#00a7a0"},
@@ -204,6 +206,15 @@ const MetaRow = styled.div`
     margin-bottom: 16px;
 `;
 
+/* #00a7a0 is a mid-luminance teal: on the ink post header it is 6.33:1, but on
+   the paper article body it is only 2.86:1. #007570 is the same hue darkened
+   until it clears 4.5:1 on paper (5.32:1) AND on the slightly darker inline-code
+   chip (4.70:1) — links inside `code` land on that, not on paper, which is what
+   ruled out the lighter #007d78. Rule: fill teal on ink, this variant for teal
+   text on light surfaces. See README, "Colour pairings". */
+const TEAL_ON_PAPER = "#007570";
+
+/* Sits in the ink hero, so the fill teal is the correct one here. */
 const MetaDate = styled.span`
     color: #00a7a0;
 `;
@@ -351,17 +362,17 @@ const Article = styled.article`
 `;
 
 const linkStyles = css`
-    color: #00a7a0;
+    color: ${TEAL_ON_PAPER};
     text-decoration: none;
-    border-bottom: 1px solid rgba(0, 167, 160, 0.35);
+    border-bottom: 1px solid rgba(0, 117, 112, 0.35);
 
     &:hover {
-        color: #00a7a0;
+        color: ${TEAL_ON_PAPER};
         text-decoration: underline;
     }
 
     &:focus-visible {
-        outline: 2px solid #00a7a0;
+        outline: 2px solid ${TEAL_ON_PAPER};
         outline-offset: 2px;
     }
 `;
@@ -468,7 +479,10 @@ const ArchiveNote = styled.aside`
     border: 2px solid #111;
     max-width: 66ch;
     font: 400 11.5px/1.7 'JetBrains Mono', monospace;
-    opacity: 0.7;
+    /* Was opacity: 0.7, which dimmed the purple ARCHIVE tag to 3.33:1 along with
+       the prose. #575756 is exactly what 0.7 ink over paper composites to (6.93:1),
+       so the body reads the same while the tag keeps full strength. */
+    color: #575756;
 
     b {
         font-weight: 500;
@@ -500,10 +514,11 @@ const FiledInner = styled.div`
     max-width: 900px;
 `;
 
+/* 0.65, not 0.5: dimmed ink on paper drops under 4.5:1 below about 0.60. */
 const FiledLabel = styled.span`
     font: 500 10px/1 'JetBrains Mono', monospace;
     letter-spacing: 0.14em;
-    opacity: 0.5;
+    opacity: 0.65;
 `;
 
 const Tag = styled.span`
@@ -522,7 +537,8 @@ const KeepReading = styled.section`
     overflow: hidden;
     padding: clamp(40px, 6vh, 72px) clamp(20px, 4vw, 56px);
     background: #00a7a0;
-    color: #fff;
+    /* Ink, not white: white on this teal is 2.99:1, below the AA floor. Ink is 6.33:1. */
+    color: #111;
 `;
 
 const Blob = styled.div`
@@ -533,7 +549,8 @@ const Blob = styled.div`
     height: 210px;
     background: #8e3d94;
     border-radius: 50%;
-    opacity: 0.6;
+    /* Ink copy can overlap this wash; 0.25 keeps the composite at 4.83:1 against ink. */
+    opacity: 0.25;
     pointer-events: none;
 `;
 
@@ -557,17 +574,19 @@ const NextTitle = styled(Link)`
     display: block;
     font: 700 clamp(22px, 3.6vw, 46px)/1.04 'Space Grotesk', sans-serif;
     letter-spacing: -0.04em;
-    color: #fff;
+    color: #111;
     text-decoration: none;
     max-width: 26ch;
     text-wrap: pretty;
 
+    /* Underline rather than a colour shift on hover: yellow on this teal is 2.26:1. */
     &:hover {
-        color: #e9e64a;
+        color: #111;
+        text-decoration: underline;
     }
 
     &:focus-visible {
-        outline: 2px solid #fff;
+        outline: 2px solid #111;
         outline-offset: 4px;
     }
 `;
@@ -576,8 +595,8 @@ const IndexButton = styled(Link)`
     font: 500 10px/1 'JetBrains Mono', monospace;
     letter-spacing: 0.12em;
     padding: 13px 17px;
-    background: #fff;
-    color: #111;
+    background: #111;
+    color: #fbfaf7;
     text-decoration: none;
     transition: background 0.15s ease;
 
@@ -587,7 +606,7 @@ const IndexButton = styled(Link)`
     }
 
     &:focus-visible {
-        outline: 2px solid #fff;
+        outline: 2px solid #111;
         outline-offset: 3px;
     }
 `;
@@ -704,7 +723,7 @@ export default function ClientBlogPost({post, nextPost}: ClientBlogPostProps) {
             <GlobalStyle/>
             <Nav page="blog"/>
 
-            <main>
+            <main id="main-content" tabIndex={-1}>
                 <Hero>
                     {HERO_MARKS.map((m, i) => (
                         <Confetti

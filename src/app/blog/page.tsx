@@ -4,26 +4,28 @@ import React from "react";
 import {Metadata} from "next";
 import ClientBlogListing from "./ClientBlogListing";
 import {getAllPosts, Post} from "@/service/blog";
+import {BLOG_DESCRIPTION, OG_IMAGE, SITE_NAME, canonicalPath} from "../siteMeta";
 
-const DESCRIPTION =
-    "Notes on making computers do the work: AI development workflows lately, and " +
-    "before that, the years I wired up my house. Home Assistant, Hue, agent " +
-    "pipelines, and one voice actor who reads my cat's litter box.";
+const DESCRIPTION = BLOG_DESCRIPTION;
 
 export const metadata: Metadata = {
     title: "Blog | Craig Midwinter",
     description: DESCRIPTION,
+    alternates: {canonical: canonicalPath("/blog")},
     openGraph: {
         title: "Blog | Craig Midwinter",
         description: DESCRIPTION,
-        url: "https://midwinter.io/blog",
-        siteName: "Craig Midwinter",
+        url: canonicalPath("/blog"),
+        siteName: SITE_NAME,
         type: "website",
+        locale: "en_CA",
+        images: [OG_IMAGE],
     },
     twitter: {
-        card: "summary",
+        card: "summary_large_image",
         title: "Blog | Craig Midwinter",
         description: DESCRIPTION,
+        images: [OG_IMAGE],
     },
 };
 

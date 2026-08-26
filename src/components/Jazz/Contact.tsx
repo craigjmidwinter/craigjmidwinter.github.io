@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import {MARK_CLIP, marks} from "./marks";
+import {ANALYTICS_DISCLOSURE} from "./analyticsDisclosure";
 
 const Section = styled.footer`
     position: relative;
@@ -72,7 +73,22 @@ const Colophon = styled.div`
     margin-top: 36px;
     font: 500 9.5px/1 'JetBrains Mono', monospace;
     letter-spacing: 0.14em;
-    opacity: 0.65;
+    /* 0.8, not 0.65: dimmed white on the purple footer needs 0.8 to clear 4.5:1. */
+    opacity: 0.8;
+`;
+
+/* Discloses the self-hosted Umami tag added in layout.tsx. The tracker and this
+   line are a pair: if the tag is ever removed, remove this; if it is ever moved to
+   another site, that site needs its own disclosure. Do not ship one without the
+   other. The 404 page carries the same string via analyticsDisclosure.ts, since it
+   renders no footer but still inherits the tag from the root layout. */
+const AnalyticsNote = styled.div`
+    margin-top: 10px;
+    font: 500 9.5px/1.5 'JetBrains Mono', monospace;
+    letter-spacing: 0.14em;
+    /* Matches Colophon: 0.8 is the floor for white on this purple. */
+    opacity: 0.8;
+    max-width: 80ch;
 `;
 
 interface FooterLinkItem {
@@ -147,6 +163,7 @@ export function Contact({variant = "home"}: { variant?: "home" | "blog" } = {}) 
                     ))}
                 </Links>
                 <Colophon>WINNIPEG, MB · 49.895°N 97.138°W · MMXXVI</Colophon>
+                <AnalyticsNote>{ANALYTICS_DISCLOSURE}</AnalyticsNote>
             </Inner>
         </Section>
     );

@@ -10,6 +10,7 @@ import {Marquee} from "@/components/Jazz/Marquee";
 import {Work} from "@/components/Jazz/Work";
 import {About} from "@/components/Jazz/About";
 import {Podcast} from "@/components/Jazz/Podcast";
+import {BravoOutsider} from "@/components/Jazz/BravoOutsider";
 import {Archive} from "@/components/Jazz/Archive";
 import {Contact} from "@/components/Jazz/Contact";
 
@@ -36,8 +37,9 @@ const GlobalStyle = createGlobalStyle`
         color: #111;
     }
 
+    /* #007570, not the #00a7a0 fill teal: on paper the fill teal is only 2.86:1. */
     a:hover {
-        color: #00a7a0;
+        color: #007570;
     }
 
     ::selection {
@@ -79,12 +81,13 @@ export default function ClientLanding({episodes, posts}: ClientLandingProps) {
         <>
             <GlobalStyle />
             <Nav />
-            <main>
+            <main id="main-content" tabIndex={-1}>
                 <Hero />
                 <Marquee />
                 <Work />
                 <About />
                 <Podcast episodes={episodes} />
+                <BravoOutsider />
                 <Archive posts={posts} />
             </main>
             <Contact />

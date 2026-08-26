@@ -1,6 +1,10 @@
 import React from "react";
 import styled, {css} from "styled-components";
 
+/* The #00a7a0 fill teal only reaches 2.86:1 on the paper bar; this is the same hue
+   darkened until it clears the 4.5:1 AA floor (5.32:1). See README, "Colour pairings". */
+const TEAL_ON_PAPER = "#007570";
+
 const Bar = styled.nav`
     position: sticky;
     top: 0;
@@ -25,7 +29,7 @@ const Wordmark = styled.a`
     white-space: nowrap;
 
     &:hover {
-        color: #00a7a0;
+        color: ${TEAL_ON_PAPER};
     }
 `;
 
@@ -41,14 +45,14 @@ const NavLink = styled.a<{ $active?: boolean }>`
     text-decoration: none;
 
     &:hover {
-        color: #00a7a0;
+        color: ${TEAL_ON_PAPER};
     }
 
     ${({$active}) =>
         $active &&
         css`
-            color: #00a7a0;
-            border-bottom: 2px solid #00a7a0;
+            color: ${TEAL_ON_PAPER};
+            border-bottom: 2px solid ${TEAL_ON_PAPER};
             padding-bottom: 2px;
         `}
 `;

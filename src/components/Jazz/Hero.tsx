@@ -106,12 +106,14 @@ const PurpleButton = styled(Button)`
     }
 `;
 
+/* Ink, not white, on the teal fill: white on #00a7a0 measures 2.99:1, under the
+   4.5:1 AA floor for text this size. Ink on the same teal is 6.33:1. */
 const TealButton = styled(Button)`
     background: #00a7a0;
-    color: #fff;
+    color: #111;
 
     &:hover {
-        color: #fff;
+        color: #111;
     }
 `;
 

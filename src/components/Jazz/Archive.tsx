@@ -60,9 +60,10 @@ const Row = styled(Link)`
     }
 `;
 
+/* 0.65, not 0.5: dimmed ink on paper drops under 4.5:1 below about 0.60. */
 const RowDate = styled.span`
     font: 500 10.5px/1 'JetBrains Mono', monospace;
-    opacity: 0.5;
+    opacity: 0.65;
 `;
 
 const RowTitle = styled.span`

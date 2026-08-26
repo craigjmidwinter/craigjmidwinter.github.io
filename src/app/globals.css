@@ -1,13 +1,15 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fbfaf7;
+  --foreground: #111111;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* The Jazz design paints paper (#fbfaf7) and ink (#111) on every page and has no
+   dark treatment. The old prefers-color-scheme block flipped the UA to dark —
+   dark scrollbars and form controls against a permanently light page — while the
+   styled-components global style repainted the body light anyway. Light-only here
+   keeps the UA, the painted page, and <meta name="theme-color"> saying the same thing. */
+html {
+  color-scheme: light;
 }
 
 html,
@@ -35,8 +37,30 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+/* Skip link: off-screen until focused, then a solid ink chip above the sticky
+   nav (which sits at z-index 40). Paper on ink is 18.09:1. */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  background: #111111;
+  color: #fbfaf7;
+  font: 500 12px/1 "JetBrains Mono", monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 14px 18px;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  left: 8px;
+  top: 8px;
+  outline: 2px solid #e9e64a;
+  outline-offset: 2px;
+}
+
+/* The skip link's target should not draw a focus ring of its own. */
+#main-content:focus {
+  outline: none;
 }

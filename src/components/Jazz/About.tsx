@@ -5,7 +5,11 @@ import styled from "styled-components";
 const INK = "#111";
 const PAPER = "#fbfaf7";
 const TEAL = "#00a7a0";
-const PURPLE = "#8e3d94";
+/* Purple is mid-luminance like the teal: the #8e3d94 fill purple is 6.20:1 on
+   paper but only 2.92:1 on this section's ink background. This is the same hue
+   lifted toward white until it clears AA on ink (5.53:1). This section is ink,
+   so it is the only purple used here. See README, "Colour pairings". */
+const PURPLE_ON_INK = "#b077b4";
 
 const PARAGRAPHS: string[] = [
     "I'm a Director of Engineering at Lyntris (formerly Hypergiant / Accelint), where I've led an engineering organization of ~50 people across multiple product lines. Before that I was the lead engineer on Hyperdrive, a Kubernetes-native MLOps platform that spun off into an enterprise product.",
@@ -168,7 +172,7 @@ export function About() {
                             </Row>
                         ))}
                     </Timeline>
-                    <AlsoLabel $color={PURPLE}>ALSO</AlsoLabel>
+                    <AlsoLabel $color={PURPLE_ON_INK}>ALSO</AlsoLabel>
                     <AlsoList>
                         {ALSO.map((line) => (
                             <li key={line}>{line}</li>

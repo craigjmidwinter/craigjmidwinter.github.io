@@ -9,7 +9,8 @@ const Section = styled.section`
     overflow: hidden;
     padding: clamp(48px, 7vh, 86px) clamp(20px, 4vw, 56px);
     background: #00a7a0;
-    color: #fff;
+    /* Ink, not white: white on this teal is 2.99:1, below the AA floor. Ink is 6.33:1. */
+    color: #111;
 `;
 
 const Blob = styled.div`
@@ -20,7 +21,9 @@ const Blob = styled.div`
     height: 200px;
     background: #8e3d94;
     border-radius: 50%;
-    opacity: 0.65;
+    /* Ink copy can overlap this wash; 0.25 keeps the composite at 4.83:1 against ink.
+       At the old 0.65 the blob rendered #5c6298 and dropped ink to 3.29:1. */
+    opacity: 0.25;
     pointer-events: none;
 `;
 
@@ -57,15 +60,15 @@ const ListenButton = styled.a`
     font: 500 10px/1 'JetBrains Mono', monospace;
     letter-spacing: 0.12em;
     padding: 13px 17px;
-    background: #fff;
-    color: #111;
+    background: #111;
+    color: #fbfaf7;
     text-decoration: none;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
 
     &:hover {
-        color: #111;
+        color: #fbfaf7;
         transform: translate(-2px, -2px);
-        box-shadow: 6px 6px 0 #111;
+        box-shadow: 6px 6px 0 #fbfaf7;
     }
 
     &:focus-visible {
@@ -74,26 +77,9 @@ const ListenButton = styled.a`
     }
 `;
 
-const Predecessor = styled.a`
-    display: inline-block;
-    margin: 14px 0 0 2px;
-    font: 500 9.5px/1 'JetBrains Mono', monospace;
-    letter-spacing: 0.12em;
-    color: #fff;
-    opacity: 0.75;
-    text-decoration: none;
-
-    &:hover {
-        color: #fff;
-        opacity: 1;
-        text-decoration: underline;
-    }
-
-    &:focus-visible {
-        outline: 2px solid #111;
-        outline-offset: 2px;
-    }
-`;
+/* The "PREVIOUSLY: BRAVO OUTSIDER" footnote that used to sit here has been promoted
+   into its own band — see Jazz/BravoOutsider.tsx, rendered directly below this
+   section. Do not re-add it here; one mention is enough. */
 
 const Tiles = styled.div`
     display: grid;
@@ -105,7 +91,7 @@ const tileBase = `
     position: relative;
     display: block;
     aspect-ratio: 16 / 9;
-    border: 2px solid #fff;
+    border: 2px solid #111;
     overflow: hidden;
 `;
 
@@ -149,8 +135,12 @@ const TileLabel = styled.span`
     z-index: 1;
     font: 500 9.5px/1.2 'JetBrains Mono', monospace;
     letter-spacing: 0.12em;
-    color: #fff;
-    text-shadow: 0 1px 4px rgba(17, 17, 17, 0.85);
+    /* A solid ink chip rather than a text-shadow: the label sits over arbitrary
+       thumbnails and over the teal placeholder stripes, where white measured
+       2.97:1. Paper on ink is 18.09:1 regardless of what is behind it. */
+    background: #111;
+    color: #fbfaf7;
+    padding: 4px 6px;
 `;
 
 const VisuallyHidden = styled.span`
@@ -189,9 +179,9 @@ export function Podcast({episodes}: { episodes: PlaylistItem[] }) {
                     <Eyebrow>SIDE PROJECT, LOUDEST ONE</Eyebrow>
                     <Heading>Oscars<br/>Outsider</Heading>
                     <Blurb>
-                        I host a podcast exploring the art of cinema and the stories that
-                        define the Academy Awards. Weekly awards-season analysis, plus an
-                        Oscars fantasy league we take entirely too seriously.
+                        I co-host and produce a podcast exploring the art of cinema and the
+                        stories that define the Academy Awards. Weekly awards-season analysis,
+                        plus an Oscars fantasy league we take entirely too seriously.
                     </Blurb>
                     <ListenButton
                         href="https://oscarsoutsider.com/"
@@ -200,13 +190,6 @@ export function Podcast({episodes}: { episodes: PlaylistItem[] }) {
                     >
                         LISTEN / WATCH ↗
                     </ListenButton>
-                    <Predecessor
-                        href="https://bravooutsider.com/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        PREVIOUSLY: BRAVO OUTSIDER ↗
-                    </Predecessor>
                 </div>
 
                 <Tiles>

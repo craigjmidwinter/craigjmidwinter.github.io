@@ -6,6 +6,7 @@ import {notFound} from "next/navigation";
 import {getAllPosts, Post} from "@/service/blog";
 import {excerpt} from "@/components/Jazz/postMeta";
 import ClientBlogPost, {NextPostLink} from "./ClientBlogPost";
+import {OG_IMAGE, SITE_NAME, canonicalPath} from "../../siteMeta";
 
 export function generateStaticParams(): { slug: string }[] {
     const posts: Post[] = getAllPosts();
@@ -44,21 +45,34 @@ export async function generateMetadata({params}: BlogPostPageProps): Promise<Met
 
     const title = `${post.title} | Craig Midwinter`;
     const description = excerpt(post, 160);
+    const url = canonicalPath(`/blog/${post.slug}`);
+
+    // A post's own cover art is its social card; posts written before covers
+    // existed fall back to the site card. metadataBase makes both absolute.
+    const images = post.cover_image
+        ? [{url: post.cover_image, alt: post.title}]
+        : [OG_IMAGE];
 
     return {
         title,
         description,
+        alternates: {canonical: url},
         openGraph: {
             title,
             description,
-            url: `https://midwinter.io/blog/${post.slug}`,
-            siteName: "Craig Midwinter",
+            url,
+            siteName: SITE_NAME,
             type: "article",
+            locale: "en_CA",
+            publishedTime: post.date_published,
+            modifiedTime: post.date_updated ?? post.date_published,
+            images,
         },
         twitter: {
-            card: "summary",
+            card: "summary_large_image",
             title,
             description,
+            images,
         },
     };
 }
