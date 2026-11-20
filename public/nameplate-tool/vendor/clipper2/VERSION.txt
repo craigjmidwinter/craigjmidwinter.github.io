@@ -1,0 +1,1 @@
+clipper2-ts 2.0.1-18 (bundled into ../../app/nameplate-tool.js)

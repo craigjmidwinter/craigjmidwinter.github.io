@@ -1,0 +1,1 @@
+tiny-inflate (bundled inside opentype.js for WOFF): tiny-inflate 1.0.3 (bundled into ../../app/nameplate-tool.js)

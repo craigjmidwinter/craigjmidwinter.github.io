@@ -1,0 +1,8 @@
+Nameplate web tool build (app/nameplate-tool.js, app/nameplate.css)
+nameplate_repo_commit: a2b3f9a98397267472e4a7dffa549a38002c5b4d
+working_tree_clean: yes
+node: v26.7.0
+three: 0.187.0
+opentype.js: 2.0.0
+clipper2-ts: 2.0.1-18
+fflate: 0.8.3

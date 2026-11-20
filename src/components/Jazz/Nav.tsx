@@ -68,6 +68,7 @@ const SECTIONS: NavItem[] = [
     {href: "#about", label: "ABOUT"},
     {href: "#pod", label: "POD"},
     {href: "#archive", label: "NOTES"},
+    {href: "/nameplate/", label: "NAMEPLATES"},
     {href: "#contact", label: "CONTACT"},
 ];
 
@@ -81,9 +82,16 @@ const BLOG_SECTIONS: NavItem[] = [
     {href: "/#contact", label: "CONTACT"},
 ];
 
-export function Nav({page = "home"}: { page?: "home" | "blog" }) {
-    const isBlog = page === "blog";
-    const sections = isBlog ? BLOG_SECTIONS : SECTIONS;
+/** Nameplate tool page: the blog bar, with NAMEPLATES as the current page. */
+const NAMEPLATE_SECTIONS: NavItem[] = [
+    ...BLOG_SECTIONS.filter((s) => s.href !== "/#contact").map((s) => ({...s, active: false})),
+    {href: "/nameplate/", label: "NAMEPLATES", active: true},
+    {href: "/#contact", label: "CONTACT"},
+];
+
+export function Nav({page = "home"}: { page?: "home" | "blog" | "nameplate" }) {
+    const isBlog = page !== "home";
+    const sections = page === "nameplate" ? NAMEPLATE_SECTIONS : isBlog ? BLOG_SECTIONS : SECTIONS;
 
     return (
         <Bar aria-label="Primary">
