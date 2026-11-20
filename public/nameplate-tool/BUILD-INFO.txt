@@ -1,5 +1,5 @@
 Nameplate web tool build (app/nameplate-tool.js, app/nameplate.css)
-nameplate_repo_commit: a2b3f9a98397267472e4a7dffa549a38002c5b4d
+nameplate_repo_commit: e7ccaabb206dee88fc0ce03cc87821e78a47b356
 working_tree_clean: yes
 node: v26.7.0
 three: 0.187.0
