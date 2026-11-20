@@ -29,7 +29,7 @@ const INK = "#111";
 const PAPER = "#fbfaf7";
 
 const TOOL_BASE = "/nameplate-tool/";
-const TOOL_COMMIT = "e7ccaabb206dee88fc0ce03cc87821e78a47b356";
+const TOOL_COMMIT = "be8dc26df863e529ba66068599b52603df2314a4";
 /* TODO(Craig, before merge): confirm the public repo URL once it is pushed. */
 const TOOL_SOURCE = `https://github.com/craigjmidwinter/nameplate-generator/tree/${TOOL_COMMIT}`;
 
