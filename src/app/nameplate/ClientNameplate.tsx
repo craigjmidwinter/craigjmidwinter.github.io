@@ -643,15 +643,21 @@ export default function ClientNameplate() {
         try {
             const buf = await file.arrayBuffer();
             const problem = api.fontFileProblem(buf);
-            if (problem) throw new Error(problem);
+            if (problem) {
+                setFontMsg(`Could not use ${file.name}: ${problem}.`);
+                input.value = "";
+                return;
+            }
             const f = api.loadFont(buf);
             const id = `upload:${file.name}`;
             setFonts((m) => ({...m, [id]: f}));
             setOwnFont({id, name: file.name});
             setFontMsg(`Using ${file.name}. It stays in this browser.`);
             chooseFont(id);
-        } catch (err) {
-            setFontMsg(`Could not read that font: ${(err as Error).message}. Use a TTF or OTF file.`);
+        } catch {
+            // The parser's own message is technical (and can echo raw bytes),
+            // so say it plainly. The current font stays selected.
+            setFontMsg(`Could not read ${file.name} as a font. It may be damaged or not a font file. Use a TTF or OTF file.`);
         }
         input.value = "";
     };
