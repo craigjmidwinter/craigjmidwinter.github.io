@@ -1,0 +1,1 @@
+earcut (copy inside three.js, src/extras/lib/earcut.js): earcut 3.0.2 (bundled into ../../app/nameplate-tool.js)
