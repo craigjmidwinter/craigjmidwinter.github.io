@@ -29,8 +29,7 @@ const INK = "#111";
 const PAPER = "#fbfaf7";
 
 const TOOL_BASE = "/nameplate-tool/";
-const TOOL_COMMIT = "be8dc26df863e529ba66068599b52603df2314a4";
-/* TODO(Craig, before merge): confirm the public repo URL once it is pushed. */
+const TOOL_COMMIT = "8025992ebbd23886e502883db698bfba01c66702";
 const TOOL_SOURCE = `https://github.com/craigjmidwinter/nameplate-generator/tree/${TOOL_COMMIT}`;
 
 /* ------------------------------------------------------------ tool API -- */
@@ -55,6 +54,8 @@ type ToolApi = {
     parseNames(text: string): string[];
     write3MF(plates: Plate[]): Uint8Array;
     fileNameFor(name: string): string;
+    writeSTLZip(plates: Plate[]): Uint8Array;
+    stlZipNameFor(plates: Plate[]): string;
     createPreview(el: HTMLElement, o?: Record<string, unknown>): Preview;
     fontFileProblem(buf: ArrayBuffer): string | null;
     missingGlyphs(font: Font, names: string[]): string[];
@@ -529,7 +530,8 @@ const STICK_SLIDERS: Slider[] = [
 const fmt = (v: number, step: number) => v.toFixed(step < 0.1 ? 2 : 1);
 
 function saveFile(bytes: Uint8Array, name: string) {
-    const url = URL.createObjectURL(new Blob([bytes as BlobPart], {type: "model/3mf"}));
+    const type = name.endsWith(".zip") ? "application/zip" : "model/3mf";
+    const url = URL.createObjectURL(new Blob([bytes as BlobPart], {type}));
     const a = document.createElement("a");
     a.href = url;
     a.download = name;
@@ -815,13 +817,22 @@ export default function ClientNameplate() {
 
                             <Group>
                                 <legend><FilterLabel>DOWNLOAD</FilterLabel></legend>
-                                <div>
+                                <HeroButtons>
                                     <PurpleButton type="button" disabled={!plates.length}
                                                   onClick={() => api && saveFile(api.write3MF(plates),
                                                       plates.length === 1 ? api.fileNameFor(plates[0].name) : "nameplates.3mf")}>
                                         DOWNLOAD ALL (ONE .3MF) ↓
                                     </PurpleButton>
-                                </div>
+                                    <OutlineButton type="button" disabled={!plates.length}
+                                                   onClick={() => api && saveFile(api.writeSTLZip(plates), api.stlZipNameFor(plates))}>
+                                        ALL AS .STL (ZIP) ↓
+                                    </OutlineButton>
+                                </HeroButtons>
+                                <Note>
+                                    STL has no colours or parts, so the zip holds one STL per colour of each plate
+                                    (base, letters, stick). For several colours, load a plate&apos;s files together
+                                    as one object. The 3MF does this for you.
+                                </Note>
                                 <FilterRow>
                                     {plates.map((p, i) => (
                                         <Chip key={`${p.name}-${i}`} type="button" $active={false}
@@ -886,7 +897,8 @@ export default function ClientNameplate() {
                         <FilterLabel>PRINTING</FilterLabel>
                         <p>
                             Open the 3MF in Bambu Studio or PrusaSlicer. Each plate comes in as one object
-                            with its base, letters and stick ready to colour.
+                            with its base, letters and stick ready to colour. The STL zip has the same parts as
+                            separate files, with a README on how to load them.
                         </p>
                     </div>
                     <div>
