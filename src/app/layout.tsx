@@ -1,6 +1,7 @@
 // app/layout.tsx
 import { ReactNode } from "react";
 import { Metadata, Viewport } from "next";
+import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import StyledComponentsRegistry from "@/lib/registry";
 import { OG_IMAGE, SITE_NAME, SITE_URL } from "./siteMeta";
@@ -37,6 +38,13 @@ export const metadata: Metadata = {
   },
 };
 
+// Self-hosted (card e2d93c): next/font downloads these at build time and serves
+// them from this site, so a visit makes no request to Google. Next 15 keeps the
+// real family names in the @font-face rules, so components can go on naming
+// 'JetBrains Mono' / 'Space Grotesk'; the variables are there for new code.
+const mono = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "500", "700"], variable: "--font-mono", display: "swap" });
+const grotesk = Space_Grotesk({ subsets: ["latin"], weight: ["400", "500", "700"], variable: "--font-grotesk", display: "swap" });
+
 /** Paper, matching the page background the design actually paints. */
 export const viewport: Viewport = {
   themeColor: "#fbfaf7",
@@ -45,15 +53,8 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-      <html lang="en">
+      <html lang="en" className={`${mono.variable} ${grotesk.variable}`}>
       <head>
-        {/* Preconnect to Google Fonts and load the site typefaces */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link
-            href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap"
-            rel="stylesheet"
-        />
         <link rel="alternate" type="application/rss+xml" title="Craig Midwinter — Blog" href="/feed.xml" />
         {/*
           Self-hosted Umami. Cookieless, so it ships with the footer disclosure in
